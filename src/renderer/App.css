@@ -38,6 +38,11 @@ li {
   margin: 0;
 }
 
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
@@ -48,12 +53,23 @@ li {
   user-select: none;
 }
 
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.toggle-add-timer {
+  font-size: 1.5rem;
+}
+
 .hr-fade {
   height: 1px;
   background-image: linear-gradient(
     90deg,
     var(--color-white-fade) 10%,
-    white 50%,
+    red 50%,
     var(--color-white-fade) 90%
   );
   margin: 2rem 0;

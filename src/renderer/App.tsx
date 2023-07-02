@@ -33,6 +33,7 @@ const Main = () => {
   ]);
   const [ selTimer, setSelTimer ] = useState(0);
   const [triggerTimer, setTriggerTimer] = useState(0);
+  const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
   function handleSetSelTimer(i:number) {
     setSelTimer(i)
@@ -53,13 +54,13 @@ const Main = () => {
 
 
   return (
-    <div className="main">
-      {/* <div className="timer-app">
-        <div className="titlebar">
-          <h1 className="title">{tasks[selectedTask].title}</h1>
-          <p className="task-count">{tasks.length}</p>
+    <div className='main'>
+      {/* <div className='timer-app'>
+        <div className='titlebar'>
+          <h1 className='title'>{tasks[selectedTask].title}</h1>
+          <p className='task-count'>{tasks.length}</p>
         </div>
-        <div className="timer-area"> {tasks[selectedTask].timeLeft} </div>
+        <div className='timer-area'> {tasks[selectedTask].timeLeft} </div>
       </div> */}
 
 
@@ -93,15 +94,32 @@ const Main = () => {
           ))
         }
       </div>
-      <TimerButton
-        handleToggleTimerState={handleTriggerTimer}
-      />
-      <div className="hr-fade" />
-      <div className='add-timer-wrapper'>
-        <AddTimer
-          onAddTimer={handleAddTimer}
+      <div className='buttons-container'>
+        <TimerButton
+          handleToggleTimerState={handleTriggerTimer}
         />
+        <button
+          type='button'
+          onClick={() => setIsShowAddTimer(!isShowAddTimer)}
+          className='toggle-add-timer'
+          title='Show or hide add timer form'
+          >
+          ➕
+        </button>
       </div>
+      {
+        isShowAddTimer
+          ? <>
+            <div className='hr-fade' />
+            <div className='add-timer-wrapper'>
+              <AddTimer
+                onAddTimer={handleAddTimer}
+              />
+            </div>
+          </>
+          : (<></>)
+
+      }
 
     </div>
   );

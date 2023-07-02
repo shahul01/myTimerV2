@@ -130,7 +130,7 @@ const Timer: FC<ITimerProps> = (
         `
       }
       >
-      <span>
+      <span title='Select timer' >
         {isSelected ? '⦿' : '⦾'}
       </span>
       <span>{title}: {outputTime}</span>
