@@ -6,10 +6,8 @@
   --example: #ccc;
 }
 
-
 html,
-body
-{
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -26,7 +24,37 @@ a {
   text-decoration: none;
 }
 
-h1,h2,h3,h4,h5,h6,p,span,a,ul,li
-{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+ul,
+li {
   margin: 0;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.timerWrapper {
+  cursor: pointer;
+  user-select: none;
+}
+
+.hr-fade {
+  height: 1px;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-white-fade) 10%,
+    white 50%,
+    var(--color-white-fade) 90%
+  );
+  margin: 2rem 0;
 }

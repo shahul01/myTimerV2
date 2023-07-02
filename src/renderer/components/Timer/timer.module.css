@@ -1,0 +1,10 @@
+.timer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 2rem;
+}
+
+.selected {
+  display: none;
+}

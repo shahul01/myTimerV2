@@ -4,8 +4,10 @@ export interface IObject<Type> {
 
 export interface ITask {
   title: string;
-  timeLeft: number | string;
+  // number |
+  timerInput: string;
 
+  isSelected?: boolean;
   switchedCount?: number;
   timeSpent?: number;
   description?: string;

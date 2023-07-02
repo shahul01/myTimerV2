@@ -1,0 +1,22 @@
+.add-timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.add-timer input {
+  padding: 0.5rem 0.5rem;
+  font-size: 1.5rem;
+  width: 20rem;
+}
+
+.add-timer button {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  width: 10rem;
+
+  cursor: pointer;
+  user-select: none;
+}
