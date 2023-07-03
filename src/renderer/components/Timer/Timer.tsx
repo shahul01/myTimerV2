@@ -98,7 +98,10 @@ const Timer: FC<ITimerProps> = (
 
 
   useEffect(() => {
-    getFormattedFullTime();
+    console.log(`timerInput: `, timerInput);
+    if (timerInput) {
+      getFormattedFullTime()
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

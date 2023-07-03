@@ -71,10 +71,12 @@ const Main = () => {
           timerArray, null, 2
         )}
       </pre> */}
-      <Timers
-        timerArray={timerArray}
-        handleSetSelTimer={(x) => handleSetSelTimer(x)}
-        selTimer={selTimer}
+
+      <Timer
+        title={timerArray[selTimer].title}
+        timerInput={timerArray[selTimer].timerInput}
+        // eslint-disable-next-line react/jsx-boolean-value
+        isSelected={true}
         triggerTimer={triggerTimer}
       />
 
@@ -91,6 +93,13 @@ const Main = () => {
           ➕
         </button>
       </div>
+      <br /><br />
+      <Timers
+        timerArray={timerArray}
+        handleSetSelTimer={(x) => handleSetSelTimer(x)}
+        selTimer={selTimer}
+        triggerTimer={triggerTimer}
+      />
       {
         isShowAddTimer
           ? <>
