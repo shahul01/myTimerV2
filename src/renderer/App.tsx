@@ -9,6 +9,7 @@ import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
 import './App.css';
 import { ITask } from './types';
+import Timers from './components/Timers/Timers';
 
 const Main = () => {
 
@@ -32,11 +33,11 @@ const Main = () => {
     },
   ]);
   const [ selTimer, setSelTimer ] = useState(0);
-  const [triggerTimer, setTriggerTimer] = useState(0);
+  const [ triggerTimer, setTriggerTimer ] = useState(0);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
   function handleSetSelTimer(i:number) {
-    setSelTimer(i)
+    setSelTimer(i);
   };
 
   const handleTriggerTimer = useCallback(() => {
@@ -64,36 +65,19 @@ const Main = () => {
       </div> */}
 
 
-      <h3>Timers: </h3>
+      {/* <h3>Timers: </h3> */}
       {/* <pre>
         {JSON.stringify(
           timerArray, null, 2
         )}
       </pre> */}
-      <div className='timer'>
-        {
-          timerArray.map((el, i) => (
-            <div
-              key={el.title}
-              className='timerWrapper'
-              onClick={()=>handleSetSelTimer(i)}
+      <Timers
+        timerArray={timerArray}
+        handleSetSelTimer={(x) => handleSetSelTimer(x)}
+        selTimer={selTimer}
+        triggerTimer={triggerTimer}
+      />
 
-              role="button"
-              tabIndex={0}
-              onKeyDown={()=>{}}
-              >
-              <Timer
-                title={el.title}
-                timerInput={el.timerInput}
-                isSelected={i===selTimer}
-                triggerTimer={triggerTimer}
-              />
-              <br />
-
-            </div>
-          ))
-        }
-      </div>
       <div className='buttons-container'>
         <TimerButton
           handleToggleTimerState={handleTriggerTimer}
