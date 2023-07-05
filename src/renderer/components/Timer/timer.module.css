@@ -5,6 +5,10 @@
   font-size: 2rem;
 }
 
+.title-bar {
+  font-size: 0.75rem;
+}
+
 .selected {
   display: none;
 }

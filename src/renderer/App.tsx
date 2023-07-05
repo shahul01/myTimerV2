@@ -34,6 +34,7 @@ const Main = () => {
   ]);
   const [ selTimer, setSelTimer ] = useState(0);
   const [ triggerTimer, setTriggerTimer ] = useState(0);
+  const [ isShowTimers, setIsShowTimers ] = useState(false);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
   function handleSetSelTimer(i:number) {
@@ -53,9 +54,21 @@ const Main = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function handleShowHideAllTimers(display:'show'|'leave') {
+    console.log(`display: `, display);
+    if (display === 'show') {
+      return setIsShowTimers(true);
+    };
+    return setIsShowTimers(false);
+  };
+
 
   return (
-    <div className='main'>
+    <div
+      className='main'
+      onMouseEnter={()=>handleShowHideAllTimers('show')}
+      onMouseLeave={() => handleShowHideAllTimers('leave')}
+      >
       {/* <div className='timer-app'>
         <div className='titlebar'>
           <h1 className='title'>{tasks[selectedTask].title}</h1>
@@ -63,7 +76,6 @@ const Main = () => {
         </div>
         <div className='timer-area'> {tasks[selectedTask].timeLeft} </div>
       </div> */}
-
 
       {/* <h3>Timers: </h3> */}
       {/* <pre>
@@ -75,43 +87,50 @@ const Main = () => {
       <Timer
         title={timerArray[selTimer].title}
         timerInput={timerArray[selTimer].timerInput}
+        displayType='hero'
         // eslint-disable-next-line react/jsx-boolean-value
         isSelected={true}
         triggerTimer={triggerTimer}
       />
 
-      <div className='buttons-container'>
-        <TimerButton
-          handleToggleTimerState={handleTriggerTimer}
-        />
-        <button
-          type='button'
-          onClick={() => setIsShowAddTimer(!isShowAddTimer)}
-          className='toggle-add-timer'
-          title='Show or hide add timer form'
-          >
-          ➕
-        </button>
-      </div>
-      <br /><br />
-      <Timers
-        timerArray={timerArray}
-        handleSetSelTimer={(x) => handleSetSelTimer(x)}
-        selTimer={selTimer}
-        triggerTimer={triggerTimer}
-      />
       {
-        isShowAddTimer
-          ? <>
-            <div className='hr-fade' />
-            <div className='add-timer-wrapper'>
-              <AddTimer
-                onAddTimer={handleAddTimer}
+        !!isShowTimers && (
+          <>
+            <div className='buttons-container'>
+              <TimerButton
+                handleToggleTimerState={handleTriggerTimer}
               />
+              <button
+                type='button'
+                onClick={() => setIsShowAddTimer(!isShowAddTimer)}
+                className='toggle-add-timer'
+                title='Show or hide add timer form'
+                >
+                ➕
+              </button>
             </div>
-          </>
-          : (<></>)
+            <br /><br />
+            <Timers
+              timerArray={timerArray}
+              handleSetSelTimer={(x) => handleSetSelTimer(x)}
+              selTimer={selTimer}
+              triggerTimer={triggerTimer}
+            />
+            {
+              isShowAddTimer
+                ? <>
+                  <div className='hr-fade' />
+                  <div className='add-timer-wrapper'>
+                    <AddTimer
+                      onAddTimer={handleAddTimer}
+                    />
+                  </div>
+                </>
+                : (<></>)
 
+            }
+          </>
+        )
       }
 
     </div>

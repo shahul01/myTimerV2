@@ -10,11 +10,12 @@ interface ITimerProps extends ITask {
   // title: string;
   // timerInput: number | string;
   // isSelected: boolean;
+  displayType: 'hero' | 'list';
   triggerTimer: number;
 };
 
 const Timer: FC<ITimerProps> = (
-  {title, timerInput, isSelected, triggerTimer}
+  {title, timerInput, isSelected, displayType, triggerTimer}
   ) => {
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
@@ -133,10 +134,27 @@ const Timer: FC<ITimerProps> = (
         `
       }
       >
-      <span title='Select timer' >
-        {isSelected ? '⦿' : '⦾'}
-      </span>
-      <span>{title}: {outputTime}</span>
+        {
+          displayType === 'hero'
+          ? (
+            <div className={styles.hero} >
+              <div className={styles['title-bar']} >
+                {title}
+              </div>
+              <div className={styles.body} >
+                {outputTime}
+              </div>
+            </div>
+
+          ) : (
+            <div className={styles.list}>
+              <span title='Select timer' >
+                {isSelected ? '⦿' : '⦾'}
+              </span>
+              <span>{title}: {outputTime}</span>
+            </div>
+          )
+        }
 
       {/* <button
         onClick={handleToggleTimerState}
