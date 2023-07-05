@@ -49,16 +49,26 @@ const Main = () => {
 
   const handleAddTimer = useCallback((newTimerData:ITask) => {
     setTimerArray( prev => [...prev, newTimerData] );
-    console.log(`timerArray: `, JSON.stringify(timerArray));
-    console.log('parent', JSON.stringify(newTimerData))
+    // console.log(`timerArray: `, JSON.stringify(timerArray));
+    // console.log('parent', JSON.stringify(newTimerData))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleShowHideAllTimers(display:'show'|'leave') {
-    console.log(`display: `, display);
+
+    // TODO: modularize all electron functions?
+    function handleStickyHoverElectron(arg:boolean) {
+      // const elt = window.electron?.ipcRenderer;
+      // console.log(`### elt: `, elt);
+      return window.electron?.ipcRenderer?.handleStickyHover(arg)
+    };
+
     if (display === 'show') {
+      handleStickyHoverElectron(true);
       return setIsShowTimers(true);
     };
+
+    handleStickyHoverElectron(false);
     return setIsShowTimers(false);
   };
 
@@ -67,7 +77,7 @@ const Main = () => {
     <div
       className='main'
       onMouseEnter={()=>handleShowHideAllTimers('show')}
-      onMouseLeave={() => handleShowHideAllTimers('leave')}
+      onMouseLeave={()=>handleShowHideAllTimers('leave')}
       >
       {/* <div className='timer-app'>
         <div className='titlebar'>

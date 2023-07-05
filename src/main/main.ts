@@ -28,6 +28,39 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+const userSettings = {
+  version: '1.0.0',
+  appSize: {
+    sticky: {
+      showTimers: { height: 400, width: 600 },
+      hideTimers: { height: 120, width: 174 }
+    },
+  }
+
+};
+
+// let isStickyHovered:boolean|void = false;
+
+function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
+  const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
+  const newSize = userSettings.appSize.sticky[displayOption][dimension];
+  console.log(`newSize ${dimension}: `, newSize);
+  return newSize;
+};
+
+// ipc
+
+ipcMain.on(
+  'handle-sticky-hover',
+  (e, arg:boolean) => {
+    console.log(`arg: `, arg);
+    const newHeight = getAppSize('height', arg);
+    const newWidth = getAppSize('width', arg);
+    console.log(`${arg ? 'over' : 'leave'} newHeight: `, newHeight);
+    mainWindow?.setSize(newWidth, newHeight);
+  }
+);
+
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
@@ -59,6 +92,7 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
+
 const createWindow = async () => {
   if (isDevelopment) {
     await installExtensions();
@@ -74,8 +108,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 527,
-    height: 156,
+    width: getAppSize('width', false),
+    height: getAppSize('height', false),
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

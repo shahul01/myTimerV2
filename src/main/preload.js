@@ -5,6 +5,12 @@ contextBridge.exposeInMainWorld('electron', {
     myPing() {
       ipcRenderer.send('ipc-example', 'ping');
     },
+
+    // hover and resize
+    handleStickyHover(arg) {
+      ipcRenderer.send('handle-sticky-hover', arg);
+    },
+
     on(channel, func) {
       const validChannels = ['ipc-example'];
       if (validChannels.includes(channel)) {

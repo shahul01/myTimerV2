@@ -99,7 +99,7 @@ const Timer: FC<ITimerProps> = (
 
 
   useEffect(() => {
-    console.log(`timerInput: `, timerInput);
+    // console.log(`timerInput: `, timerInput);
     if (timerInput) {
       getFormattedFullTime()
     };
@@ -107,11 +107,11 @@ const Timer: FC<ITimerProps> = (
   }, []);
 
   useEffect(() => {
-    console.log(`firstLoad.current: `, firstLoad.current);
+    // console.log(`firstLoad.current: `, firstLoad.current);
     if (firstLoad.current) {
       firstLoad.current = false;
     } else {
-      console.log('timer', triggerTimer)
+      // console.log('timer', triggerTimer)
       if (isSelected) {
         handleToggleTimerState();
       };
