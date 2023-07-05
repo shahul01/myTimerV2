@@ -99,7 +99,7 @@ const Main = () => {
                 ➕
               </button>
             </div>
-            <br /><br />
+            <br />
             <Timers
               timerArray={timerArray}
               handleSetSelTimer={(x) => handleSetSelTimer(x)}

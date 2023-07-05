@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { ITask } from 'renderer/types';
 import Timer from '../Timer/Timer';
+import styles from './timers.module.css';
 
 interface ITimersProps {
   timerArray: ITask[]
@@ -18,13 +19,13 @@ const Timers: FC<ITimersProps> = (props) => {
   } = props;
 
   return (
-    <div className='timers'>
+    <div className={styles.timers}>
       {/* <div className='timer'> */}
         {
           timerArray.map((el, i) => (
             <div
               key={el.title}
-              className='timerWrapper'
+              className={styles['timer-wrapper']}
               onClick={()=>handleSetSelTimer(i)}
 
               role="button"

@@ -4,6 +4,7 @@
 */
 :root {
   --example: #ccc;
+  --color-white-fade: hsl(0deg 0% 93% / 0%);
 }
 
 html,
@@ -66,11 +67,12 @@ button {
 
 .hr-fade {
   height: 1px;
+  /* width: 100%; */
   background-image: linear-gradient(
     90deg,
-    var(--color-white-fade) 10%,
-    red 50%,
-    var(--color-white-fade) 90%
+    var(--color-white-fade) 24%,
+    white 50%,
+    var(--color-white-fade) 76%
   );
-  margin: 2rem 0;
+  margin: 8px 0;
 }

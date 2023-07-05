@@ -157,6 +157,7 @@ const Timer: FC<ITimerProps> = (
         {
           displayType === 'hero'
           ? (
+            // TODO: Make this a component
             <div
               className={styles.hero}
             >
@@ -176,11 +177,14 @@ const Timer: FC<ITimerProps> = (
             </div>
 
           ) : (
+            // TODO: Make this a component
             <div className={styles.list}>
-              <span title='Select timer' >
+              <span className={styles.btn} title='Select timer' >
                 {isSelected ? '⦿' : '⦾'}
               </span>
-              <span>{title}: {outputTime}</span>
+              <span>{title}: </span>
+              <span>{outputTime}</span>
+
             </div>
           )
         }

@@ -32,8 +32,8 @@ const userSettings = {
   version: '1.0.0',
   appSize: {
     sticky: {
-      showTimers: { height: 500, width: 174 },
-      hideTimers: { height: 118, width: 174 }
+      hideTimers: { height: 118, width: 174 },
+      showTimers: { height: 370, width: 174 }
     },
   }
 
@@ -42,7 +42,7 @@ const userSettings = {
 function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
   const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
   const newSize = userSettings.appSize.sticky[displayOption][dimension];
-  console.log(`newSize ${dimension}: `, newSize);
+  // console.log(`newSize ${dimension}: `, newSize);
   return newSize;
 };
 

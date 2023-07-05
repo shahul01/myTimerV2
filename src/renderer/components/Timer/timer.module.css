@@ -5,13 +5,22 @@
   font-size: 2rem;
 }
 
-.title-bar {
+.hero .title-bar {
   font-size: 0.75rem;
 }
 
-.timer .hero .body {
+.hero .body {
   cursor: pointer;
   user-select: none;
+}
+
+.list {
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.list .btn {
+  user-selct: none;
 }
 
 .selected {
