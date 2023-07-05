@@ -32,14 +32,12 @@ const userSettings = {
   version: '1.0.0',
   appSize: {
     sticky: {
-      showTimers: { height: 400, width: 600 },
-      hideTimers: { height: 120, width: 174 }
+      showTimers: { height: 500, width: 174 },
+      hideTimers: { height: 118, width: 174 }
     },
   }
 
 };
-
-// let isStickyHovered:boolean|void = false;
 
 function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
   const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
@@ -53,10 +51,9 @@ function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
 ipcMain.on(
   'handle-sticky-hover',
   (e, arg:boolean) => {
-    console.log(`arg: `, arg);
+    // console.log(`arg: `, arg);
     const newHeight = getAppSize('height', arg);
     const newWidth = getAppSize('width', arg);
-    console.log(`${arg ? 'over' : 'leave'} newHeight: `, newHeight);
     mainWindow?.setSize(newWidth, newHeight);
   }
 );

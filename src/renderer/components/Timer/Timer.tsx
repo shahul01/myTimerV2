@@ -11,17 +11,20 @@ interface ITimerProps extends ITask {
   // timerInput: number | string;
   // isSelected: boolean;
   displayType: 'hero' | 'list';
+  setIsShowTimers: any;
   triggerTimer: number;
 };
 
 const Timer: FC<ITimerProps> = (
-  {title, timerInput, isSelected, displayType, triggerTimer}
+  {title, timerInput, isSelected, displayType, setIsShowTimers, triggerTimer}
   ) => {
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
   const firstLoad = useRef(true);
   const [ outputTime, setOutputTime ] = useState('');
   const [ timerState, setTimerState ] = useState<TTimerState>('paused');
+  // const [ isClickedTimer, setIsClickedTimer ] = useState('false');
+  const [ triggerClickedTimer, setTriggerClickedTimer ] = useState(0);
   const countdown = useRef<NodeJS.Timeout>();
 
   const getTimeInSeconds = (time: string): number => {
@@ -97,6 +100,23 @@ const Timer: FC<ITimerProps> = (
   };
 
 
+  function handleShowHideAllTimers() {
+
+    // TODO: modularize all electron functions?
+    function handleStickyHoverElectron(arg:boolean) {
+      return window.electron?.ipcRenderer?.handleStickyHover(arg)
+    };
+
+    const display = triggerClickedTimer % 2 === 0 ? 'show' : 'hide';
+    setTriggerClickedTimer(p=>p+1);
+    if (display === 'show') {
+      handleStickyHoverElectron(true);
+      return setIsShowTimers(true);
+    };
+
+    handleStickyHoverElectron(false);
+    return setIsShowTimers(false);
+  };
 
   useEffect(() => {
     // console.log(`timerInput: `, timerInput);
@@ -137,11 +157,20 @@ const Timer: FC<ITimerProps> = (
         {
           displayType === 'hero'
           ? (
-            <div className={styles.hero} >
+            <div
+              className={styles.hero}
+            >
               <div className={styles['title-bar']} >
                 {title}
               </div>
-              <div className={styles.body} >
+              <div
+                  className={styles.body}
+                  onClick={handleShowHideAllTimers}
+
+                  onKeyUp={handleShowHideAllTimers}
+                  role="button"
+                  tabIndex={0}
+                >
                 {outputTime}
               </div>
             </div>

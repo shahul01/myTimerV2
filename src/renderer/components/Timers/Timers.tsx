@@ -35,6 +35,7 @@ const Timers: FC<ITimersProps> = (props) => {
                 title={el.title}
                 timerInput={el.timerInput}
                 displayType='list'
+                setIsShowTimers={{}}
                 isSelected={i===selTimer}
                 triggerTimer={triggerTimer}
               />

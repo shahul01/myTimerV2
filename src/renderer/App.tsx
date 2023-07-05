@@ -54,30 +54,9 @@ const Main = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleShowHideAllTimers(display:'show'|'leave') {
-
-    // TODO: modularize all electron functions?
-    function handleStickyHoverElectron(arg:boolean) {
-      // const elt = window.electron?.ipcRenderer;
-      // console.log(`### elt: `, elt);
-      return window.electron?.ipcRenderer?.handleStickyHover(arg)
-    };
-
-    if (display === 'show') {
-      handleStickyHoverElectron(true);
-      return setIsShowTimers(true);
-    };
-
-    handleStickyHoverElectron(false);
-    return setIsShowTimers(false);
-  };
-
-
   return (
     <div
       className='main'
-      onMouseEnter={()=>handleShowHideAllTimers('show')}
-      onMouseLeave={()=>handleShowHideAllTimers('leave')}
       >
       {/* <div className='timer-app'>
         <div className='titlebar'>
@@ -98,6 +77,7 @@ const Main = () => {
         title={timerArray[selTimer].title}
         timerInput={timerArray[selTimer].timerInput}
         displayType='hero'
+        setIsShowTimers={setIsShowTimers}
         // eslint-disable-next-line react/jsx-boolean-value
         isSelected={true}
         triggerTimer={triggerTimer}
