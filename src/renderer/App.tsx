@@ -24,10 +24,12 @@ const Main = () => {
 
   const [ timerArray, setTimerArray ] = useState<ITask[]>([
     {
+      // id: 1,
       title: 'Timer 1',
       timerInput: '00:02:00',
     },
     {
+      // id: 2,
       title: 'Timer 2',
       timerInput: '00:00:03',
     },
@@ -73,7 +75,9 @@ const Main = () => {
         )}
       </pre> */}
 
+      {/* // TODO: Make key have Unique Id */}
       <Timer
+        key={timerArray[selTimer].title}
         title={timerArray[selTimer].title}
         timerInput={timerArray[selTimer].timerInput}
         displayType='hero'

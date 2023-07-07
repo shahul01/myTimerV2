@@ -4,7 +4,7 @@ import Timer from '../Timer/Timer';
 import styles from './timers.module.css';
 
 interface ITimersProps {
-  timerArray: ITask[]
+  timerArray: ITask[];
   handleSetSelTimer: (i:number) => void;
   selTimer: number;
   triggerTimer: number;

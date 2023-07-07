@@ -11,7 +11,7 @@ interface ITimerProps extends ITask {
   // timerInput: number | string;
   // isSelected: boolean;
   displayType: 'hero' | 'list';
-  setIsShowTimers: any;
+  setIsShowTimers: React.Dispatch<React.SetStateAction<boolean>>;
   triggerTimer: number;
 };
 
