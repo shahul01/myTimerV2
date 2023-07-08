@@ -24,12 +24,12 @@ const Main = () => {
 
   const [ timerArray, setTimerArray ] = useState<ITask[]>([
     {
-      // id: 1,
+      id: 1,
       title: 'Timer 1',
       timerInput: '00:02:00',
     },
     {
-      // id: 2,
+      id: 2,
       title: 'Timer 2',
       timerInput: '00:00:03',
     },
@@ -45,15 +45,10 @@ const Main = () => {
 
   const handleTriggerTimer = useCallback(() => {
     setTriggerTimer(p => p + 1);
-    console.log('app', triggerTimer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddTimer = useCallback((newTimerData:ITask) => {
     setTimerArray( prev => [...prev, newTimerData] );
-    // console.log(`timerArray: `, JSON.stringify(timerArray));
-    // console.log('parent', JSON.stringify(newTimerData))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -77,7 +72,8 @@ const Main = () => {
 
       {/* // TODO: Make key have Unique Id */}
       <Timer
-        key={timerArray[selTimer].title}
+        key={timerArray[selTimer].id}
+        id={timerArray[selTimer].id}
         title={timerArray[selTimer].title}
         timerInput={timerArray[selTimer].timerInput}
         displayType='hero'
@@ -116,6 +112,7 @@ const Main = () => {
                   <div className='hr-fade' />
                   <div className='add-timer-wrapper'>
                     <AddTimer
+                      timerArrayLength={timerArray.length}
                       onAddTimer={handleAddTimer}
                     />
                   </div>

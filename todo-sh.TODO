@@ -1,18 +1,29 @@
 Total:
   # bugs:
-    ☐ Started timer doesn't switch properly - July 5
+    ☐ timer still gives switching error
+      - as it is a new timer(?) rather than referencing the component it creates and reuses it
 
 
   # important:
-
+    ☐ Input mask
+    ☐ Basic Backup and restore when clicking particular btn
 
 
   # design:
-
+    ☐ no window titlebar
+    ☐ to timer lists:
+      ☐ add fixed height
+      ☐ add scrollbars
+    ☐ size
+      ☐ resizable
+        ☐ remembers dimensions even after toggling different sizes
+      ☐ font auto adjust
 
 
   # techstack:
-
+    ☐ zod
+    ☐ sqlite
+    ☐ tRPC(?)
 
 
   # refactor:
@@ -32,6 +43,14 @@ Total:
       ☐ on double click:
         - show elapsed timer
         - pause / resume
+
+    ☐ draggable anywhere
+    ☐ timer list draggable
+    ☐ time end alert:
+      ☐ beep
+      ☐ message dialog box
+      ☐ reverse countdown
+
 
 
 

@@ -96,7 +96,6 @@ const Timer: FC<ITimerProps> = (
   function handleToggleTimerState() {
     if (timerState === 'paused') resumeCountdown();
     else pauseCountdown();
-    // console.log(`timerState: ${title}`, timerState);
   };
 
 
@@ -119,7 +118,6 @@ const Timer: FC<ITimerProps> = (
   };
 
   useEffect(() => {
-    // console.log(`timerInput: `, timerInput);
     if (timerInput) {
       getFormattedFullTime()
     };
@@ -127,11 +125,9 @@ const Timer: FC<ITimerProps> = (
   }, []);
 
   useEffect(() => {
-    // console.log(`firstLoad.current: `, firstLoad.current);
     if (firstLoad.current) {
       firstLoad.current = false;
     } else {
-      // console.log('timer', triggerTimer)
       if (isSelected) {
         handleToggleTimerState();
       };

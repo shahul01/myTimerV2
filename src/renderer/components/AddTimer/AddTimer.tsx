@@ -3,12 +3,14 @@ import { IObject, ITask } from 'renderer/types';
 import styles from './addTimer.module.css';
 
 interface IAddTimerProps {
+  timerArrayLength: number;
   onAddTimer: (newTimerData: any) => void;
 }
 
 const AddTimer: FC<IAddTimerProps> = (props) => {
-  const { onAddTimer } = props;
+  const { timerArrayLength, onAddTimer  } = props;
   const [ addForm, setAddForm ] = useState<ITask>({
+    id: 0,
     title: '',
     timerInput: '',
   });
@@ -30,9 +32,13 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
     return form(Object.fromEntries(objArr));
   };
 
-  function handleAdd() {
-    // console.log('child', addForm);
-    onAddTimer(addForm)
+  function handleSubmit() {
+    const newForm:ITask = {
+      ...addForm,
+      id: timerArrayLength + 1
+    };
+
+    onAddTimer(newForm);
     return resetForm(setAddForm);
   };
 
@@ -50,7 +56,7 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
         value={addForm.timerInput}
         onChange={e=>handleUpdateForm(e)}
       />
-      <button type="button" onClick={handleAdd}>
+      <button type="button" onClick={handleSubmit}>
         Add
       </button>
     </div>

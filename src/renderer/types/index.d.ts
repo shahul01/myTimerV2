@@ -3,6 +3,7 @@ export interface IObject<Type> {
 }
 
 export interface ITask {
+  id: number;
   title: string;
   // number |
   timerInput: string;
