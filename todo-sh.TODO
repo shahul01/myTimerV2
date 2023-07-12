@@ -8,11 +8,19 @@ Total:
     ☐ Input mask
     ☐ Basic Backup and restore when clicking particular btn
 
+    ☐ phone version:
+      ☐ sync:
+        ☐ can get tasks and current level of completion
+        ☐ one touch sync
+
+    ☐ web version
+      ☐ needs server to run FE
+
 
   # design:
     ☐ no window titlebar
     ☐ to timer lists:
-      ☐ add fixed height
+      ☐ update height dynamically depending on timer list length, then after say, 5 timers,
       ☐ add scrollbars
     ☐ size
       ☐ resizable
@@ -50,7 +58,7 @@ Total:
       ☐ beep
       ☐ message dialog box
       ☐ reverse countdown
-
+    ☐ heatmap
 
 
 

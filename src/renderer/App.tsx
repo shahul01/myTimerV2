@@ -26,12 +26,13 @@ const Main = () => {
     {
       id: 1,
       title: 'Timer 1',
-      timerInput: '00:02:00',
+      timerInput: '00:32:00',
+      // currentTime: '00:32:00' // use this to update timer when paused
     },
     {
       id: 2,
       title: 'Timer 2',
-      timerInput: '00:00:03',
+      timerInput: '00:27:03',
     },
   ]);
   const [ selTimer, setSelTimer ] = useState(0);
