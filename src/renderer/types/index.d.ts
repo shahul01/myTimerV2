@@ -7,6 +7,7 @@ export interface ITask {
   title: string;
   // number |
   timerInput: string;
+  currentTimer: string;
 
   isSelected?: boolean;
   switchedCount?: number;

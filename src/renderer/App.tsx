@@ -27,12 +27,13 @@ const Main = () => {
       id: 1,
       title: 'Timer 1',
       timerInput: '00:32:00',
-      // currentTime: '00:32:00' // use this to update timer when paused
+      currentTimer: '00:32:00'
     },
     {
       id: 2,
       title: 'Timer 2',
       timerInput: '00:27:03',
+      currentTimer: '00:27:03'
     },
   ]);
   const [ selTimer, setSelTimer ] = useState(0);
@@ -51,6 +52,12 @@ const Main = () => {
   const handleAddTimer = useCallback((newTimerData:ITask) => {
     setTimerArray( prev => [...prev, newTimerData] );
   }, []);
+
+  const handleUpdatedTimer = useCallback((currUpdatedTimer) => {
+    console.log(`e: `, currUpdatedTimer);
+    timerArray[selTimer].currentTimer = currUpdatedTimer;
+    console.log(`timerArray: `, timerArray);
+  }, [selTimer, timerArray]);
 
   return (
     <div
@@ -74,10 +81,14 @@ const Main = () => {
       {/* // TODO: Make key have Unique Id */}
       <Timer
         key={timerArray[selTimer].id}
+        /* make timerArray props as one prop  */
         id={timerArray[selTimer].id}
         title={timerArray[selTimer].title}
         timerInput={timerArray[selTimer].timerInput}
+        currentTimer={timerArray[selTimer].currentTimer}
+
         displayType='hero'
+        onUpdatedTimer={handleUpdatedTimer}
         setIsShowTimers={setIsShowTimers}
         // eslint-disable-next-line react/jsx-boolean-value
         isSelected={true}

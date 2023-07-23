@@ -32,14 +32,24 @@ const Timers: FC<ITimersProps> = (props) => {
               tabIndex={0}
               onKeyDown={()=>{}}
               >
-              <Timer
+              {/* <Timer
                 title={el.title}
                 timerInput={el.timerInput}
                 displayType='list'
                 setIsShowTimers={{}}
                 isSelected={i===selTimer}
                 triggerTimer={triggerTimer}
-              />
+              /> */}
+
+              {/* Rather than sending text send it as an object */}
+
+              <div style={{display: 'flex', gap: '1rem'}}>
+                <span className={styles.btn} title='Select timer' >
+                  {i===selTimer ? '⦿' : '⦾'}
+                </span>
+                <span>{el.title}</span>
+                <span title={el.timerInput}>{el.currentTimer}</span>
+              </div>
               <br />
 
             </div>

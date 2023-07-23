@@ -2,6 +2,10 @@ Total:
   # bugs:
     ☐ timer still gives switching error
       - as it is a new timer(?) rather than referencing the component it creates and reuses it
+      - fix:
+        - on pause: send 'currentTimer' to parent
+        - on resume: resume from last paused 'currentTimer'
+
 
 
   # important:
@@ -29,9 +33,12 @@ Total:
 
 
   # techstack:
-    ☐ zod
-    ☐ sqlite
     ☐ tRPC(?)
+    ☐ db
+      - postgresql
+      - sqlite
+      ☐ zod
+
 
 
   # refactor:
@@ -52,6 +59,7 @@ Total:
         - show elapsed timer
         - pause / resume
 
+    ☐ double click - pause / resume
     ☐ draggable anywhere
     ☐ timer list draggable
     ☐ time end alert:

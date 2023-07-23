@@ -13,6 +13,7 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
     id: 0,
     title: '',
     timerInput: '',
+    currentTimer: ''
   });
 
   function handleUpdateForm(e:React.ChangeEvent<HTMLInputElement>) {

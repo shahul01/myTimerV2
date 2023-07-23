@@ -2,7 +2,7 @@
 // chat.openai.com/c/516be87e-0adb-4875-acb3-40e3bdd6eab2
 
 
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ITask } from 'renderer/types';
 import styles from './timer.module.css';
 
@@ -10,13 +10,14 @@ interface ITimerProps extends ITask {
   // title: string;
   // timerInput: number | string;
   // isSelected: boolean;
+  onUpdatedTimer: any;
   displayType: 'hero' | 'list';
   setIsShowTimers: React.Dispatch<React.SetStateAction<boolean>>;
   triggerTimer: number;
 };
 
 const Timer: FC<ITimerProps> = (
-  {title, timerInput, isSelected, displayType, setIsShowTimers, triggerTimer}
+  {title, timerInput, currentTimer, onUpdatedTimer, isSelected, displayType, setIsShowTimers, triggerTimer}
   ) => {
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
@@ -33,7 +34,7 @@ const Timer: FC<ITimerProps> = (
   };
 
   const totalDeciSeconds = useRef<number>(
-    getTimeInSeconds(timerInput) * 10
+    getTimeInSeconds(currentTimer) * 10
   );
 
   const getTimeComponents = (totalSeconds: number): number[] => (
@@ -60,12 +61,17 @@ const Timer: FC<ITimerProps> = (
     // return outputTime;
   }
 
-  const pauseCountdown = (): void => {
+  const pauseCountdown = useCallback(():void => {
     // Question: right way?
     if (!countdown.current) return;
+
     clearInterval(countdown.current);
+    console.log(`pause: `, outputTime);
+    onUpdatedTimer(outputTime);
+
     setTimerState('paused');
-  };
+
+  }, [onUpdatedTimer, outputTime]);
 
   const stopCountdown = (): void => {
     // Question: right way?
@@ -74,21 +80,22 @@ const Timer: FC<ITimerProps> = (
     setTimerState('stopped');
   };
 
-  function updateCountdown() {
+  function resumeCountdown():void {
 
-    getFormattedFullTime();
-    // console.log('mainFn', timerState);
+    function updateCountdown() {
 
-    // the update..
-    totalDeciSeconds.current -= 1;
-    if (totalDeciSeconds.current < 0) {
-      console.log(title, 'done');
-      stopCountdown();
+      getFormattedFullTime();
+      // console.log('mainFn', timerState);
+
+      // the update..
+      totalDeciSeconds.current -= 1;
+      if (totalDeciSeconds.current < 0) {
+        console.log(title, 'done');
+        stopCountdown();
+      };
+
     };
 
-  };
-
-  function resumeCountdown():void {
     countdown.current = setInterval(updateCountdown, 100);
     setTimerState('resumed');
   };
@@ -118,7 +125,7 @@ const Timer: FC<ITimerProps> = (
   };
 
   useEffect(() => {
-    if (timerInput) {
+    if (currentTimer) {
       getFormattedFullTime()
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,7 +146,7 @@ const Timer: FC<ITimerProps> = (
   useEffect(() => {
 
     if (!isSelected) pauseCountdown();
-  }, [isSelected]);
+  }, [isSelected, pauseCountdown]);
 
 
   return (
