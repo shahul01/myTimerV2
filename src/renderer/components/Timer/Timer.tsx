@@ -22,8 +22,11 @@ const Timer: FC<ITimerProps> = (
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
   const firstLoad = useRef(true);
-  const [ outputTime, setOutputTime ] = useState('');
-  const [ timerState, setTimerState ] = useState<TTimerState>('paused');
+  // state for synchronous / immediate update
+  const [ outputTime, setOutputTime ] = useState(`${currentTimer}`);
+  // ref for remembering data when unmounting
+  const outputTimeRef = useRef(`${currentTimer}`);
+  const timerState = useRef<TTimerState>('paused');
   // const [ isClickedTimer, setIsClickedTimer ] = useState('false');
   const [ triggerClickedTimer, setTriggerClickedTimer ] = useState(0);
   const countdown = useRef<NodeJS.Timeout>();
@@ -49,47 +52,54 @@ const Timer: FC<ITimerProps> = (
     component.toString().padStart(2, '0')
   );
 
-  function getFormattedFullTime() {
+  function getFormattedFullTime():string {
+    if (timerState.current === 'paused') return '';
     const totalSeconds = Math.floor(totalDeciSeconds.current / 10);
     const [ h, min, sec ] = getTimeComponents(totalSeconds);
     const deciSec = Math.floor(totalDeciSeconds.current % 10);
 
-    setOutputTime(
-      `${formatTime(h)}:${formatTime(min)}:${formatTime(sec)}.${deciSec}`
-    );
+    const formattedTime = `${formatTime(h)}:${formatTime(min)}:${formatTime(sec)}.${deciSec}`;
+    // console.log(`formattedTime: `, formattedTime);
 
-    // return outputTime;
-  }
+    return formattedTime;
+  };
 
   const pauseCountdown = useCallback(():void => {
     // Question: right way?
-    if (!countdown.current) return;
+    if (!countdown?.current) return;
+
+    // send updatedTimer to parent
+    onUpdatedTimer(outputTimeRef.current);
 
     clearInterval(countdown.current);
-    console.log(`pause: `, outputTime);
-    onUpdatedTimer(outputTime);
+    // console.log(`pause ${title}: `, outputTimeRef.current);
 
-    setTimerState('paused');
+    timerState.current = 'paused';
 
-  }, [onUpdatedTimer, outputTime]);
+  }, [onUpdatedTimer]);
 
   const stopCountdown = (): void => {
     // Question: right way?
     if (!countdown.current) return;
     clearInterval(countdown.current);
-    setTimerState('stopped');
+    timerState.current = 'stopped';
   };
 
   function resumeCountdown():void {
 
     function updateCountdown() {
-
-      getFormattedFullTime();
       // console.log('mainFn', timerState);
 
-      // the update..
+      timerState.current = 'resumed';
+      const formattedTime = getFormattedFullTime();
+
+      // update state to current value
+      outputTimeRef.current = formattedTime;
+      setOutputTime(formattedTime);
+
+      // run timer..
       totalDeciSeconds.current -= 1;
-      if (totalDeciSeconds.current < 0) {
+      if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
         stopCountdown();
       };
@@ -97,11 +107,10 @@ const Timer: FC<ITimerProps> = (
     };
 
     countdown.current = setInterval(updateCountdown, 100);
-    setTimerState('resumed');
   };
 
   function handleToggleTimerState() {
-    if (timerState === 'paused') resumeCountdown();
+    if (timerState.current === 'paused') resumeCountdown();
     else pauseCountdown();
   };
 
@@ -125,9 +134,33 @@ const Timer: FC<ITimerProps> = (
   };
 
   useEffect(() => {
+
+    // const new2 = outputTimeRef.current;
+    // const new3 = outputTime;
+
+    return () => {
+      // const new1 = getFormattedFullTime();
+      // console.log('unmounting',
+      //   JSON.stringify(
+      //     { isSelected, new1Val: new1, new2, new3 }
+      //     , null, 2
+      //   )
+      // );
+
+      // onUpdatedTimer(outputTimeRef.current);
+      pauseCountdown();
+    }
+  }, [pauseCountdown])
+
+  useEffect(() => {
     if (currentTimer) {
-      getFormattedFullTime()
+      getFormattedFullTime();
     };
+
+    // return () => {
+    //   pauseCountdown();
+    // };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -144,9 +177,9 @@ const Timer: FC<ITimerProps> = (
   }, [triggerTimer])
 
   useEffect(() => {
+    setOutputTime(outputTimeRef.current);
 
-    if (!isSelected) pauseCountdown();
-  }, [isSelected, pauseCountdown]);
+  }, []);
 
 
   return (

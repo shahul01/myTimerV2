@@ -54,9 +54,9 @@ const Main = () => {
   }, []);
 
   const handleUpdatedTimer = useCallback((currUpdatedTimer) => {
-    console.log(`e: `, currUpdatedTimer);
+    // console.log(`e: `, currUpdatedTimer);
     timerArray[selTimer].currentTimer = currUpdatedTimer;
-    console.log(`timerArray: `, timerArray);
+    // console.log(`timerArray: `, timerArray);
   }, [selTimer, timerArray]);
 
   return (

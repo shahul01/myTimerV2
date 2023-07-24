@@ -153,6 +153,9 @@ const configuration: webpack.Configuration = {
 
   // @ts-ignore
   devServer: {
+    client: {
+      logging: 'none'
+    },
     port,
     compress: true,
     hot: true,
