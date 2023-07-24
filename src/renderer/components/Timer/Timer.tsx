@@ -134,23 +134,16 @@ const Timer: FC<ITimerProps> = (
   };
 
   useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+    } else {
+      if (isSelected) {
+        handleToggleTimerState();
+      };
+    };
 
-    // const new2 = outputTimeRef.current;
-    // const new3 = outputTime;
-
-    return () => {
-      // const new1 = getFormattedFullTime();
-      // console.log('unmounting',
-      //   JSON.stringify(
-      //     { isSelected, new1Val: new1, new2, new3 }
-      //     , null, 2
-      //   )
-      // );
-
-      // onUpdatedTimer(outputTimeRef.current);
-      pauseCountdown();
-    }
-  }, [pauseCountdown])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triggerTimer]);
 
   useEffect(() => {
     if (currentTimer) {
@@ -165,21 +158,12 @@ const Timer: FC<ITimerProps> = (
   }, []);
 
   useEffect(() => {
-    if (firstLoad.current) {
-      firstLoad.current = false;
-    } else {
-      if (isSelected) {
-        handleToggleTimerState();
-      };
 
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerTimer])
+    return () => {
+      pauseCountdown();
+    };
 
-  useEffect(() => {
-    setOutputTime(outputTimeRef.current);
-
-  }, []);
+  }, [pauseCountdown]);
 
 
   return (
