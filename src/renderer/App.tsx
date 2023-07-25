@@ -59,6 +59,7 @@ const Main = () => {
     // console.log(`timerArray: `, timerArray);
   }, [selTimer, timerArray]);
 
+
   return (
     <div
       className='main'
@@ -139,6 +140,7 @@ const Main = () => {
     </div>
   );
 };
+
 
 export default function App() {
   return (

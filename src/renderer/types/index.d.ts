@@ -9,7 +9,7 @@ export interface ITask {
   timerInput: string;
   currentTimer: string;
 
-  type?: 'stopwatch' | 'timer';
+  type?: 'clock' | 'stopwatch' | 'timer';
   isSelected?: boolean;
   switchedCount?: number;
   timeSpent?: number;

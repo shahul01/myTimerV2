@@ -43,7 +43,9 @@ const Timers: FC<ITimersProps> = (props) => {
 
               {/* Rather than sending text send it as an object */}
 
-              <div style={{display: 'flex', gap: '1rem'}}>
+              <div
+                  className={styles['curr-timer']}
+                >
                 <span className={styles.btn} title='Select timer' >
                   {i===selTimer ? '⦿' : '⦾'}
                 </span>

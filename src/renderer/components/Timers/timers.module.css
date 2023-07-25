@@ -4,3 +4,11 @@
 .timer-wrapper {
   max-height: 1.2rem;
 }
+
+.curr-timer {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-selct: none;
+}
