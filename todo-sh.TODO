@@ -95,6 +95,11 @@ Total:
 
 
   # Docs:
+    ☐ audio
+      - https://www.google.com/search?q=webpack+mp3+use+an+appropraite+loader
+      - https://codesandbox.io/s/reactplaysound-p47gk?file=/src/index.js
+      - https://stackoverflow.com/questions/47686345/playing-sound-in-react-js
+      - https://codesandbox.io/s/react-simple-audio-player-forked-kw98q?file=/src/index.js
 
 
 

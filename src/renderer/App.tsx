@@ -26,8 +26,8 @@ const Main = () => {
     {
       id: 1,
       title: 'Timer 1',
-      timerInput: '00:32:00',
-      currentTimer: '00:32:00'
+      timerInput: '00:00:01',
+      currentTimer: '00:00:01'
     },
     {
       id: 2,

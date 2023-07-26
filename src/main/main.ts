@@ -32,8 +32,10 @@ const userSettings = {
   version: '1.0.0',
   appSize: {
     sticky: {
-      hideTimers: { height: 118, width: 174 },
-      showTimers: { height: 370, width: 174 }
+      hideTimers: { height: 600, width: 800 },
+      showTimers: { height: 600, width: 800 }
+      // hideTimers: { height: 118, width: 174 },
+      // showTimers: { height: 370, width: 174 }
     },
   }
 

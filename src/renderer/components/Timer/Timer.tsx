@@ -5,6 +5,8 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ITask } from 'renderer/types';
 import styles from './timer.module.css';
+import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
+// 4000mHz-2400mSec
 
 interface ITimerProps extends ITask {
   // title: string;
@@ -30,6 +32,7 @@ const Timer: FC<ITimerProps> = (
   // const [ isClickedTimer, setIsClickedTimer ] = useState('false');
   const [ triggerClickedTimer, setTriggerClickedTimer ] = useState(0);
   const countdown = useRef<NodeJS.Timeout>();
+  const endAudio = new Audio(simpleBeep);
 
   const getTimeInSeconds = (time: string): number => {
     const [ hours, minutes, seconds ] = time.split(':').map(Number);
@@ -101,6 +104,7 @@ const Timer: FC<ITimerProps> = (
       totalDeciSeconds.current -= 1;
       if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
+        endAudio.play();
         stopCountdown();
       };
 
