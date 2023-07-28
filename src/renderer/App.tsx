@@ -32,8 +32,8 @@ const Main = () => {
     {
       id: 2,
       title: 'Timer 2',
-      timerInput: '00:27:03',
-      currentTimer: '00:27:03'
+      timerInput: '00:00:03',
+      currentTimer: '00:00:03'
     },
   ]);
   const [ selTimer, setSelTimer ] = useState(0);

@@ -36,7 +36,8 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
   function handleSubmit() {
     const newForm:ITask = {
       ...addForm,
-      id: timerArrayLength + 1
+      id: timerArrayLength + 1,
+      currentTimer: addForm.timerInput
     };
 
     onAddTimer(newForm);
