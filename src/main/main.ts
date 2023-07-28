@@ -12,7 +12,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -50,6 +50,13 @@ function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
 
 // ipc
 
+// TODO: make these event name a constant
+ipcMain.on('ipc-example', async (event, arg) => {
+  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+  console.log(msgTemplate(arg));
+  event.reply('ipc-example', msgTemplate('pong'));
+});
+
 ipcMain.on(
   'handle-sticky-hover',
   (e, arg:boolean) => {
@@ -60,11 +67,30 @@ ipcMain.on(
   }
 );
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+// TODO: move this to a folder common to main and renderer so both can get type
+interface ITimerEnd {
+  e: Electron.IpcMainEvent;
+  arg: {
+    taskTitle: string;
+    timeSpent?: string;
+  };
+};
+ipcMain.on(
+  'handle-timer-end',
+  (e, arg) => {
+
+    // TODO: modularise this function
+    if (!mainWindow) return ;
+    dialog.showMessageBox(
+      mainWindow,
+      {
+        title: 'myTimer',
+        message: `Timer for Task ${arg.taskTitle} is done`
+      }
+    );
+
+  }
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -124,7 +150,9 @@ const createWindow = async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
+
       mainWindow.show();
+
     }
   });
 

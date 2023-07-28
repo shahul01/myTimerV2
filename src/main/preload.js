@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
+
     myPing() {
       ipcRenderer.send('ipc-example', 'ping');
     },
@@ -10,6 +11,12 @@ contextBridge.exposeInMainWorld('electron', {
     handleStickyHover(arg) {
       ipcRenderer.send('handle-sticky-hover', arg);
     },
+
+    // timer end
+    handleTimerEnd(arg) {
+      ipcRenderer.send('handle-timer-end', arg);
+    },
+
 
     on(channel, func) {
       const validChannels = ['ipc-example'];

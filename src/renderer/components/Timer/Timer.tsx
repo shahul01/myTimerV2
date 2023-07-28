@@ -90,6 +90,10 @@ const Timer: FC<ITimerProps> = (
 
   function resumeCountdown():void {
 
+    function handleTimerEndElectron(arg:any) {
+      return window.electron?.ipcRenderer?.handleTimerEnd(arg);
+    };
+
     function updateCountdown() {
       // console.log('mainFn', timerState);
 
@@ -104,6 +108,7 @@ const Timer: FC<ITimerProps> = (
       totalDeciSeconds.current -= 1;
       if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
+        handleTimerEndElectron({taskTitle: title});
         endAudio.play();
         stopCountdown();
       };
