@@ -17,8 +17,11 @@ body {
   font-family: Tahoma, Verdana, Arial, sans-serif;
 }
 
-/* body {
-} */
+/* body {} */
+
+#root {
+  height: 100%;
+}
 
 a {
   color: inherit;
@@ -44,9 +47,9 @@ button {
   user-select: none;
 }
 
-.App {
-  font-family: sans-serif;
-  text-align: center;
+.main {
+  height: 100%;
+  /* background-color: hsl(269deg 39% 41%); */
 }
 
 .timerWrapper {
