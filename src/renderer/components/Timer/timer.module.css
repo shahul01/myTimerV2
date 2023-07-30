@@ -2,7 +2,6 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  font-size: 2rem;
 }
 
 .hero .title-bar {
@@ -15,6 +14,14 @@
 }
 
 .hero .body {
+  outline: none;
+  margin: 0.125rem 0;
+  width: 7.5 rem;
+  /* text-align: left; */
+  /* font-family: 'Courier', monospace; */
+  font-family: 'Chivo Mono';
+  font-size: 1.45rem;
+  /* font-weight: bold; */
   cursor: pointer;
   user-select: none;
 }

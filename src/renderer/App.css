@@ -2,6 +2,10 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
 */
+
+/* TODO: Remove unused fonts */
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;700&family=B612+Mono:wght@400;700&family=Chivo+Mono:wght@400;500;700&display=swap');
+
 :root {
   --example: #ccc;
   --color-white-fade: hsl(0deg 0% 93% / 0%);
@@ -49,7 +53,7 @@ button {
 
 .main {
   height: 100%;
-  /* background-color: hsl(269deg 39% 41%); */
+  background-color: hsl(249deg 11% 17%);
 }
 
 .timerWrapper {

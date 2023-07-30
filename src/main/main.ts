@@ -34,8 +34,8 @@ const userSettings = {
     sticky: {
       // hideTimers: { height: 600, width: 800 },
       // showTimers: { height: 600, width: 800 }
-      hideTimers: { height: 57, width: 154 },
-      showTimers: { height: 370, width: 154 }
+      hideTimers: { height: 48, width: 140 },
+      showTimers: { height: 250, width: 140 }
     },
   }
 
