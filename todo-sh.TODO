@@ -22,9 +22,9 @@ Total:
 
 
   # design:
-    ☐ no window titlebar
+    ✔ no window titlebar @done(23-07-31 14:13)
     ☐ to timer lists:
-      ☐ update height dynamically depending on timer list length, then after say, 5 timers,
+      ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
     ☐ size
       ☐ resizable
@@ -97,10 +97,6 @@ Total:
 
   # Docs:
     ☐ audio
-      - https://www.google.com/search?q=webpack+mp3+use+an+appropraite+loader
-      - https://codesandbox.io/s/reactplaysound-p47gk?file=/src/index.js
-      - https://stackoverflow.com/questions/47686345/playing-sound-in-react-js
-      - https://codesandbox.io/s/react-simple-audio-player-forked-kw98q?file=/src/index.js
 
 
 

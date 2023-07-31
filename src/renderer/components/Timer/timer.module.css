@@ -17,6 +17,7 @@
   outline: none;
   margin: 0.125rem 0;
   width: 7.5 rem;
+  color: hsl(0deg, 0%, 92%);
   /* text-align: left; */
   /* font-family: 'Courier', monospace; */
   font-family: 'Chivo Mono';
@@ -26,6 +27,7 @@
   user-select: none;
 }
 
+/* Not used */
 .list {
   font-size: 0.9rem;
   cursor: pointer;
@@ -36,5 +38,4 @@
 }
 
 .selected {
-  display: none;
 }

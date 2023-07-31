@@ -208,11 +208,11 @@ const Timer: FC<ITimerProps> = (
           ) : (
             // TODO: Make this a component
             <div className={styles.list}>
-              <span className={styles.btn} title='Select timer' >
+              {/* <span className={styles.btn} title='Select timer' >
                 {isSelected ? '⦿' : '⦾'}
               </span>
               <span>{title}: </span>
-              <span>{outputTime}</span>
+              <span>{outputTime}</span> */}
 
             </div>
           )

@@ -3,12 +3,27 @@
 
 .timer-wrapper {
   max-height: 1.2rem;
+  overflow-y: auto;
+
+  /* TODO: Add custom scrollbar here */
 }
 
-.curr-timer {
+.timer {
   display: flex;
-  gap: 1rem;
-  font-size: 0.9rem;
+  justify-content: space-between;
+  /* align-items: center; */
+  gap: 0.25rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  user-selct: none;
+}
+
+.timer .title {
+  /* align-self: left; */
+  text-align: left;
+  overflow: hidden;
+  /* margin-right: 0.25rem; */
+}
+
+.timer .button {
+  user-select: none;
 }
