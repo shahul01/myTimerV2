@@ -36,17 +36,19 @@ const Timers: FC<ITimersProps> = (props) => {
 
 
               <div className={styles.timer} >
-                <span
-                    className={styles.button}
-                    title='Select timer'
-                  >
-                    {i===selTimer ? '⦿' : '⦾'}
-                </span>
-                <span
-                    className={styles.title}
-                    title={currTimer.title}
-                  >
-                  {currTimer.title}
+                <span className={styles['button-title']}>
+                  <span
+                      className={styles.button}
+                      title='Select timer'
+                    >
+                      {i===selTimer ? '⦿' : '⦾'}
+                  </span>
+                  <span
+                      className={styles.title}
+                      title={currTimer.title}
+                    >
+                    {currTimer.title}
+                  </span>
                 </span>
                 <span
                     className={styles.timerText}
