@@ -1,11 +1,19 @@
 .timers {
+  max-height: 6.4rem;
+  overflow-y: auto;
+}
+
+div.timers::-webkit-scrollbar {
+  width: 12px;
+}
+
+div.timers::-webkit-scrollbar-thumb {
+  border: 2px solid hsla(0, 0%, 50%, 0.6);
+  border-radius: 20px;
 }
 
 .timer-wrapper {
   max-height: 1.2rem;
-  overflow-y: auto;
-
-  /* TODO: Add custom scrollbar here */
 }
 
 .timer {

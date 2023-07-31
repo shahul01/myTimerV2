@@ -8,6 +8,7 @@
   -webkit-app-region: drag;
   border: 1px solid gray;
   border-top: none;
+  padding: 0 0.125rem;
   font-size: 0.75rem;
   /* cursor: move; */
   user-select: none;
