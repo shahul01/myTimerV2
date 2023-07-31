@@ -5,16 +5,18 @@ import styles from './addTimer.module.css';
 interface IAddTimerProps {
   timerArrayLength: number;
   onAddTimer: (newTimerData: any) => void;
-}
+};
+
+const initTimer = {
+  id: 0,
+  title: '',
+  timerInput: '01:00:00',
+  currentTimer: '01:00:00'
+};
 
 const AddTimer: FC<IAddTimerProps> = (props) => {
   const { timerArrayLength, onAddTimer  } = props;
-  const [ addForm, setAddForm ] = useState<ITask>({
-    id: 0,
-    title: '',
-    timerInput: '',
-    currentTimer: ''
-  });
+  const [ addForm, setAddForm ] = useState<ITask>(initTimer);
 
   function handleUpdateForm(e:React.ChangeEvent<HTMLInputElement>) {
     setAddForm({
@@ -41,7 +43,8 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
     };
 
     onAddTimer(newForm);
-    return resetForm(setAddForm);
+    // return resetForm(setAddForm);
+    return setAddForm(initTimer);
   };
 
   return (
@@ -53,7 +56,7 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
         onChange={e=>handleUpdateForm(e)}
       />
       <input
-        placeholder='07:59:59'
+        placeholder='01:00:00'
         name='timerInput'
         value={addForm.timerInput}
         onChange={e=>handleUpdateForm(e)}

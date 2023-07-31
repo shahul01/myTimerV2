@@ -18,10 +18,8 @@
 }
 
 .timer .title {
-  /* align-self: left; */
   text-align: left;
   overflow: hidden;
-  /* margin-right: 0.25rem; */
 }
 
 .timer .button {
