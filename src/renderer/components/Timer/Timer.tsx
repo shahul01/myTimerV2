@@ -2,30 +2,37 @@
 // chat.openai.com/c/516be87e-0adb-4875-acb3-40e3bdd6eab2
 
 
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ITask } from 'renderer/types';
 import styles from './timer.module.css';
+import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
+// 4000mHz-2400mSec
 
 interface ITimerProps extends ITask {
   // title: string;
   // timerInput: number | string;
   // isSelected: boolean;
+  onUpdatedTimer: any;
   displayType: 'hero' | 'list';
   setIsShowTimers: React.Dispatch<React.SetStateAction<boolean>>;
   triggerTimer: number;
 };
 
 const Timer: FC<ITimerProps> = (
-  {title, timerInput, isSelected, displayType, setIsShowTimers, triggerTimer}
+  {title, timerInput, currentTimer, onUpdatedTimer, isSelected, displayType, setIsShowTimers, triggerTimer}
   ) => {
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
   const firstLoad = useRef(true);
-  const [ outputTime, setOutputTime ] = useState('');
-  const [ timerState, setTimerState ] = useState<TTimerState>('paused');
+  // state for synchronous / immediate update
+  const [ outputTime, setOutputTime ] = useState(`${currentTimer}`);
+  // ref for remembering data when unmounting
+  const outputTimeRef = useRef(`${currentTimer}`);
+  const timerState = useRef<TTimerState>('paused');
   // const [ isClickedTimer, setIsClickedTimer ] = useState('false');
   const [ triggerClickedTimer, setTriggerClickedTimer ] = useState(0);
   const countdown = useRef<NodeJS.Timeout>();
+  const endAudio = new Audio(simpleBeep);
 
   const getTimeInSeconds = (time: string): number => {
     const [ hours, minutes, seconds ] = time.split(':').map(Number);
@@ -33,7 +40,7 @@ const Timer: FC<ITimerProps> = (
   };
 
   const totalDeciSeconds = useRef<number>(
-    getTimeInSeconds(timerInput) * 10
+    getTimeInSeconds(currentTimer) * 10
   );
 
   const getTimeComponents = (totalSeconds: number): number[] => (
@@ -48,53 +55,71 @@ const Timer: FC<ITimerProps> = (
     component.toString().padStart(2, '0')
   );
 
-  function getFormattedFullTime() {
+  function getFormattedFullTime():string {
+    if (timerState.current === 'paused') return '';
     const totalSeconds = Math.floor(totalDeciSeconds.current / 10);
     const [ h, min, sec ] = getTimeComponents(totalSeconds);
     const deciSec = Math.floor(totalDeciSeconds.current % 10);
 
-    setOutputTime(
-      `${formatTime(h)}:${formatTime(min)}:${formatTime(sec)}.${deciSec}`
-    );
+    const formattedTime = `${formatTime(h)}:${formatTime(min)}:${formatTime(sec)}.${deciSec}`;
+    // console.log(`formattedTime: `, formattedTime);
 
-    // return outputTime;
-  }
-
-  const pauseCountdown = (): void => {
-    // Question: right way?
-    if (!countdown.current) return;
-    clearInterval(countdown.current);
-    setTimerState('paused');
+    return formattedTime;
   };
+
+  const pauseCountdown = useCallback(():void => {
+    // Question: right way?
+    if (!countdown?.current) return;
+
+    // send updatedTimer to parent
+    onUpdatedTimer(outputTimeRef.current);
+
+    clearInterval(countdown.current);
+    // console.log(`pause ${title}: `, outputTimeRef.current);
+
+    timerState.current = 'paused';
+
+  }, [onUpdatedTimer]);
 
   const stopCountdown = (): void => {
     // Question: right way?
     if (!countdown.current) return;
     clearInterval(countdown.current);
-    setTimerState('stopped');
-  };
-
-  function updateCountdown() {
-
-    getFormattedFullTime();
-    // console.log('mainFn', timerState);
-
-    // the update..
-    totalDeciSeconds.current -= 1;
-    if (totalDeciSeconds.current < 0) {
-      console.log(title, 'done');
-      stopCountdown();
-    };
-
+    timerState.current = 'stopped';
   };
 
   function resumeCountdown():void {
+
+    function handleTimerEndElectron(arg:any) {
+      return window.electron?.ipcRenderer?.handleTimerEnd(arg);
+    };
+
+    function updateCountdown() {
+      // console.log('mainFn', timerState);
+
+      timerState.current = 'resumed';
+      const formattedTime = getFormattedFullTime();
+
+      // update state to current value
+      outputTimeRef.current = formattedTime;
+      setOutputTime(formattedTime);
+
+      // run timer..
+      totalDeciSeconds.current -= 1;
+      if (totalDeciSeconds.current <= 0) {
+        console.log(title, 'done');
+        handleTimerEndElectron({taskTitle: title});
+        endAudio.play();
+        stopCountdown();
+      };
+
+    };
+
     countdown.current = setInterval(updateCountdown, 100);
-    setTimerState('resumed');
   };
 
   function handleToggleTimerState() {
-    if (timerState === 'paused') resumeCountdown();
+    if (timerState.current === 'paused') resumeCountdown();
     else pauseCountdown();
   };
 
@@ -118,28 +143,36 @@ const Timer: FC<ITimerProps> = (
   };
 
   useEffect(() => {
-    if (timerInput) {
-      getFormattedFullTime()
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (firstLoad.current) {
       firstLoad.current = false;
     } else {
       if (isSelected) {
         handleToggleTimerState();
       };
+    };
 
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerTimer])
+  }, [triggerTimer]);
+
+  useEffect(() => {
+    if (currentTimer) {
+      getFormattedFullTime();
+    };
+
+    // return () => {
+    //   pauseCountdown();
+    // };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
 
-    if (!isSelected) pauseCountdown();
-  }, [isSelected]);
+    return () => {
+      pauseCountdown();
+    };
+
+  }, [pauseCountdown]);
 
 
   return (
@@ -175,11 +208,11 @@ const Timer: FC<ITimerProps> = (
           ) : (
             // TODO: Make this a component
             <div className={styles.list}>
-              <span className={styles.btn} title='Select timer' >
+              {/* <span className={styles.btn} title='Select timer' >
                 {isSelected ? '⦿' : '⦾'}
               </span>
               <span>{title}: </span>
-              <span>{outputTime}</span>
+              <span>{outputTime}</span> */}
 
             </div>
           )

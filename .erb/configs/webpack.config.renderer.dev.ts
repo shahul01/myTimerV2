@@ -94,6 +94,11 @@ const configuration: webpack.Configuration = {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
       },
+      // Audio
+      {
+        test: /\.(mp3)$/i,
+        type: 'asset/resource'
+      }
     ],
   },
   plugins: [
@@ -153,6 +158,9 @@ const configuration: webpack.Configuration = {
 
   // @ts-ignore
   devServer: {
+    client: {
+      logging: 'none'
+    },
     port,
     compress: true,
     hot: true,

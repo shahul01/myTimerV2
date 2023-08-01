@@ -1,7 +1,11 @@
 Total:
   # bugs:
-    ☐ timer still gives switching error
+    ✔ timer still gives switching error @done(23-07-23 12:38)
       - as it is a new timer(?) rather than referencing the component it creates and reuses it
+      - fix:
+        - on pause: send 'currentTimer' to parent
+        - on resume: resume from last paused 'currentTimer'
+    ☐ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
 
 
   # important:
@@ -18,9 +22,9 @@ Total:
 
 
   # design:
-    ☐ no window titlebar
+    ✔ no window titlebar @done(23-07-31 14:13)
     ☐ to timer lists:
-      ☐ update height dynamically depending on timer list length, then after say, 5 timers,
+      ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
     ☐ size
       ☐ resizable
@@ -29,9 +33,12 @@ Total:
 
 
   # techstack:
-    ☐ zod
-    ☐ sqlite
     ☐ tRPC(?)
+    ☐ db
+      - postgresql
+      - sqlite
+      ☐ zod
+
 
 
   # refactor:
@@ -52,15 +59,20 @@ Total:
         - show elapsed timer
         - pause / resume
 
+    ☐ stopwatch:
+      ☐ multiples in list just like timers but with stopwatch
+
+
     ☐ draggable anywhere
     ☐ timer list draggable
+    ☐ remember position on screen and monitor
     ☐ time end alert:
-      ☐ beep
-      ☐ message dialog box
+      ✔ beep @done(23-08-01 20:20)
+      ✔ message dialog box @done(23-08-01 20:20)
       ☐ reverse countdown
     ☐ heatmap
 
-
+    ☐ testing
 
 
   # performance:
@@ -68,7 +80,15 @@ Total:
 
 
   # security:
+    ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
+        Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+        this app to unnecessary security risks.
 
+      For more information and help, consult
+      https://electronjs.org/docs/tutorial/security.
+      This warning will not show up
+      once the app is packaged.
+    ☐ Replace any type
 
 
   # misc:

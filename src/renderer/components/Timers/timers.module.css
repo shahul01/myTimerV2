@@ -1,6 +1,36 @@
 .timers {
+  max-height: 6.4rem;
+  overflow-y: auto;
+}
+
+div.timers::-webkit-scrollbar {
+  width: 12px;
+}
+
+div.timers::-webkit-scrollbar-thumb {
+  border: 2px solid hsla(0, 0%, 50%, 0.6);
+  border-radius: 20px;
 }
 
 .timer-wrapper {
   max-height: 1.2rem;
+}
+
+.timer {
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.timer .title {
+  text-align: left;
+  overflow: hidden;
+}
+
+.timer .button {
+  user-select: none;
+  margin-right: 0.25rem;
 }
