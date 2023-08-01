@@ -25,7 +25,7 @@ const Main = () => {
   const [ timerArray, setTimerArray ] = useState<ITask[]>([
     {
       id: 1,
-      title: 'Timer 1',
+      title: 'myTimer1',
       timerInput: '00:51:01',
       currentTimer: '00:51:01'
     },

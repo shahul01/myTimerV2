@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IObject, ITask } from 'renderer/types';
+import { ITask } from 'types';
 import styles from './addTimer.module.css';
 
 interface IAddTimerProps {

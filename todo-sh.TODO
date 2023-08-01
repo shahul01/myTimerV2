@@ -67,8 +67,8 @@ Total:
     ☐ timer list draggable
     ☐ remember position on screen and monitor
     ☐ time end alert:
-      ☐ beep
-      ☐ message dialog box
+      ✔ beep @done(23-08-01 20:20)
+      ✔ message dialog box @done(23-08-01 20:20)
       ☐ reverse countdown
     ☐ heatmap
 
@@ -96,7 +96,6 @@ Total:
 
 
   # Docs:
-    ☐ audio
 
 
 

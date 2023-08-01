@@ -1,6 +1,6 @@
 import { render } from 'react-dom';
+import { IObject } from 'types';
 import App from './App';
-import { IObject } from './types';
 
 // TODO: modularize this
 declare global {
