@@ -5,11 +5,11 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { useCallback, useRef, useState } from 'react';
 import Timer from './components/Timer/Timer';
 import TimerButton from './components/TimerButton/TimerButton';
+import Timers from './components/Timers/Timers';
 import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
+// import global from '../types/global';
 import './App.css';
-import { ITask } from './types';
-import Timers from './components/Timers/Timers';
 
 const Main = () => {
 
@@ -22,7 +22,7 @@ const Main = () => {
   //   },
   // ];
 
-  const [ timerArray, setTimerArray ] = useState<ITask[]>([
+  const [ timerArray, setTimerArray ] = useState<App.ITask[]>([
     {
       id: 1,
       title: 'myTimer1',
@@ -49,7 +49,7 @@ const Main = () => {
     setTriggerTimer(p => p + 1);
   }, []);
 
-  const handleAddTimer = useCallback((newTimerData:ITask) => {
+  const handleAddTimer = useCallback((newTimerData:App.ITask) => {
     setTimerArray( prev => [...prev, newTimerData] );
   }, []);
 

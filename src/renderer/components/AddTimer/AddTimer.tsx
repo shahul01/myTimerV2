@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { ITask } from 'types';
+// import { App.ITask } from 'types';
 import styles from './addTimer.module.css';
 
 interface IAddTimerProps {
@@ -16,7 +16,7 @@ const initTimer = {
 
 const AddTimer: FC<IAddTimerProps> = (props) => {
   const { timerArrayLength, onAddTimer  } = props;
-  const [ addForm, setAddForm ] = useState<ITask>(initTimer);
+  const [ addForm, setAddForm ] = useState<App.ITask>(initTimer);
 
   function handleUpdateForm(e:React.ChangeEvent<HTMLInputElement>) {
     setAddForm({
@@ -36,7 +36,7 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
   };
 
   function handleSubmit() {
-    const newForm:ITask = {
+    const newForm:App.ITask = {
       ...addForm,
       id: timerArrayLength + 1,
       currentTimer: addForm.timerInput

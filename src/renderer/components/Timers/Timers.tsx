@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { ITask } from 'renderer/types';
+// import { ITask } from 'renderer/types';
 import Timer from '../Timer/Timer';
 import styles from './timers.module.css';
 
 interface ITimersProps {
-  timerArray: ITask[];
+  timerArray: App.ITask[];
   handleSetSelTimer: (i:number) => void;
   selTimer: number;
   triggerTimer: number;

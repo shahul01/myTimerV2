@@ -3,12 +3,12 @@
 
 
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { ITask } from 'renderer/types';
+// import { ITask } from 'renderer/types';
 import styles from './timer.module.css';
 import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
 // 4000mHz-2400mSec
 
-interface ITimerProps extends ITask {
+interface ITimerProps extends App.ITask {
   // title: string;
   // timerInput: number | string;
   // isSelected: boolean;
