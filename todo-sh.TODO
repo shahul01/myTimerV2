@@ -5,7 +5,7 @@ Total:
       - fix:
         - on pause: send 'currentTimer' to parent
         - on resume: resume from last paused 'currentTimer'
-    ☐ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
+    ✔ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer @done(23-08-02 14:47)
 
 
   # important:
@@ -64,7 +64,12 @@ Total:
 
 
     ☐ draggable anywhere
-    ☐ timer list draggable
+    ☐ timer list drag and droppable
+
+
+
+
+
     ☐ remember position on screen and monitor
     ☐ time end alert:
       ✔ beep @done(23-08-01 20:20)
