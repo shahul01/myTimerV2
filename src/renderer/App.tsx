@@ -1,6 +1,8 @@
 // https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
 
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { httpBatchLink } from '@trpc/client';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { useCallback, useRef, useState } from 'react';
 import Timer from './components/Timer/Timer';
@@ -9,9 +11,16 @@ import Timers from './components/Timers/Timers';
 import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
+import { trpc } from './utils/trpc'
 import './App.css';
 
 const Main = () => {
+
+
+  const greeting = trpc.greeting.useQuery({name: 'Yo2'});
+  console.log(`greeting.data: `, greeting.data);
+
+  // const user = async () => await trpc.userById.query('a')
 
   // const [selectedTask, setSelectedTask] = useState<number>(0);
 
@@ -141,12 +150,32 @@ const Main = () => {
   );
 };
 
+const MainTRPCWrapped = () => {
+  const [ queryClient ] = useState(() => new QueryClient());
+  const [ trpcClient ] = useState(() => (
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: 'http://localhost:2023'
+        })
+      ]
+    })
+  ))
+
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <Main />
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
+};
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/" element={<MainTRPCWrapped />} />
       </Routes>
     </Router>
   );

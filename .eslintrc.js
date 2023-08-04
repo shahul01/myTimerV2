@@ -7,6 +7,14 @@ module.exports = {
     // Since React 17 and typescript 4.1 you can safely disable the rule
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 0,
+    // temp, upgraded TS for tRPC
+    // TODO: enable these rules
+    'no-unused-vars': 'off',
+    'import/extensions': 'off',
+    'no-undef': 'off',
+    'react/function-component-definition': 'off',
+    'react/jsx-filename-extension': 'off',
+    'react/jsx-no-useless-fragment': 'off',
     // [
     //   'error',
     //   {

@@ -93,7 +93,12 @@ Total:
       https://electronjs.org/docs/tutorial/security.
       This warning will not show up
       once the app is packaged.
-    ☐ Replace any type
+    ☐ Replace types:
+      ☐ any type
+      ☐ unknown type
+
+    ☐ turn on recently disabled rules
+      - in .eslintrc.js
 
 
   # misc:
@@ -103,6 +108,7 @@ Total:
   # Docs:
     ☐ trpc
       - https://trpc.io/docs/quickstart
+      - D:\Shahul\test-codes\t3\tRPC\trpc\examples\minimal-react
 
 
 
