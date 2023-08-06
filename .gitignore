@@ -1,3 +1,13 @@
+# Dependency directory
+node_modules
+
+.env
+**/db.sqlite
+# *sh.TODO
+
+
+# misc:
+
 # Logs
 logs
 *.log
@@ -11,10 +21,6 @@ pids
 coverage
 .eslintcache
 
-# Dependency directory
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-node_modules
-
 # OSX
 .DS_Store
 
@@ -27,8 +33,3 @@ npm-debug.log.*
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts
-
-
-
-.env
-Sh.TODO
