@@ -106,9 +106,11 @@ Total:
 
 
   # Docs:
-    ☐ trpc
+    - trpc / prisma
       - https://trpc.io/docs/quickstart
-      - D:\Shahul\test-codes\t3\tRPC\trpc\examples\minimal-react
+      - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
+      - file:///D:/Code/t3/my-t3-5-aug-23
+      - https://github.com/prosepilot/trpc-openapi
 
 
 

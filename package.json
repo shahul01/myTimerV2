@@ -93,12 +93,13 @@
     ]
   },
   "author": {
-    "name": "Sh"
+    "name": "shahul01"
   },
   "keywords": [
     "electron",
     "react",
-    "typescript"
+    "typescript",
+    "tRPC"
   ],
   "jest": {
     "testURL": "http://localhost/",
@@ -177,6 +178,7 @@
     "mini-css-extract-plugin": "^2.7.6",
     "opencollective-postinstall": "^2.0.3",
     "prettier": "^2.8.8",
+    "prisma": "^5.1.1",
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "^2.0.9",
     "react-test-renderer": "^17.0.2",
@@ -198,6 +200,7 @@
     "webpack-merge": "^5.9.0"
   },
   "dependencies": {
+    "@prisma/client": "^5.1.1",
     "@tanstack/react-query": "^4.32.5",
     "@trpc/client": "^10.37.1",
     "@trpc/react-query": "^10.37.1",
