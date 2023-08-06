@@ -81,6 +81,8 @@ Total:
 
 
   # performance:
+    ☐ uninstall
+      ☐ cors and its type
 
 
 
@@ -110,7 +112,10 @@ Total:
       - https://trpc.io/docs/quickstart
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
+
+    - tools:
       - https://github.com/prosepilot/trpc-openapi
+      - https://github.com/mohammed-bahumaish/prisma-editor
 
 
 

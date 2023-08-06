@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 
+
 // Important: Fixing Prisma Errors
 // run `npx prisma generate` // to use prisma
 // run `npx prisma db push` // to create db w/ tables
