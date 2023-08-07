@@ -79,6 +79,9 @@ Total:
 
     ☐ testing
 
+  # offline:
+    ☐ save fonts locally
+
 
   # performance:
     ☐ uninstall
@@ -109,6 +112,9 @@ Total:
 
 
   # Docs:
+    - ~best practices:
+      - file:///D:/Shahul/test-codes/fullstack/t3/chirp
+
     - trpc / prisma
       - https://trpc.io/docs/quickstart
       - https://trpc.io/docs/server/adapters/express

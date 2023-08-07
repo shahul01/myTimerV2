@@ -100,12 +100,17 @@ const Timer: FC<ITimerProps> = (
       timerState.current = 'resumed';
       const formattedTime = getFormattedFullTime();
 
+      // NOTE: Core timer code start --
+
       // update state to current value
       outputTimeRef.current = formattedTime;
       setOutputTime(formattedTime);
 
-      // run timer..
+      // IMPORTANT: run timer..
       totalDeciSeconds.current -= 1;
+
+      // NOTE: -- Core timer code end
+
       if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
         handleTimerEndElectron({taskTitle: title});

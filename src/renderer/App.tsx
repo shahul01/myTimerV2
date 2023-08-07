@@ -4,7 +4,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Timer from './components/Timer/Timer';
 import TimerButton from './components/TimerButton/TimerButton';
 import Timers from './components/Timers/Timers';
@@ -13,24 +13,22 @@ import AddTimer from './components/AddTimer/AddTimer';
 // import global from '../types/global';
 import { api } from './utils/trpc';
 import './App.css';
+import { stringify } from './utils/misc';
 
 const Main = () => {
 
 
-  const greeting = api.example.greeting.useQuery({name: 'Yo2'});
-  console.log(`greeting.data: `, greeting.data);
-  const id = api.example.idGetAll.useQuery();
-  console.log(`id?.data: `, id?.data);
+  // const greeting = api.example.greeting.useQuery({name: 'Yo2'});
+  // console.log(`greeting.data: `, greeting.data);
+  // const id = api.example.idGetAll.useQuery();
+  // console.log(`id?.data: `, stringify(id?.data));
+  const newTimerArray = api.task.getAllTasks.useQuery();
+  // console.log(`newTimerArray: `, stringify(newTimerArray.data));
 
   // const user = async () => await trpc.userById.query('a')
-
   // const [selectedTask, setSelectedTask] = useState<number>(0);
-
   // const tasks: ITask[] = [
-  //   {
-  //     title: 'React',
-  //     timeLeft: '08:59:59',
-  //   },
+  //   { title: 'React', timeLeft: '08:59:59' },
   // ];
 
   const [ timerArray, setTimerArray ] = useState<App.ITask[]>([
@@ -65,9 +63,12 @@ const Main = () => {
   }, []);
 
   const handleUpdatedTimer = useCallback((currUpdatedTimer) => {
-    // console.log(`e: `, currUpdatedTimer);
+
+    // NOTE: currentTimer gets updated here
     timerArray[selTimer].currentTimer = currUpdatedTimer;
-    // console.log(`timerArray: `, timerArray);
+
+    // TODO: use TRPC useMutation to update time on db.
+
   }, [selTimer, timerArray]);
 
 
@@ -160,14 +161,6 @@ const MainTRPCWrapped = () => {
         httpBatchLink({
           // TODO: remove hard code
           url: 'http://localhost:9000/api/v1',
-          fetch(url, options) {
-            return fetch(url, {
-              ...options,
-              // to enable cookies
-              // credentials: 'include',
-            })
-          }
-
         })
       ]
     })
