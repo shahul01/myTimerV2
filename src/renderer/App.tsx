@@ -1,6 +1,3 @@
-// https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
-
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
@@ -70,6 +67,10 @@ const Main = () => {
     setTimerArray( prev => [...prev, newTimerData] );
   }, []);
 
+  function handleToggleMoreOptions() {
+
+  };
+
   const handleUpdatedTimer = useCallback((newUpdatedTimer:string) => {
 
     // NOTE: currentTimer gets updated here
@@ -133,9 +134,16 @@ const Main = () => {
                 >
                 ➕
               </button>
+              <button
+                type='button'
+                onClick={handleToggleMoreOptions}
+                className='toggle-more-options'
+                title='Show or hide more options modal'
+                >
+                ▫▫▫
+              </button>
             </div>
             <Timers
-              key={`${ dbTimerArray?.length }-${ selTimerId }`}
               timerArray={timerArray}
               handleSetSelTimer={(x) => handleSetSelTimer(x)}
               selTimerId={selTimerId}

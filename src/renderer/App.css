@@ -67,10 +67,15 @@ button {
   align-items: center;
   gap: 0.25rem;
   margin-bottom: 1.2rem;
+  /* max-width: 18.3rem; */
 }
 
 .toggle-add-timer {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.toggle-more-options {
+  font-size: 1.3rem;
 }
 
 .hr-fade {

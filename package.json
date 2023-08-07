@@ -99,7 +99,8 @@
     "electron",
     "react",
     "typescript",
-    "tRPC"
+    "tRPC",
+    "SQLite"
   ],
   "jest": {
     "testURL": "http://localhost/",
