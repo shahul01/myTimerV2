@@ -16,11 +16,26 @@ const Modal: FC<IModalProps> = (props) => {
     children
   } = props;
 
+  const styleProp = {
+    modalWidth: {num: 86, units: 'vw'},
+  };
+  const { modalWidth } = styleProp;
+
   return (
-    <div className={styles.modal} >
+    <div
+      className={styles.modal}
+      style={{
+        transform: `translate(${(100 - modalWidth.num) / 2}vw, 5vh)`
+      }}
+      >
       {isShowModal ?
         (
-          <div className={styles["show-modal"]} >
+          <div
+            className={styles["show-modal"]}
+            style={{
+              width: modalWidth.num + modalWidth.units,
+            }}
+            >
             <div className={styles.heading} >
               <h3>{title}</h3>
               <button

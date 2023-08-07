@@ -1,13 +1,17 @@
+:root {
+  --modal-width: 86vw;
+}
+
 .modal {
   position: absolute;
-  transform: translate(5vw, 5vh);
+  /* transform: translate(5vw , 5vh); */
   height: 90%;
   overflow: auto;
 }
 
 .show-modal {
   height: 90vh;
-  width: 90vw;
+  /* width: var(--modal-width); */
   background-color: hsla(0deg, 0%, 10%, 0.92);
   height: 100%;
 }
