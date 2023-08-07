@@ -66,6 +66,7 @@ button {
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .toggle-add-timer {

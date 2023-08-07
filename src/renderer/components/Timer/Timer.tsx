@@ -13,20 +13,16 @@ interface ITimerProps {
   // timerInput: number | string;
   // isSelected: boolean;
   timerData: App.ITask | undefined;
-  displayType: 'hero' | 'list';
   onUpdatedTimer: any;
   setIsShowTimers: React.Dispatch<React.SetStateAction<boolean>>;
-  isSelected: boolean;
   triggerTimer: number;
 };
 
 const Timer: FC<ITimerProps> = (props) => {
   const {
     timerData,
-    displayType,
     onUpdatedTimer,
     setIsShowTimers,
-    isSelected,
     triggerTimer
   } = props;
 
@@ -165,9 +161,8 @@ const Timer: FC<ITimerProps> = (props) => {
     if (firstLoad.current) {
       firstLoad.current = false;
     } else {
-      if (isSelected) {
-        handleToggleTimerState();
-      };
+      handleToggleTimerState();
+
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -202,46 +197,22 @@ const Timer: FC<ITimerProps> = (props) => {
         `
       }
       >
-        {
-          displayType === 'hero'
-          ? (
-            // TODO: Make this a component
-            <div
-              className={styles.hero}
+        <div className={styles.hero} >
+          <div className={styles['title-bar']} >
+            {title}
+          </div>
+          <div
+              className={styles.body}
+              onClick={handleShowHideAllTimers}
+
+              onKeyUp={handleShowHideAllTimers}
+              role="button"
+              tabIndex={0}
             >
-              <div className={styles['title-bar']} >
-                {title}
-              </div>
-              <div
-                  className={styles.body}
-                  onClick={handleShowHideAllTimers}
+            {outputTime}
+          </div>
+        </div>
 
-                  onKeyUp={handleShowHideAllTimers}
-                  role="button"
-                  tabIndex={0}
-                >
-                {outputTime}
-              </div>
-            </div>
-
-          ) : (
-            // TODO: Make this a component
-            <div className={styles.list}>
-              {/* <span className={styles.btn} title='Select timer' >
-                {isSelected ? '⦿' : '⦾'}
-              </span>
-              <span>{title}: </span>
-              <span>{outputTime}</span> */}
-
-            </div>
-          )
-        }
-
-      {/* <button
-        onClick={handleToggleTimerState}
-        >
-        {timerState === 'paused' ? 'Start' : 'Pause'}
-      </button> */}
 
     </div>
   )

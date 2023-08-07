@@ -97,32 +97,15 @@ const Main = () => {
     <div
       className='main'
       >
-      {/* <div className='timer-app'>
-        <div className='titlebar'>
-          <h1 className='title'>{tasks[selectedTask].title}</h1>
-          <p className='task-count'>{tasks.length}</p>
-        </div>
-        <div className='timer-area'> {tasks[selectedTask].timeLeft} </div>
-      </div> */}
-
-      {/* <h3>Timers: </h3> */}
-      {/* <pre>
-        {JSON.stringify(
-          timerArray, null, 2
-        )}
-      </pre> */}
 
       {/* // TODO: Make key have Unique Id */}
       <Timer
         key={timerArray.find(cT => cT.id === selTimerId)?.id}
-        /* make timerArray props as one prop  */
         timerData={timerArray.find(cT => cT.id === selTimerId)}
 
-        displayType='hero'
         onUpdatedTimer={handleUpdatedTimer}
         setIsShowTimers={setIsShowTimers}
         // eslint-disable-next-line react/jsx-boolean-value
-        isSelected={true}
         triggerTimer={triggerTimer}
       />
 
@@ -142,7 +125,6 @@ const Main = () => {
                 ➕
               </button>
             </div>
-            <br />
             <Timers
               timerArray={timerArray}
               handleSetSelTimer={(x) => handleSetSelTimer(x)}
