@@ -1,8 +1,16 @@
 import { z } from 'zod';
 import { FC, useEffect, useState } from 'react';
 import { api } from 'renderer/utils/trpc';
+import { getTimeInMin } from 'renderer/utils/time';
 import { stringify } from 'renderer/utils/misc';
 import styles from './sync.module.css';
+
+interface ILogByDate {
+  id: string;
+  date: string;
+  taskName: string;
+  timeSpent: string;
+};
 
 interface ISyncProps {
 };
@@ -24,21 +32,39 @@ const Sync: FC<ISyncProps> = (props) => {
     endDate: `12-31-${currYear}`,
   };
 
-  console.log(`dateRange: `, dateRange);
-
-  const {data: dbGetByDate} = api.logByDate.getByDate.useQuery(dateRange);
-  console.log(`dbGetByDate: `, dbGetByDate);
+  // const {data: dbGetByDate} = api.logByDate.getByDate.useQuery(dateRange);
+  // console.log(`dbGetByDate: `, dbGetByDate);
   const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery();
-  console.log('dbLogAll', dbLogAll);
-
-
-  function getData() {
-
-  };
+  // console.log('dbLogAll', dbLogAll);
 
   function calcTimePerTask() {
-    const tasks = getData();
-    return {};
+    const logs = {
+      metaData: {lastUpdateAt: '<When tasks are saved as logs>' },
+      data: {} as App.IObject<{[totalTime:string]: string}>
+    };
+
+    // TODO: reduce loop count
+    dbLogAll?.forEach((currTask:ILogByDate) => {
+      // 120 minutes
+      const prevTime = logs.data[currTask.taskName]?.totalTime;
+      const currTime = getTimeInMin(currTask.timeSpent);
+
+      // 120
+      const prevTimeInMin = prevTime ? Number( prevTime?.split(' ')?.[0] ) : 0;
+      let totalTime = 0;
+      if (typeof(currTime) === 'number') {
+        totalTime = prevTimeInMin + currTime;
+      }
+
+      logs.data = {
+        ...logs.data,
+        [currTask.taskName]: { totalTime: `${totalTime} minutes`}
+      }
+
+    })
+
+    return logs;
+
   };
 
   function updateSyncData() {
@@ -46,9 +72,9 @@ const Sync: FC<ISyncProps> = (props) => {
   };
 
   function handleSync() {
-    // updateSyncData();
+    updateSyncData();
     console.log('invalidating');
-    trpcContext.logByDate.getByDate.invalidate();
+    // trpcContext.logByDate.getByDate.invalidate();
     trpcContext.logByDate.getAllLogs.invalidate();
   };
 
@@ -67,9 +93,9 @@ const Sync: FC<ISyncProps> = (props) => {
         <p>Logs: </p>
         <div className={styles["data-wrapper"]}>
           <pre>
-            date: {stringify({dbGetByDate})}
-            <hr />
-            all: {stringify({dbLogAll})}
+            syncData: {stringify(syncData)} <hr />
+            {/* date: {stringify({dbGetByDate})} <hr /> */}
+            {/* all: {stringify({dbLogAll})} */}
           </pre>
 
         </div>

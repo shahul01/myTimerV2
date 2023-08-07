@@ -14,4 +14,5 @@
   border: 1px solid hsl(0deg, 0%, 80%);
   height: 75%;
   width: 100%;
+  overflow-y: auto;
 }
