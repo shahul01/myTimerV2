@@ -45,6 +45,8 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
   };
 
   function handleSubmit() {
+    // if (timerArrayLength < 0) return console.error('Error');
+    console.log(`timerArrayLength: `, timerArrayLength);
     const newForm:App.ITask = {
       ...addForm,
       id: timerArrayLength + 1,

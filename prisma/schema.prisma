@@ -9,9 +9,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Example {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Task {
 // id          TEXT PRIMARY KEY DESC
-  id           Int   @id @unique @default(autoincrement())
+  id           Int         @id @unique
   title        String
   timerInput   String
   currentTimer String
@@ -19,8 +25,9 @@ model Task {
   // updatedAt    DateTime @updatedAt
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model LogByDate {
+  id String @id @unique @default(uuid())
+  date DateTime
+  taskName String
+  timeSpent String
 }

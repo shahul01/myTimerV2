@@ -166,7 +166,7 @@ const Main = () => {
                   <div className='hr-fade' />
                   <div className='add-timer-wrapper'>
                     <AddTimer
-                      timerArrayLength={timerArray.length}
+                      timerArrayLength={(dbTimerArray?.length||0)}
                       onAddTimer={handleAddTimer}
                     />
                   </div>
