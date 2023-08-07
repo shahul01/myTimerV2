@@ -11,7 +11,7 @@ datasource db {
 
 model Task {
 // id          TEXT PRIMARY KEY DESC
-  id           String   @id @unique @default(uuid())
+  id           Int   @id @unique @default(autoincrement())
   title        String
   timerInput   String
   currentTimer String

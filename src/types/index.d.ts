@@ -10,7 +10,7 @@ declare global {
     interface ITask {
       id: number;
       title: string;
-      // number | DateTime(?) | DateTimeOffset
+      // number | DateTime(?)
       timerInput: string;
       currentTimer: string;
 
