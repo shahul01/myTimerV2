@@ -5,8 +5,18 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  // url      = env("DATABASE_URL")
-  url      = "file:./db.sqlite"
+  url      = env("DATABASE_URL")
+  // url      = "db.sqlite"
+}
+
+model Task {
+// id          TEXT PRIMARY KEY DESC
+  id           String   @id @unique @default(uuid())
+  title        String
+  timerInput   String
+  currentTimer String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Example {
