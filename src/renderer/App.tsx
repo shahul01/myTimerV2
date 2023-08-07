@@ -22,14 +22,14 @@ const Main = () => {
   // console.log(`greeting.data: `, greeting.data);
   // const id = api.example.idGetAll.useQuery();
   // console.log(`id?.data: `, stringify(id?.data));
-  const {data: newTimerArray} = api.task.getAllTasks.useQuery();
-  // console.log(`newTimerArray: `, stringify(newTimerArray.data));
+  const {data: dbTimerArray} = api.task.getAllTasks.useQuery();
+  // console.log(`dbTimerArray: `, stringify(dbTimerArray.data));
 
-  // const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.UpdateCurrentTimer.useMutation({
-  //   onSuccess: () => {
-  //     // void ctx.task.getAllTasks.invalidate();
-  //   }
-  // });
+  const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.UpdateCurrentTimer.useMutation({
+    onSuccess: () => {
+      // void ctx.task.getAllTasks.invalidate();
+    }
+  });
 
   // const user = async () => await trpc.userById.query('a')
   // const [selectedTask, setSelectedTask] = useState<number>(0);
@@ -37,25 +37,28 @@ const Main = () => {
   //   { title: 'React', timeLeft: '08:59:59' },
   // ];
 
-  const initTimerArray = [
-    {
-      id: 1, title: 'myTimer1',
-      timerInput: '00:31:01', currentTimer: '00:31:01'
-    },
-    {
-      id: 2, title: 'Timer 2',
-      timerInput: '00:00:03', currentTimer: '00:00:03'
-    },
-  ];
-  // newTimerArray
+  const initId = 0;
+  const initTimerArray = [{
+    id: initId, title: '.',
+    timerInput: '00:00:00', currentTimer: '00:00:00'
+  }];
+  // dbTimerArray
   // initTimerArray
   const [ timerArray, setTimerArray ] = useState<App.ITask[]>(initTimerArray);
   // changed this to id(starts with 1) instead of idx
-  const [ selTimerId, setSelTimerId ] = useState(1);
+  const [ selTimerId, setSelTimerId ] = useState(initId);
   const [ triggerTimer, setTriggerTimer ] = useState(0);
   const [ isShowTimers, setIsShowTimers ] = useState(false);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
+  function updateTimerArray() {
+    console.log(`dbTimerArray: `, dbTimerArray);
+    if (!!dbTimerArray?.length) {
+      // update the selected Id when db provides timer data
+      setSelTimerId(dbTimerArray[0].id);
+      setTimerArray(dbTimerArray)
+    };
+  };
 
   function handleSetSelTimer(i:number) {
     setSelTimerId(i);
@@ -80,17 +83,25 @@ const Main = () => {
       selTimer.currentTimer = newUpdatedTimer;
     };
 
-    // TODO: use TRPC useMutation to update time on db.
-    // const res = updateCurrentTimer({
-    //   id: selTimerId,
-    //   currentTimer: newUpdatedTimer
-    // })
+    console.log(`newUpdatedTimer: `, newUpdatedTimer);
 
-    console.log(`newTimerArray: `, newTimerArray);
+    // TODO: use TRPC useMutation to update time on db.
+    const res = updateCurrentTimer({
+      id: selTimerId,
+      currentTimer: newUpdatedTimer
+    });
+
+    // console.log(`dbTimerArray: `, dbTimerArray);
     // console.log(`res: `, res);
 
+  }, [selTimerId, timerArray, updateCurrentTimer]);
 
-  }, [newTimerArray, selTimerId, timerArray]);
+  useEffect(() => {
+    // updateTimerArray when dbTimerArray is available
+    updateTimerArray();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dbTimerArray]);
 
 
   return (
@@ -110,7 +121,7 @@ const Main = () => {
       />
 
       {
-        !!isShowTimers && (
+        isShowTimers && (
           <>
             <div className='buttons-container'>
               <TimerButton

@@ -5,10 +5,11 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 export const taskRouter = createTRPCRouter({
 
   getAllTasks: publicProcedure
-    .query( ({ ctx }) => {
+    .query(async ({ ctx }) => {
       // console.log(`task: `, ctx.prisma.task.findMany());
       // return [1,2,3];
-      return ctx.prisma.task.findMany();
+      const allTasks = await ctx.prisma.task.findMany();
+      return allTasks;
     }),
 
   // make this private

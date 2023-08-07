@@ -12,6 +12,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'import/extensions': 'off',
     'no-undef': 'off',
+    'no-extra-boolean-cast': 'off',
     'react/function-component-definition': 'off',
     'react/jsx-filename-extension': 'off',
     'react/jsx-no-useless-fragment': 'off',

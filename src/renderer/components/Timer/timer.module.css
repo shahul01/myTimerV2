@@ -4,7 +4,8 @@
   gap: 1rem;
 }
 
-.hero .title-bar {
+.hero .title-bar,
+.empty .title-bar {
   -webkit-app-region: drag;
   border: 1px solid gray;
   border-top: none;
@@ -26,17 +27,4 @@
   /* font-weight: bold; */
   cursor: pointer;
   user-select: none;
-}
-
-/* Not used */
-.list {
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.list .btn {
-  user-select: none;
-}
-
-.selected {
 }

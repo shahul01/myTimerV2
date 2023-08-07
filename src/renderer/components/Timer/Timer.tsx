@@ -4,8 +4,8 @@
 
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 // import { ITask } from 'renderer/types';
-import styles from './timer.module.css';
 import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
+import styles from './timer.module.css';
 // 4000mHz-2400mSec
 
 interface ITimerProps {
@@ -26,10 +26,11 @@ const Timer: FC<ITimerProps> = (props) => {
     triggerTimer
   } = props;
 
-  const {
-    id, title,
-    timerInput, currentTimer
-  } = timerData as App.ITask;
+  // eslint-disable-next-line prefer-destructuring
+  const title = timerData?.title;
+  // eslint-disable-next-line prefer-destructuring
+  const currentTimer = timerData?.currentTimer;
+  console.log(`timerData: `, timerData);
 
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
@@ -45,6 +46,7 @@ const Timer: FC<ITimerProps> = (props) => {
   const endAudio = new Audio(simpleBeep);
 
   const getTimeInSeconds = (time: string): number => {
+    // if (!time) return 0;
     const [ hours, minutes, seconds ] = time.split(':').map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
@@ -82,14 +84,16 @@ const Timer: FC<ITimerProps> = (props) => {
     if (!countdown?.current) return;
 
     // send updatedTimer to parent
-    onUpdatedTimer(outputTimeRef.current);
+    if (!!timerData?.id) {
+      onUpdatedTimer(outputTimeRef.current);
+    }
 
     clearInterval(countdown.current);
     // console.log(`pause ${title}: `, outputTimeRef.current);
 
     timerState.current = 'paused';
 
-  }, [onUpdatedTimer]);
+  }, [onUpdatedTimer, timerData?.id]);
 
   const stopCountdown = (): void => {
     // Question: right way?
@@ -191,27 +195,38 @@ const Timer: FC<ITimerProps> = (props) => {
 
   return (
     <div
-      className={
-        `${styles.timer}
-        isSelected ? styles.timer.selected : ''
-        `
-      }
+        className={
+          `${styles.timer}
+          isSelected ? styles.timer.selected : ''
+          `
+        }
       >
-        <div className={styles.hero} >
-          <div className={styles['title-bar']} >
-            {title}
-          </div>
-          <div
-              className={styles.body}
-              onClick={handleShowHideAllTimers}
 
-              onKeyUp={handleShowHideAllTimers}
-              role="button"
-              tabIndex={0}
-            >
-            {outputTime}
+      {!!timerData ?
+        (
+          <div className={styles.hero} >
+            <div className={styles['title-bar']} >
+              {title}
+            </div>
+            <div
+                className={styles.body}
+                onClick={handleShowHideAllTimers}
+
+                onKeyUp={handleShowHideAllTimers}
+                role="button"
+                tabIndex={0}
+              >
+              {outputTime}
+            </div>
+          </div>
+
+      ) : (
+        <div className={styles.empty}>
+          <div className={styles['title-bar'] }>
+            .
           </div>
         </div>
+      )}
 
 
     </div>
