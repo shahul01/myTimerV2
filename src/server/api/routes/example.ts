@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
-// import { db } from './db';
+// import { db } from '../../db';
 
 // eslint-disable-next-line import/prefer-default-export
 export const exampleRouter = createTRPCRouter({
@@ -20,9 +20,11 @@ export const exampleRouter = createTRPCRouter({
 
   // http://localhost:9000/trpc/example.idGetAll
   idGetAll: publicProcedure
-    .query(() => {
-      return [1,2,3];
-      // return db.example.findMany();
+    .query(({ ctx }) => {
+      // return [1,2,3];
+      // NOTE: findMany for [], groupBy for {}
+      // return ctx.prisma.example.findMany();
+      return ctx.prisma.example.groupBy({by: 'id'});
     })
 });
 

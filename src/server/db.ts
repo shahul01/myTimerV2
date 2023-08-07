@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
 
-
 // Important: Fixing Prisma Errors
-// run `npx prisma generate` // to use prisma
+// run `npx prisma generate` // to use prisma // TODO: add this to postinsall
 // run `npx prisma db push` // to create db w/ tables
 
 const globalForPrisma = globalThis as unknown as {
