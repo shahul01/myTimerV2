@@ -10,6 +10,7 @@ import AddTimer from './components/AddTimer/AddTimer';
 // import global from '../types/global';
 import { api } from './utils/trpc';
 import './App.css';
+import Modal from './components/Modal/Modal';
 
 
 const Main = () => {
@@ -42,6 +43,7 @@ const Main = () => {
   const [ timerArray, setTimerArray ] = useState<App.ITask[]>(initTimerArray);
   // changed this to id(starts with 1) instead of idx
   const [ selTimerId, setSelTimerId ] = useState(initId);
+  const [ isShowModal, setIsShowModal ] = useState(false);
   const [ triggerTimer, setTriggerTimer ] = useState(0);
   const [ isShowTimers, setIsShowTimers ] = useState(false);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
@@ -68,7 +70,7 @@ const Main = () => {
   }, []);
 
   function handleToggleMoreOptions() {
-
+    setIsShowModal(true);
   };
 
   const handleUpdatedTimer = useCallback((newUpdatedTimer:string) => {
@@ -107,8 +109,13 @@ const Main = () => {
     <div
       className='main'
       >
-
-      {/* // TODO: Make key have Unique Id */}
+      <Modal
+          isShowModal={isShowModal}
+          title='Modal'
+          onClose={() => setIsShowModal(false)}
+        >
+        <p>Hi</p>
+      </Modal>
       <Timer
         key={timerArray.find(cT => cT.id === selTimerId)?.id}
         timerData={timerArray.find(cT => cT.id === selTimerId)}
