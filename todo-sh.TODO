@@ -110,6 +110,7 @@ Total:
   # Docs:
     - trpc / prisma
       - https://trpc.io/docs/quickstart
+      - https://trpc.io/docs/server/adapters/express
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
 

@@ -17,9 +17,9 @@ import './App.css';
 const Main = () => {
 
 
-  const greeting = trpc.greeting.useQuery({name: 'Yo2'});
+  const greeting = trpc.example.greeting.useQuery({name: 'Yo2'});
   console.log(`greeting.data: `, greeting.data);
-  const id = trpc.idGetAll.useQuery();
+  const id = trpc.example.greeting.useQuery();
   console.log(`id?.data: `, id?.data);
 
   // const user = async () => await trpc.userById.query('a')
