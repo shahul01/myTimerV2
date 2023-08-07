@@ -11,7 +11,7 @@ import Timers from './components/Timers/Timers';
 import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
-import { api } from './utils/trpc'
+import { api } from './utils/trpc';
 import './App.css';
 
 const Main = () => {
@@ -158,7 +158,16 @@ const MainTRPCWrapped = () => {
     api.createClient({
       links: [
         httpBatchLink({
-          url: 'http://localhost:9000'
+          // TODO: remove hard code
+          url: 'http://localhost:9000/api/v1',
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              // to enable cookies
+              // credentials: 'include',
+            })
+          }
+
         })
       ]
     })

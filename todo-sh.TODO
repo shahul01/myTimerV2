@@ -114,6 +114,9 @@ Total:
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
 
+    - node / express
+      - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
+
     - tools:
       - https://github.com/prosepilot/trpc-openapi
       - https://github.com/mohammed-bahumaish/prisma-editor
