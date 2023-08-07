@@ -12,19 +12,24 @@ import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
 import { api } from './utils/trpc';
-import './App.css';
 import { stringify } from './utils/misc';
+import './App.css';
 
 
 const Main = () => {
-
 
   // const greeting = api.example.greeting.useQuery({name: 'Yo2'});
   // console.log(`greeting.data: `, greeting.data);
   // const id = api.example.idGetAll.useQuery();
   // console.log(`id?.data: `, stringify(id?.data));
-  const newTimerArray = api.task.getAllTasks.useQuery();
+  const {data: newTimerArray} = api.task.getAllTasks.useQuery();
   // console.log(`newTimerArray: `, stringify(newTimerArray.data));
+
+  // const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.UpdateCurrentTimer.useMutation({
+  //   onSuccess: () => {
+  //     // void ctx.task.getAllTasks.invalidate();
+  //   }
+  // });
 
   // const user = async () => await trpc.userById.query('a')
   // const [selectedTask, setSelectedTask] = useState<number>(0);
@@ -32,28 +37,28 @@ const Main = () => {
   //   { title: 'React', timeLeft: '08:59:59' },
   // ];
 
-  const [ timerArray, setTimerArray ] = useState<App.ITask[]>([
+  const initTimerArray = [
     {
-      id: 1,
-      title: 'myTimer1',
-      timerInput: '00:51:01',
-      currentTimer: '00:51:01'
+      id: 1, title: 'myTimer1',
+      timerInput: '00:31:01', currentTimer: '00:31:01'
     },
     {
-      id: 2,
-      title: 'Timer 2',
-      timerInput: '00:00:03',
-      currentTimer: '00:00:03'
+      id: 2, title: 'Timer 2',
+      timerInput: '00:00:03', currentTimer: '00:00:03'
     },
-  ]);
-  const [ selTimer, setSelTimer ] = useState(0);
+  ];
+  // newTimerArray
+  // initTimerArray
+  const [ timerArray, setTimerArray ] = useState<App.ITask[]>(initTimerArray);
+  // changed this to id(starts with 1) instead of idx
+  const [ selTimerId, setSelTimerId ] = useState(1);
   const [ triggerTimer, setTriggerTimer ] = useState(0);
   const [ isShowTimers, setIsShowTimers ] = useState(false);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
 
   function handleSetSelTimer(i:number) {
-    setSelTimer(i);
+    setSelTimerId(i);
   };
 
   const handleTriggerTimer = useCallback(() => {
@@ -64,14 +69,28 @@ const Main = () => {
     setTimerArray( prev => [...prev, newTimerData] );
   }, []);
 
-  const handleUpdatedTimer = useCallback((currUpdatedTimer) => {
+  const handleUpdatedTimer = useCallback((newUpdatedTimer:string) => {
 
     // NOTE: currentTimer gets updated here
-    timerArray[selTimer].currentTimer = currUpdatedTimer;
+    const selTimer:App.ITask|undefined = timerArray.find(currTimer => {
+      return currTimer.id === selTimerId;
+    });
+
+    if (selTimer) {
+      selTimer.currentTimer = newUpdatedTimer;
+    };
 
     // TODO: use TRPC useMutation to update time on db.
+    // const res = updateCurrentTimer({
+    //   id: selTimerId,
+    //   currentTimer: newUpdatedTimer
+    // })
 
-  }, [selTimer, timerArray]);
+    console.log(`newTimerArray: `, newTimerArray);
+    // console.log(`res: `, res);
+
+
+  }, [newTimerArray, selTimerId, timerArray]);
 
 
   return (
@@ -95,12 +114,9 @@ const Main = () => {
 
       {/* // TODO: Make key have Unique Id */}
       <Timer
-        key={timerArray[selTimer].id}
+        key={timerArray.find(cT => cT.id === selTimerId)?.id}
         /* make timerArray props as one prop  */
-        id={timerArray[selTimer].id}
-        title={timerArray[selTimer].title}
-        timerInput={timerArray[selTimer].timerInput}
-        currentTimer={timerArray[selTimer].currentTimer}
+        timerData={timerArray.find(cT => cT.id === selTimerId)}
 
         displayType='hero'
         onUpdatedTimer={handleUpdatedTimer}
@@ -130,7 +146,7 @@ const Main = () => {
             <Timers
               timerArray={timerArray}
               handleSetSelTimer={(x) => handleSetSelTimer(x)}
-              selTimer={selTimer}
+              selTimerId={selTimerId}
               triggerTimer={triggerTimer}
             />
             {

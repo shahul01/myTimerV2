@@ -8,19 +8,33 @@ import styles from './timer.module.css';
 import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
 // 4000mHz-2400mSec
 
-interface ITimerProps extends App.ITask {
+interface ITimerProps {
   // title: string;
   // timerInput: number | string;
   // isSelected: boolean;
-  onUpdatedTimer: any;
+  timerData: App.ITask | undefined;
   displayType: 'hero' | 'list';
+  onUpdatedTimer: any;
   setIsShowTimers: React.Dispatch<React.SetStateAction<boolean>>;
+  isSelected: boolean;
   triggerTimer: number;
 };
 
-const Timer: FC<ITimerProps> = (
-  {title, timerInput, currentTimer, onUpdatedTimer, isSelected, displayType, setIsShowTimers, triggerTimer}
-  ) => {
+const Timer: FC<ITimerProps> = (props) => {
+  const {
+    timerData,
+    displayType,
+    onUpdatedTimer,
+    setIsShowTimers,
+    isSelected,
+    triggerTimer
+  } = props;
+
+  const {
+    id, title,
+    timerInput, currentTimer
+  } = timerData as App.ITask;
+
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
   const firstLoad = useRef(true);

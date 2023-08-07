@@ -6,7 +6,7 @@ import styles from './timers.module.css';
 interface ITimersProps {
   timerArray: App.ITask[];
   handleSetSelTimer: (i:number) => void;
-  selTimer: number;
+  selTimerId: number;
   triggerTimer: number;
 };
 
@@ -14,7 +14,7 @@ const Timers: FC<ITimersProps> = (props) => {
   const {
     timerArray,
     handleSetSelTimer,
-    selTimer,
+    selTimerId,
     triggerTimer
   } = props;
 
@@ -26,7 +26,7 @@ const Timers: FC<ITimersProps> = (props) => {
             <div
               key={currTimer.title}
               className={styles['timer-wrapper']}
-              onClick={()=>handleSetSelTimer(i)}
+              onClick={()=>handleSetSelTimer(currTimer.id)}
 
               role="button"
               tabIndex={0}
@@ -41,7 +41,7 @@ const Timers: FC<ITimersProps> = (props) => {
                       className={styles.button}
                       title='Select timer'
                     >
-                      {i===selTimer ? '⦿' : '⦾'}
+                      {currTimer.id===selTimerId ? '⦿' : '⦾'}
                   </span>
                   <span
                       className={styles.title}
