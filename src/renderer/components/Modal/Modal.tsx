@@ -25,7 +25,8 @@ const Modal: FC<IModalProps> = (props) => {
               <h3>{title}</h3>
               <button
                   type='button'
-                  onClick={() =>onClose(false)}
+                  title='Close Modal'
+                  onClick={() => onClose(false)}
                 >
                 X
               </button>

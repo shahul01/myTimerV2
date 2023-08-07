@@ -11,6 +11,7 @@ import AddTimer from './components/AddTimer/AddTimer';
 import { api } from './utils/trpc';
 import './App.css';
 import Modal from './components/Modal/Modal';
+import Sync from './components/Sync/Sync';
 
 
 const Main = () => {
@@ -111,11 +112,14 @@ const Main = () => {
       >
       <Modal
           isShowModal={isShowModal}
-          title='Modal'
+          title='More options'
           onClose={() => setIsShowModal(false)}
         >
-        <p>Hi</p>
+          <div className="modal-body">
+            <Sync />
+          </div>
       </Modal>
+
       <Timer
         key={timerArray.find(cT => cT.id === selTimerId)?.id}
         timerData={timerArray.find(cT => cT.id === selTimerId)}
@@ -135,17 +139,17 @@ const Main = () => {
               />
               <button
                 type='button'
-                onClick={() => setIsShowAddTimer(!isShowAddTimer)}
-                className='toggle-add-timer'
                 title='Show or hide add timer form'
+                className='toggle-add-timer'
+                onClick={() => setIsShowAddTimer(!isShowAddTimer)}
                 >
                 ➕
               </button>
               <button
                 type='button'
-                onClick={handleToggleMoreOptions}
+                title='Show More options modal'
                 className='toggle-more-options'
-                title='Show or hide more options modal'
+                onClick={handleToggleMoreOptions}
                 >
                 ▫▫▫
               </button>

@@ -1,18 +1,23 @@
 .modal {
   position: absolute;
   transform: translate(5vw, 5vh);
+  height: 90%;
+  overflow: auto;
 }
 
 .show-modal {
   height: 90vh;
   width: 90vw;
   background-color: hsla(0deg, 0%, 10%, 0.92);
+  height: 100%;
 }
 
 .show-modal .heading {
   display: flex;
   justify-content: space-between;
+  position: sticky;
   padding: 0.1rem 0;
+  /* height: 20%; */
   width: 100%;
 }
 
@@ -22,5 +27,9 @@
 }
 
 .show-modal .body {
+  position: relative;
+  /* margin-top: 2rem; */
+  /* padding-top: 4rem; */
   padding: 0.7rem;
+  height: 80%;
 }
