@@ -11,15 +11,15 @@ import Timers from './components/Timers/Timers';
 import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
-import { trpc } from './utils/trpc'
+import { api } from './utils/trpc'
 import './App.css';
 
 const Main = () => {
 
 
-  const greeting = trpc.example.greeting.useQuery({name: 'Yo2'});
+  const greeting = api.example.greeting.useQuery({name: 'Yo2'});
   console.log(`greeting.data: `, greeting.data);
-  const id = trpc.example.greeting.useQuery();
+  const id = api.example.idGetAll.useQuery();
   console.log(`id?.data: `, id?.data);
 
   // const user = async () => await trpc.userById.query('a')
@@ -155,21 +155,21 @@ const Main = () => {
 const MainTRPCWrapped = () => {
   const [ queryClient ] = useState(() => new QueryClient());
   const [ trpcClient ] = useState(() => (
-    trpc.createClient({
+    api.createClient({
       links: [
         httpBatchLink({
-          url: 'http://localhost:2023'
+          url: 'http://localhost:9000'
         })
       ]
     })
   ))
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <Main />
       </QueryClientProvider>
-    </trpc.Provider>
+    </api.Provider>
   );
 };
 

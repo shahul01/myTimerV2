@@ -13,8 +13,7 @@ export type AppRouter = typeof appRouter;
 const app = express();
 
 app.use(
-  // '/api/v1/',
-  '/trpc/',
+  '/api/v1/',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext
