@@ -12,6 +12,28 @@ export const taskRouter = createTRPCRouter({
       return allTasks;
     }),
 
+  addTask: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        title: z.string(),
+        timerInput: z.string(),
+        currentTimer: z.string()
+      })
+    )
+    .mutation(async ({ctx, input}) => {
+      const task = await ctx.prisma.task.create({
+        data: {
+          id: input.id,
+          title: input.title,
+          timerInput: input.timerInput,
+          currentTimer: input.currentTimer,
+        }
+      })
+
+      return task;
+    }),
+
   // make this private
   UpdateCurrentTimer: publicProcedure
     .input(
@@ -21,8 +43,7 @@ export const taskRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-
-      console.log(`input mutation: `, input);
+      // console.log(`input mutation: `, input);
       const updatedTimer = await ctx.prisma.task.update({
         where: {
           id: input.id

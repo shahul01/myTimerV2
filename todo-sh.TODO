@@ -55,6 +55,7 @@ Total:
 
   # ideas:
     ☐ timer:
+      ☐ add delete option to task
       ☐ on double click:
         - show elapsed timer
         - pause / resume

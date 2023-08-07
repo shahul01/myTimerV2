@@ -12,7 +12,6 @@ import AddTimer from './components/AddTimer/AddTimer';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
 import { api } from './utils/trpc';
-import { stringify } from './utils/misc';
 import './App.css';
 
 
@@ -22,8 +21,7 @@ const Main = () => {
   // console.log(`greeting.data: `, greeting.data);
   // const id = api.example.idGetAll.useQuery();
   // console.log(`id?.data: `, stringify(id?.data));
-  const {data: dbTimerArray} = api.task.getAllTasks.useQuery();
-  // console.log(`dbTimerArray: `, stringify(dbTimerArray.data));
+  const { data: dbTimerArray } = api.task.getAllTasks.useQuery();
 
   const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.UpdateCurrentTimer.useMutation({
     onSuccess: () => {
@@ -137,6 +135,7 @@ const Main = () => {
               </button>
             </div>
             <Timers
+              key={`${ dbTimerArray?.length }-${ selTimerId }`}
               timerArray={timerArray}
               handleSetSelTimer={(x) => handleSetSelTimer(x)}
               selTimerId={selTimerId}
