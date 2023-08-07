@@ -30,7 +30,7 @@ const Timer: FC<ITimerProps> = (props) => {
   const title = timerData?.title;
   // eslint-disable-next-line prefer-destructuring
   const currentTimer = timerData?.currentTimer;
-  console.log(`timerData: `, timerData);
+  // console.log(`timerData: `, timerData);
 
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
