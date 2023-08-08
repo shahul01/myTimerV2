@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { api } from 'renderer/utils/trpc';
-import { getTimeAsNumber } from 'renderer/utils/time';
+import { calcTimeSpent, getNumberAsTime, getTimeAsNumber } from 'renderer/utils/time';
 import { stringify } from 'renderer/utils/misc';
 import styles from './sync.module.css';
 
@@ -32,11 +32,35 @@ const Sync: FC<ISyncProps> = (props) => {
     endDate: `12-31-${currYear}`,
   };
 
+  const { data: dbTimerArray } = api.task.getAllTasks.useQuery();
+
   // const {data: dbGetByDate} = api.logByDate.getByDate.useQuery(dateRange);
   // console.log(`dbGetByDate: `, dbGetByDate);
   const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery();
   // console.log('dbLogAll', dbLogAll);
 
+  // NOTE: send to logByDate Db
+
+  function sendToDb() {
+    // mutate({
+    //   id: uuidV4(),
+    //   date: new Date(),
+    //   taskName: currTimer.title,
+    //   timeSpent: calcTimeSpent(currTimer)
+    // })
+  };
+
+  // const firstLoad = useRef(true);
+  // if (firstLoad.current) {
+
+  //   calcTimeSpent(dbTimerArray?.[0]);
+  //   firstLoad.current = false;
+
+  // }
+
+
+
+  // NOTE: get from logByDate Db
   function calcTimePerTask() {
     const logs = {
       metaData: {lastUpdateAt: '<When tasks are saved as logs>' },
