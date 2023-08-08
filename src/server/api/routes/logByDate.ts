@@ -16,10 +16,10 @@ export const logByDateRouter = createTRPCRouter({
         endDate: z.string()
       })
     )
-    .query(({ctx, input}) => {
+    .query(async ({ctx, input}) => {
 
       console.log(`input: `, input);
-      const data = ctx.prisma.logByDate.findMany(
+      const resGetByDate = await ctx.prisma.logByDate.findMany(
         {
           where: {
             date: {
@@ -35,16 +35,17 @@ export const logByDateRouter = createTRPCRouter({
       // const logData = ctx.prisma.logByDate.fields.date.typeName;
       // console.log(`logData: `, logData);
 
-
-      return data;
+      return resGetByDate;
     }),
 
   getAllLogs: publicProcedure
     .query(async ({ ctx }) => {
-      const data = await ctx.prisma.logByDate.findMany();
-      return data;
+      const resGetAllLogs = await ctx.prisma.logByDate.findMany();
+
+      return resGetAllLogs;
     }),
 
+  // use upsert
   postLog: publicProcedure
     .input(z.object(
       {
@@ -55,7 +56,7 @@ export const logByDateRouter = createTRPCRouter({
       }
     ))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.prisma.logByDate.create({
+      const resPostLog = await ctx.prisma.logByDate.create({
         data: {
           id: input.id,
           date: input.date,
@@ -64,10 +65,31 @@ export const logByDateRouter = createTRPCRouter({
         }
       });
 
-      return data;
-    })
+      return resPostLog;
+    }),
 
-  // patchLog: publicProcedure.query()
+  patchLog: publicProcedure
+    .input(z.object({
+      id: z.string(),
+      date: z.date(),
+      taskName: z.string(),
+      timeSpent: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const resPatchLog = await ctx.prisma.logByDate.update({
+        where: {
+          id: input.id,
+          taskName: input.taskName
+        },
+        data: {
+          date: input.date,
+          timeSpent: input.timeSpent
+        }
+
+      });
+
+      return resPatchLog;
+    })
 
 });
 
