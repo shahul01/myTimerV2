@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
+import { PrismaModels } from '../../db';
+
+
+type TLogByDate = PrismaModels['LogByDate'];
 
 // eslint-disable-next-line import/prefer-default-export
 export const logByDateRouter = createTRPCRouter({
@@ -39,7 +43,31 @@ export const logByDateRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const data = await ctx.prisma.logByDate.findMany();
       return data;
+    }),
+
+  postLog: publicProcedure
+    .input(z.object(
+      {
+        id: z.string(),
+        date: z.date(),
+        taskName: z.string(),
+        timeSpent: z.string()
+      }
+    ))
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.prisma.logByDate.create({
+        data: {
+          id: input.id,
+          date: input.date,
+          taskName: input.taskName,
+          timeSpent: input.timeSpent
+        }
+      });
+
+      return data;
     })
+
+  // patchLog: publicProcedure.query()
 
 });
 

@@ -42,12 +42,23 @@ const Sync: FC<ISyncProps> = (props) => {
   // NOTE: send to logByDate Db
 
   function sendToDb() {
-    // mutate({
-    //   id: uuidV4(),
-    //   date: new Date(),
-    //   taskName: currTimer.title,
-    //   timeSpent: calcTimeSpent(currTimer)
-    // })
+
+    // if (old data with same date and same taskName) {
+    //   update only date and timeSpent
+    // } else {
+    //   add entire data of ILogByDate to LogByDate Db
+    // }
+
+    // // add new data
+    // dbTimerArray?.forEach((currTimer:App.ITask) => {
+    //   mutate({
+    //     id: uuidV4(),
+    //     date: new Date(),
+    //     taskName: currTimer.title,
+    //     timeSpent: calcTimeSpent(currTimer)
+    //   })
+    // });
+
   };
 
   // const firstLoad = useRef(true);

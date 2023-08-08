@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 
 // Important: Fixing Prisma Errors
@@ -18,5 +18,16 @@ export const prisma =
     log:
       tempEnv === "development" ? ["query", "error", "warn"] : ["error"],
   });
+
+type ModelNames = Prisma.ModelName;
+
+export type PrismaModels = {
+  [M in ModelNames]: Exclude<
+    Awaited<ReturnType<
+      PrismaClient[Uncapitalize<M>]["findUnique"]
+    >>,
+    null
+  >;
+};
 
 // if (tempEnv !== "production") globalForPrisma.prisma = prisma;

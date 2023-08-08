@@ -30,6 +30,13 @@ declare global {
       }
     }
 
+    interface ILogByDate {
+      id: string;
+      date: Date;
+      taskName: string;
+      timeSpent: string;
+    }
+
 
   }
 }
