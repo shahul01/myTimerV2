@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { FC, useEffect, useState } from 'react';
 import { api } from 'renderer/utils/trpc';
-import { getTimeInMin } from 'renderer/utils/time';
+import { getTimeAsNumber } from 'renderer/utils/time';
 import { stringify } from 'renderer/utils/misc';
 import styles from './sync.module.css';
 
@@ -47,7 +47,9 @@ const Sync: FC<ISyncProps> = (props) => {
     dbLogAll?.forEach((currTask:ILogByDate) => {
       // 120 minutes
       const prevTime = logs.data[currTask.taskName]?.totalTime;
-      const currTime = getTimeInMin(currTask.timeSpent);
+      const currTime = getTimeAsNumber(
+        {time: currTask.timeSpent, preferredUnit: 'minutes'}
+      );
 
       // 120
       const prevTimeInMin = prevTime ? Number( prevTime?.split(' ')?.[0] ) : 0;
