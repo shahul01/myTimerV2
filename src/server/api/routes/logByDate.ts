@@ -71,12 +71,12 @@ export const logByDateRouter = createTRPCRouter({
   patchLog: publicProcedure
     .input(z.object({
       id: z.string(),
-      date: z.date(),
+      date: z.string(),
       taskName: z.string(),
       timeSpent: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const resPatchLog = await ctx.prisma.logByDate.update({
+      const resPatchLog = await ctx.prisma.logByDate.updateMany({
         where: {
           id: input.id,
           taskName: input.taskName
