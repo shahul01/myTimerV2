@@ -1,0 +1,18 @@
+.sync {
+  height: 100%;
+}
+
+.sync > * {
+  margin-bottom: 0.6rem;
+}
+
+.sync .body {
+  height: 100%;
+}
+
+.sync .data-wrapper {
+  border: 1px solid hsl(0deg, 0%, 80%);
+  height: 75%;
+  width: 100%;
+  overflow-y: auto;
+}

@@ -1,5 +1,5 @@
 import { render } from 'react-dom';
-import { IObject } from 'types';
+// import { IObject } from 'types/index.d';
 import App from './App';
 
 // TODO: modularize this
@@ -8,7 +8,7 @@ declare global {
     electron: {
       ipcRenderer: {
         handleStickyHover:(arg0:boolean) => void;
-        handleTimerEnd:(arg0:IObject<string>) => void;
+        handleTimerEnd:(arg0:App.IObject<string>) => void;
       }
     }
   }

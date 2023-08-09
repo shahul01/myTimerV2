@@ -13,8 +13,8 @@ const TimerButton: FC<ITimerButtonProps> = (props) => {
 
       <button
         type='button'
-        onClick={handleToggleTimerState}
         title='Pause or resume timer'
+        onClick={handleToggleTimerState}
         >
       ⏯
       </button>

@@ -3,24 +3,35 @@
 
 
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { ITask } from 'renderer/types';
-import styles from './timer.module.css';
+// import { ITask } from 'renderer/types';
 import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
+import styles from './timer.module.css';
 // 4000mHz-2400mSec
 
-interface ITimerProps extends ITask {
+interface ITimerProps {
   // title: string;
   // timerInput: number | string;
   // isSelected: boolean;
+  timerData: App.ITask | undefined;
   onUpdatedTimer: any;
-  displayType: 'hero' | 'list';
   setIsShowTimers: React.Dispatch<React.SetStateAction<boolean>>;
   triggerTimer: number;
 };
 
-const Timer: FC<ITimerProps> = (
-  {title, timerInput, currentTimer, onUpdatedTimer, isSelected, displayType, setIsShowTimers, triggerTimer}
-  ) => {
+const Timer: FC<ITimerProps> = (props) => {
+  const {
+    timerData,
+    onUpdatedTimer,
+    setIsShowTimers,
+    triggerTimer
+  } = props;
+
+  // eslint-disable-next-line prefer-destructuring
+  const title = timerData?.title;
+  // eslint-disable-next-line prefer-destructuring
+  const currentTimer = timerData?.currentTimer;
+  // console.log(`timerData: `, timerData);
+
   type TTimerState = 'paused' | 'resumed' | 'stopped';
 
   const firstLoad = useRef(true);
@@ -35,6 +46,7 @@ const Timer: FC<ITimerProps> = (
   const endAudio = new Audio(simpleBeep);
 
   const getTimeInSeconds = (time: string): number => {
+    // if (!time) return 0;
     const [ hours, minutes, seconds ] = time.split(':').map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
@@ -72,14 +84,16 @@ const Timer: FC<ITimerProps> = (
     if (!countdown?.current) return;
 
     // send updatedTimer to parent
-    onUpdatedTimer(outputTimeRef.current);
+    if (!!timerData?.id) {
+      onUpdatedTimer(outputTimeRef.current);
+    }
 
     clearInterval(countdown.current);
     // console.log(`pause ${title}: `, outputTimeRef.current);
 
     timerState.current = 'paused';
 
-  }, [onUpdatedTimer]);
+  }, [onUpdatedTimer, timerData?.id]);
 
   const stopCountdown = (): void => {
     // Question: right way?
@@ -100,12 +114,17 @@ const Timer: FC<ITimerProps> = (
       timerState.current = 'resumed';
       const formattedTime = getFormattedFullTime();
 
+      // NOTE: Core timer code start --
+
       // update state to current value
       outputTimeRef.current = formattedTime;
       setOutputTime(formattedTime);
 
-      // run timer..
+      // IMPORTANT: run timer..
       totalDeciSeconds.current -= 1;
+
+      // NOTE: -- Core timer code end
+
       if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
         handleTimerEndElectron({taskTitle: title});
@@ -146,9 +165,8 @@ const Timer: FC<ITimerProps> = (
     if (firstLoad.current) {
       firstLoad.current = false;
     } else {
-      if (isSelected) {
-        handleToggleTimerState();
-      };
+      handleToggleTimerState();
+
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,52 +195,39 @@ const Timer: FC<ITimerProps> = (
 
   return (
     <div
-      className={
-        `${styles.timer}
-        isSelected ? styles.timer.selected : ''
-        `
-      }
-      >
-        {
-          displayType === 'hero'
-          ? (
-            // TODO: Make this a component
-            <div
-              className={styles.hero}
-            >
-              <div className={styles['title-bar']} >
-                {title}
-              </div>
-              <div
-                  className={styles.body}
-                  onClick={handleShowHideAllTimers}
-
-                  onKeyUp={handleShowHideAllTimers}
-                  role="button"
-                  tabIndex={0}
-                >
-                {outputTime}
-              </div>
-            </div>
-
-          ) : (
-            // TODO: Make this a component
-            <div className={styles.list}>
-              {/* <span className={styles.btn} title='Select timer' >
-                {isSelected ? '⦿' : '⦾'}
-              </span>
-              <span>{title}: </span>
-              <span>{outputTime}</span> */}
-
-            </div>
-          )
+        className={
+          `${styles.timer}
+          isSelected ? styles.timer.selected : ''
+          `
         }
+      >
 
-      {/* <button
-        onClick={handleToggleTimerState}
-        >
-        {timerState === 'paused' ? 'Start' : 'Pause'}
-      </button> */}
+      {!!timerData ?
+        (
+          <div className={styles.hero} >
+            <div className={styles['title-bar']} >
+              {title}
+            </div>
+            <div
+                className={styles.body}
+                onClick={handleShowHideAllTimers}
+
+                onKeyUp={handleShowHideAllTimers}
+                role="button"
+                tabIndex={0}
+              >
+              {outputTime}
+            </div>
+          </div>
+
+      ) : (
+        <div className={styles.empty}>
+          <div className={styles['title-bar'] }>
+            .
+          </div>
+        </div>
+      )}
+
 
     </div>
   )

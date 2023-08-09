@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import { ITask } from 'types';
+import { api } from 'renderer/utils/trpc';
+// import { App.ITask } from 'types';
 import styles from './addTimer.module.css';
 
 interface IAddTimerProps {
@@ -16,7 +17,15 @@ const initTimer = {
 
 const AddTimer: FC<IAddTimerProps> = (props) => {
   const { timerArrayLength, onAddTimer  } = props;
-  const [ addForm, setAddForm ] = useState<ITask>(initTimer);
+  const [ addForm, setAddForm ] = useState<App.ITask>(initTimer);
+  const trpcContext = api.useContext();
+  const { mutate: dbAddTask } = api.task.addTask.useMutation({
+    onSuccess: () => {
+      trpcContext.task.getAllTasks.invalidate();
+      // resetForm(setAddForm);
+      setAddForm(initTimer);
+    }
+  })
 
   function handleUpdateForm(e:React.ChangeEvent<HTMLInputElement>) {
     setAddForm({
@@ -36,15 +45,18 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
   };
 
   function handleSubmit() {
-    const newForm:ITask = {
+    // if (timerArrayLength < 0) return console.error('Error');
+    console.log(`timerArrayLength: `, timerArrayLength);
+    const newForm:App.ITask = {
       ...addForm,
       id: timerArrayLength + 1,
       currentTimer: addForm.timerInput
     };
 
-    onAddTimer(newForm);
-    // return resetForm(setAddForm);
-    return setAddForm(initTimer);
+    // onAddTimer(newForm);
+    dbAddTask(newForm);
+
+    return false;
   };
 
   return (

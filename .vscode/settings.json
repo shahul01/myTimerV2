@@ -21,7 +21,9 @@
     "*.{css,sass,scss}.d.ts": true
   },
   "cSpell.words": [
-    "Deci"
+    "Deca",
+    "Deci",
+    "Uncapitalize"
   ],
   "editor.rulers": [
     71,

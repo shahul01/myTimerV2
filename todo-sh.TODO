@@ -5,7 +5,7 @@ Total:
       - fix:
         - on pause: send 'currentTimer' to parent
         - on resume: resume from last paused 'currentTimer'
-    ☐ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
+    ✔ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer @done(23-08-02 14:47)
 
 
   # important:
@@ -55,6 +55,7 @@ Total:
 
   # ideas:
     ☐ timer:
+      ☐ add delete option to task
       ☐ on double click:
         - show elapsed timer
         - pause / resume
@@ -64,7 +65,12 @@ Total:
 
 
     ☐ draggable anywhere
-    ☐ timer list draggable
+    ☐ timer list drag and droppable
+
+
+
+
+
     ☐ remember position on screen and monitor
     ☐ time end alert:
       ✔ beep @done(23-08-01 20:20)
@@ -74,8 +80,13 @@ Total:
 
     ☐ testing
 
+  # offline:
+    ☐ save fonts locally
+
 
   # performance:
+    ☐ uninstall
+      ☐ cors and its type
 
 
 
@@ -88,15 +99,40 @@ Total:
       https://electronjs.org/docs/tutorial/security.
       This warning will not show up
       once the app is packaged.
-    ☐ Replace any type
+    ☐ Replace types:
+      ☐ any type
+      ☐ unknown type
+
+    ☐ turn on recently disabled rules
+      - in .eslintrc.js
 
 
   # misc:
-
+    ☐ https://github.com/shahul01/myTimerV2/issues
+    ☐ add env processing files to trpc
 
 
   # Docs:
+    - ~best practices:
+      - file:///D:/Shahul/test-codes/fullstack/t3/chirp
 
+    - trpc / prisma
+      - https://trpc.io/docs/quickstart
+      - https://trpc.io/docs/server/adapters/express
+      - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
+      - file:///D:/Code/t3/my-t3-5-aug-23
+
+    - node / express
+      - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
+
+    - tools:
+      - https://github.com/prosepilot/trpc-openapi
+      - ERD:
+        - https://github.com/mohammed-bahumaish/prisma-editor
+        - https://cloud.smartdraw.com/
+
+    - misc:
+      - https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
 
 
   # Gist link:
