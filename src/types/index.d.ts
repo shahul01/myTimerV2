@@ -1,4 +1,14 @@
 declare global {
+
+  // TODO: move this to a folder common to main and renderer so both can get type
+  interface ITimerEnd {
+    e: Electron.IpcMainEvent;
+    arg: {
+      taskTitle: string;
+      timeSpent?: string;
+    };
+  }
+
   namespace App {
 
     interface IObject<Type> {

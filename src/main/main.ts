@@ -18,6 +18,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+const isDevelopmentUser = JSON.parse( process.env?.isDevelopmentUser || 'false' );
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -28,24 +30,34 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-const userSettings = {
-  version: '1.0.0',
-  appSize: {
-    sticky: {
+function appDimensionDict() {
+  return isDevelopmentUser ? (
+    {
       hideTimers: { height: 400, width: 600 },
       showTimers: { height: 400, width: 600 },
       expanded: { height: 400, width: 600 }
-      // hideTimers: { height: 48, width: 140 },
-      // showTimers: { height: 370, width: 140 },
-      // expanded: { height: 400, width: 600 }
-    },
+
+    }
+  ) : (
+    {
+      hideTimers: { height: 48, width: 140 },
+      showTimers: { height: 370, width: 140 },
+      expanded: { height: 400, width: 600 }
+    }
+  )
+};
+
+const userSettings = {
+  version: '1.0.0',
+  appDimension: {
+    sticky: appDimensionDict(),
   }
 
 };
 
-function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
+function getAppDimension(dimension:'height'|'width', isStickyHovered:boolean):number{
   const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
-  const newSize = userSettings.appSize.sticky[displayOption][dimension];
+  const newSize = userSettings.appDimension.sticky[displayOption][dimension];
   // console.log(`newSize ${dimension}: `, newSize);
   return newSize;
 };
@@ -63,20 +75,11 @@ ipcMain.on(
   'handle-sticky-hover',
   (e, arg:boolean) => {
     // console.log(`arg: `, arg);
-    const newHeight = getAppSize('height', arg);
-    const newWidth = getAppSize('width', arg);
+    const newHeight = getAppDimension('height', arg);
+    const newWidth = getAppDimension('width', arg);
     mainWindow?.setSize(newWidth, newHeight);
   }
 );
-
-// TODO: move this to a folder common to main and renderer so both can get type
-interface ITimerEnd {
-  e: Electron.IpcMainEvent;
-  arg: {
-    taskTitle: string;
-    timeSpent?: string;
-  };
-};
 ipcMain.on(
   'handle-timer-end',
   (e, arg) => {
@@ -102,7 +105,7 @@ if (process.env.NODE_ENV === 'production') {
 const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
-if (isDevelopment) {
+if (isDevelopment && isDevelopmentUser) {
   require('electron-debug')();
 }
 
@@ -135,8 +138,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: getAppSize('width', false),
-    height: getAppSize('height', false),
+    width: getAppDimension('width', false),
+    height: getAppDimension('height', false),
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
