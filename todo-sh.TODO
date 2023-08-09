@@ -33,11 +33,11 @@ Total:
 
 
   # techstack:
-    ☐ tRPC(?)
-    ☐ db
+    ✔ tRPC(?) @done(23-08-10 00:57)
+    ✔ db @done(23-08-10 00:57)
       - postgresql
       - sqlite
-      ☐ zod
+      ✔ zod @done(23-08-10 00:57)
 
 
 
@@ -59,17 +59,28 @@ Total:
       ☐ on double click:
         - show elapsed timer
         - pause / resume
+      ☐ id as identifier instead of title:
+        ☐ replace title with id, which could be same as title, so title can be edited
+        ☐ make title editable
+      ☐ make task's timer editable
+        ☐ before edit, prompt to save data to db
+
+    ☐ Mac: show on all windows / desktops
+    ☐ integrate with db
+    ☐ executable file for win & mac
+    ☐ minimise btn
+    ☐ sync:
+      ☐ btn to backup timer table within db
+
+    ☐ open source(?)
+
+
 
     ☐ stopwatch:
       ☐ multiples in list just like timers but with stopwatch
 
-
     ☐ draggable anywhere
     ☐ timer list drag and droppable
-
-
-
-
 
     ☐ remember position on screen and monitor
     ☐ time end alert:
@@ -86,9 +97,6 @@ Total:
 
   # performance:
     ☐ uninstall
-      ☐ cors and its type
-
-
 
   # security:
     ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
