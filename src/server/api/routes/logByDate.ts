@@ -45,12 +45,12 @@ export const logByDateRouter = createTRPCRouter({
       return resGetAllLogs;
     }),
 
-  // use upsert
+  // TODO: use upsert(?)
   postLog: publicProcedure
     .input(z.object(
       {
         id: z.string(),
-        date: z.date(),
+        date: z.string(),
         taskName: z.string(),
         timeSpent: z.string()
       }

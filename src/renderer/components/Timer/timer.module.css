@@ -16,10 +16,15 @@
   user-select: none;
 }
 
+.hero .title-bar:hover,
+.empty .title-bar:hover {
+  background-color: hsla(var(--color-text-1), 0.65);
+}
+
 .hero .body {
   outline: none;
   margin: 0.125rem 0;
-  color: hsl(0deg, 0%, 92%);
+  color: hsla(var(--color-text-2), 1);
   /* text-align: left; */
   /* font-family: 'Courier', monospace; */
   font-family: 'Chivo Mono';

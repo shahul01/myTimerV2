@@ -1,3 +1,5 @@
+
+
 interface IGetNumberAsTimeProps {
   number: number;
   selectedUnit: 'minutes' | 'seconds';
@@ -6,6 +8,7 @@ interface IGetNumberAsTimeProps {
 export function getNumberAsTime(props:IGetNumberAsTimeProps):string {
   const { number, selectedUnit } = props;
   let numberAsTime:string = '00:00:00';
+
   const twoDigits = (time:number) => time > 9 ? `${time}` : `0${time}`;
 
   const fullHours = number;
@@ -25,7 +28,7 @@ interface IGetTimeAsNumberProps {
 };
 
 export function getTimeAsNumber(props:IGetTimeAsNumberProps):number {
-  const { time, preferredUnit } = props;
+  const { time='00:00:00', preferredUnit } = props;
   let timeAsNumber:number = 0;
 
   // if (typeof(time) !== 'string') return ({

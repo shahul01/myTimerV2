@@ -14,11 +14,11 @@ declare global {
       timerInput: string;
       currentTimer: string;
 
-      type?: TTaskType;
-      isSelected?: boolean;
-      switchedCount?: number;
-      timeSpent?: number;
-      description?: string;
+      // type?: TTaskType;
+      // isSelected?: boolean;
+      // switchedCount?: number;
+      // timeSpent?: number;
+      // description?: string;
     }
 
     interface IConfig {
@@ -32,6 +32,7 @@ declare global {
 
     interface ILogByDate {
       id: string;
+      // TODO: make date string type as in Db
       date: Date;
       taskName: string;
       timeSpent: string;
