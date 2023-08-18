@@ -6,25 +6,40 @@ import Timer from './components/Timer/Timer';
 import TimerButton from './components/TimerButton/TimerButton';
 import Timers from './components/Timers/Timers';
 import AddTimer from './components/AddTimer/AddTimer';
-// import icon from '../../assets/icon.svg';
-// import global from '../types/global';
-import { api } from './utils/trpc';
-import './App.css';
 import Modal from './components/Modal/Modal';
 import Sync from './components/Sync/Sync';
+import { api } from './utils/trpc';
+import { calcTimeSpent } from './utils/time';
+// import icon from '../../assets/icon.svg';
+// import global from '../types/global';
+import './App.css';
 
 
 const Main = () => {
 
+  const trpcContext = api.useContext();
   // const greeting = api.example.greeting.useQuery({name: 'Yo2'});
   // console.log(`greeting.data: `, greeting.data);
   // const id = api.example.idGetAll.useQuery();
   // console.log(`id?.data: `, stringify(id?.data));
-  const { data: dbTimerArray } = api.task.getAllTasks.useQuery();
+  const { data: dbTimerArray, isLoading: isLoadingTimerArray } = api.task.getAllTasks.useQuery();
+  const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery();
 
-  const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.UpdateCurrentTimer.useMutation({
+  const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.updateCurrentTimer.useMutation({
     onSuccess: () => {
-      // void ctx.task.getAllTasks.invalidate();
+      trpcContext.task.getAllTasks.invalidate();
+    }
+  });
+
+  const { mutate:dbPatchToLog } = api.logByDate.patchLog.useMutation({
+    onSuccess: () => {
+      // trpcContext.logByDate.getAllLogs.invalidate();
+      // eslint-disable-next-line no-use-before-define
+      updateTimerValueToTimerDb();
+      // resetTimerValue();
+    },
+    onError: (error) => {
+      console.error('error - reset timer - patch mutation', error)
     }
   });
 
@@ -34,6 +49,7 @@ const Main = () => {
   //   { title: 'React', timeLeft: '08:59:59' },
   // ];
 
+  const firstLoad = useRef(true);
   const initId = 0;
   const initTimerArray = [{
     id: initId, title: '.',
@@ -98,6 +114,63 @@ const Main = () => {
 
   }, [selTimerId, timerArray, updateCurrentTimer]);
 
+  // TODO: modularise this fn
+
+  const selTimerIdx = timerArray.findIndex(cT => {
+    return cT.id === selTimerId;
+  });
+
+  // function resetTimerValue() {
+  //   timerArray[selTimerIdx] = {
+  //     ...timerArray[selTimerIdx],
+  //     currentTimer: timerArray[selTimerIdx].timerInput
+  //   };
+  // };
+
+  function updateTimerValueToTimerDb() {
+    updateCurrentTimer({
+      id: timerArray[selTimerIdx].id,
+      currentTimer: timerArray[selTimerIdx].timerInput
+    })
+
+  };
+
+  function handleResetTimer() {
+
+    function updateTimerValToLogDb() {
+      // timerArray[selTimerIdx] = {
+      //   ...timerArray[selTimerIdx],
+      //   // patch
+      // };
+
+      const selTimerLogIdx = dbLogAll?.findIndex(cL => {
+        return cL.taskName === timerArray[selTimerIdx].title;
+      });
+
+      if (!dbLogAll || !selTimerLogIdx) return;
+
+      dbPatchToLog({
+        // should be currLog.id...
+        id: dbLogAll[selTimerLogIdx].id,
+        date: new Date().toISOString(),
+        taskName: timerArray[selTimerIdx].title,
+        timeSpent: calcTimeSpent(timerArray[selTimerIdx]),
+      })
+
+    };
+
+    updateTimerValToLogDb();
+    // resetTimerValue();
+  };
+
+  useEffect(() => {
+
+    if (firstLoad.current) {
+      console.log('#App Loaded');
+      firstLoad.current = false;
+    }
+  }, []);
+
   useEffect(() => {
     // updateTimerArray when dbTimerArray is available
     updateTimerArray();
@@ -116,7 +189,27 @@ const Main = () => {
           onClose={() => setIsShowModal(false)}
         >
           <div className="modal-body">
-            <Sync />
+
+            {/* <ol>
+              <li>Reset timer</li>
+              <li>Sync</li>
+            </ol>
+            <div className="hr-fade" /> */}
+              <div className="reset-timer">
+                {/* <h3>Reset timer</h3> */}
+                <div className="body">
+                  <button
+                    type='button'
+                    onClick={() => handleResetTimer()}
+
+                  >
+                    Reset current timer
+                  </button>
+                </div>
+                <br />
+              </div>
+            <div className="hr-fade" />
+              <Sync />
           </div>
       </Modal>
 

@@ -46,6 +46,7 @@ const Modal: FC<IModalProps> = (props) => {
                 X
               </button>
             </div>
+            <div className="hr-fade" />
             <div className={styles.body} >
               {children}
             </div>

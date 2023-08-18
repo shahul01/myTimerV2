@@ -9,6 +9,7 @@ export function getNumberAsTime(props:IGetNumberAsTimeProps):string {
   const { number, selectedUnit } = props;
   let numberAsTime:string = '00:00:00';
 
+  // returns 00 | 01 | 59...
   const twoDigits = (time:number) => time > 9 ? `${time}` : `0${time}`;
 
   const fullHours = number;

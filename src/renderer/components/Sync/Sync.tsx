@@ -146,6 +146,7 @@ const Sync: FC<ISyncProps> = (props) => {
 
         if (
           currLog.taskName === currTimer.title
+          // availableInLogData()
         ) {
           // if ( logTimeAsNumber > currDbTimeAsNumber ) return;
           toPatchData.push({

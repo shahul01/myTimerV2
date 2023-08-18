@@ -35,7 +35,7 @@ export const taskRouter = createTRPCRouter({
     }),
 
   // make this private
-  UpdateCurrentTimer: publicProcedure
+  updateCurrentTimer: publicProcedure
     .input(
       z.object({
         id: z.number(),

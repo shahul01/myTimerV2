@@ -1,60 +1,87 @@
 Total:
   # bugs:
-    ✔ timer still gives switching error @done(23-07-23 12:38)
-      - as it is a new timer(?) rather than referencing the component it creates and reuses it
-      - fix:
-        - on pause: send 'currentTimer' to parent
-        - on resume: resume from last paused 'currentTimer'
-    ✔ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer @done(23-08-02 14:47)
+    timer:
+      ✔ timer still gives switching error @done(23-07-23 12:38)
+        - as it is a new timer(?) rather than referencing the component it creates and reuses it
+        - fix:
+          - on pause: send 'currentTimer' to parent
+          - on resume: resume from last paused 'currentTimer'
+    ☐ sync
+      ☐ sync by title has repeated titles...
+    ☐ Warning:
+      ✔ 1. Can't perform a React state update on an unmounted component. @done(23-08-02 14:47)
+        - This is a no-op, but it indicates a memory leak in your application.
+        - To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
 
 
   # important:
+    - top:
+      - remember to fix bugs
+      - top 5:
+        - reset timer
+        - for mac: always visible
+        - id instead of name
+        - backup and restore w/ config file
+        - testing
+
+      - rest:
+        - double click - pause / resume
+        - change bg color on running
+        - local storage
+        - user auth
+
     ☐ Input mask
-    ☐ Basic Backup and restore when clicking particular btn
+    ☐ timer string validation:
+      ☐ regex
+      ☐ zod
+
+    ☐ Backup and restore:
+      ☐ when clicking particular btn
+      ☐ basic
+      ☐ backup
+      ☐ restore
+	    ☐ as jsonc config gile
+
+
+    ☐ web version
+      - add user roles
+      ☐ needs server on web to run FE
+	    ☐ one source of truth timer: eg pausing web version pauses electron's timer...
 
     ☐ phone version:
       ☐ sync:
         ☐ can get tasks and current level of completion
         ☐ one touch sync
 
-    ☐ web version
-      ☐ needs server to run FE
-
 
   # design:
     ✔ no window titlebar @done(23-07-31 14:13)
+    ☐ when running, change body color
     ☐ to timer lists:
       ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
+    ☐ replace border with fading border
+
     ☐ size
       ☐ resizable
         ☐ remembers dimensions even after toggling different sizes
       ☐ font auto adjust
+      ☐ on modal, have prop for modal that resizes the electron app acc to modal props
+
+    ☐ responsive
+    ☐ theme color per task
 
 
   # techstack:
-    ✔ tRPC(?) @done(23-08-10 00:57)
-    ✔ db @done(23-08-10 00:57)
+    ☐ db
       - postgresql
-      - sqlite
-      ✔ zod @done(23-08-10 00:57)
-
-
-
-  # refactor:
-
-
-
-  # good codebases for reference:
-
-
-
-  # references and resources:
-
-
+    ☐ tailwind
+      - for responsiveness(?)
 
   # ideas:
     ☐ timer:
+      ☐ reset
+        ☐ and before reset, send timespent to db
       ☐ add delete option to task
       ☐ on double click:
         - show elapsed timer
@@ -63,24 +90,46 @@ Total:
         ☐ replace title with id, which could be same as title, so title can be edited
         ☐ make title editable
       ☐ make task's timer editable
-        ☐ before edit, prompt to save data to db
+        - ie each task has default timer, make it changable
+        ☐ before updating the timer, prompt to save data to db
+          - create timespent prop for ITask, which persists for entire day
 
     ☐ Mac: show on all windows / desktops
+    ☐ refresh react home page
     ☐ integrate with db
-    ☐ executable file for win & mac
+    ☐ executable file:
+      ☐ win
+      ☐ mac
+      ☐ integrated with db
+      ☐ make it portable
+
     ☐ minimise btn
-    ☐ sync:
-      ☐ btn to backup timer table within db
+    ☐ remove unicode and emoji btn and replace with svg buttons
+      ☐ sync:
+        ☐ btn to backup timer table within db
 
-    ☐ open source(?)
+    ☐ blink
+      ☐ on end
+      ☐ when paused, once every 15 mins
 
+    ☐ open source the repo(?)
 
+    ☐ localStorage
+      - save every elapsed sec to lclStrg
+      - 'when' crash && if lclstrg has data && more time elapsed on lclStrg than db
+        - ask to restore from lclStrg and push to db
+
+    ☐ PWA
+    ☐ Browser only
+    ☐ offline only
 
     ☐ stopwatch:
       ☐ multiples in list just like timers but with stopwatch
 
     ☐ draggable anywhere
     ☐ timer list drag and droppable
+    ☐ hotkeys
+      ☐ resume and pause
 
     ☐ remember position on screen and monitor
     ☐ time end alert:
@@ -89,16 +138,40 @@ Total:
       ☐ reverse countdown
     ☐ heatmap
 
-    ☐ testing
+
+  # refactor:
+    ☐ sync.tsx → too many loops...
+      - rewrite 3x
+      - use chatgpt
+
 
   # offline:
     ☐ save fonts locally
 
 
+  # testing:
+    type:
+      ☐ unit testing
+        ☐ timer:
+          ☐ runs for particular seconds etc
+            ☐ unit testing
+          ☐ play pause
+        ☐ util function
+          ☐ important ones
+          ☐ possibly buggy ones
+      ☐ e2e testing
+        ☐ CRUD
+        ☐ sync
+
+
+
   # performance:
-    ☐ uninstall
+    ☐ uninstall unused npms
+
 
   # security:
+    ☐ User auth to connect with db
+
     ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
         Policy set or a policy with "unsafe-eval" enabled. This exposes users of
         this app to unnecessary security risks.
@@ -107,12 +180,17 @@ Total:
       https://electronjs.org/docs/tutorial/security.
       This warning will not show up
       once the app is packaged.
+
     ☐ Replace types:
       ☐ any type
       ☐ unknown type
 
     ☐ turn on recently disabled rules
       - in .eslintrc.js
+    ☐ remove eslint in-file/in-line disable
+      ☐ remove disabled rule for exhaustive useEffect deps
+
+
 
 
   # misc:
@@ -120,7 +198,7 @@ Total:
     ☐ add env processing files to trpc
 
 
-  # Docs:
+  # Docs & reference:
     - ~best practices:
       - file:///D:/Shahul/test-codes/fullstack/t3/chirp
 
@@ -141,6 +219,10 @@ Total:
 
     - misc:
       - https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
+      - https://stackoverflow.com/questions/41855859/electron-how-to-setup-db-with-sqlite-in-windows
+      - https://morioh.com/a/9fa8d2cf658c/create-a-simple-react-project-electron-app-sqlite3-connection
+      - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9
+      - https://www.google.com/search?q=portable+electron+app
 
 
   # Gist link:

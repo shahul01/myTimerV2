@@ -12,13 +12,16 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
-const isDevelopmentUser = JSON.parse( process.env?.isDevelopmentUser || 'false' );
+process.env.isDevelopmentUser='false';
+const isDevelopmentUser = process.env.isDevelopmentUser && JSON.parse(
+   process.env.isDevelopmentUser
+);
 
 export default class AppUpdater {
   constructor() {
@@ -31,6 +34,7 @@ export default class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 
 function appDimensionDict() {
+  console.log(`isDevelopmentUser: `, isDevelopmentUser);
   return isDevelopmentUser ? (
     {
       hideTimers: { height: 400, width: 600 },
@@ -144,7 +148,10 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+
     frame: false,
+    // fix: enabling 'transparent' disables window maximization
+    transparent: true,
   });
 
   mainWindow.setAlwaysOnTop(true);
