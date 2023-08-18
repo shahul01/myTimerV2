@@ -18,7 +18,7 @@ Total:
     - top:
       - remember to fix bugs
       - top 5:
-        - reset timer
+        ✔ reset timer @done(23-08-19 00:41)
         - for mac: always visible
         - id instead of name
         - backup and restore w/ config file
@@ -29,6 +29,7 @@ Total:
         - change bg color on running
         - local storage
         - user auth
+        - refactor
 
     ☐ Input mask
     ☐ timer string validation:
@@ -216,6 +217,10 @@ Total:
       - ERD:
         - https://github.com/mohammed-bahumaish/prisma-editor
         - https://cloud.smartdraw.com/
+
+    - pin to top:
+      - https://stackoverflow.com/questions/49232037/how-to-make-electron-in-a-window-on-top-of-all-other-windows-as-an-indicator-of
+      - https://syobochim.medium.com/electron-keep-apps-on-top-whether-in-full-screen-mode-or-on-other-desktops-d7d914579fce
 
     - misc:
       - https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48

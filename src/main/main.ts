@@ -154,7 +154,9 @@ const createWindow = async () => {
     transparent: true,
   });
 
-  mainWindow.setAlwaysOnTop(true);
+  mainWindow.setVisibleOnAllWorkspaces(true, {});
+  mainWindow.setAlwaysOnTop(true, 'pop-up-menu');
+  // mainWindow.moveTop();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
