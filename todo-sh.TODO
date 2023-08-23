@@ -8,6 +8,10 @@ Total:
           - on resume: resume from last paused 'currentTimer'
     ☐ sync
       ☐ sync by title has repeated titles...
+
+    electron:
+      ☐ refresh fn not working when frameless
+
     ☐ Warning:
       ✔ 1. Can't perform a React state update on an unmounted component. @done(23-08-02 14:47)
         - This is a no-op, but it indicates a memory leak in your application.
@@ -16,11 +20,12 @@ Total:
 
   # important:
     - top:
-      - remember to fix bugs
+
       - top 5:
+        - (fix bugs)
         ✔ reset timer @done(23-08-19 00:41)
-        - for mac: always visible
-        - id instead of name
+        ✔ for mac: always visible @done(23-08-19 00:57)
+        - id instead of name (use 'name ===' to filter)
         - backup and restore w/ config file
         - testing
 
@@ -112,6 +117,8 @@ Total:
     ☐ blink
       ☐ on end
       ☐ when paused, once every 15 mins
+
+    ☐ view raw data on db
 
     ☐ open source the repo(?)
 
@@ -224,6 +231,7 @@ Total:
 
     - misc:
       - https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
+      - https://codesandbox.io/s/sh-coundown-timers-single-button-y72wfh?file=/src/components/Timer/Timer.tsx
       - https://stackoverflow.com/questions/41855859/electron-how-to-setup-db-with-sqlite-in-windows
       - https://morioh.com/a/9fa8d2cf658c/create-a-simple-react-project-electron-app-sqlite3-connection
       - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9

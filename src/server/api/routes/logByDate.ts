@@ -79,10 +79,10 @@ export const logByDateRouter = createTRPCRouter({
       const resPatchLog = await ctx.prisma.logByDate.updateMany({
         where: {
           id: input.id,
-          taskName: input.taskName
         },
         data: {
           date: input.date,
+          taskName: input.taskName,
           timeSpent: input.timeSpent
         }
 

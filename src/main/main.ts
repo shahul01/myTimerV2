@@ -19,8 +19,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 process.env.isDevelopmentUser='false';
-const isDevelopmentUser = process.env.isDevelopmentUser && JSON.parse(
-   process.env.isDevelopmentUser
+const isDevelopmentUser = JSON.parse(
+  (process.env.isDevelopmentUser || 'false')
 );
 
 export default class AppUpdater {
@@ -150,12 +150,14 @@ const createWindow = async () => {
     },
 
     frame: false,
+    resizable: true,
+
     // fix: enabling 'transparent' disables window maximization
     transparent: true,
   });
 
   mainWindow.setVisibleOnAllWorkspaces(true, {});
-  mainWindow.setAlwaysOnTop(true, 'pop-up-menu');
+  mainWindow.setAlwaysOnTop(true, 'screen-saver', 1);
   // mainWindow.moveTop();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
