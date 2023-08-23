@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  // url      = "db.sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -17,17 +16,17 @@ model Example {
 
 model Task {
 // id          TEXT PRIMARY KEY DESC
-  id           Int         @id @unique
+  id           String         @id @unique
   title        String
   timerInput   String
   currentTimer String
-  // createdAt    DateTime @default(now())
-  // updatedAt    DateTime @updatedAt
+  // createdAt DateTime       @default(now())
+  // updatedAt DateTime       @updatedAt
 }
 
 model LogByDate {
-  id String @id @unique @default(uuid())
-  date DateTime
-  taskName String
+  id        String @id @unique @default(uuid())
+  date      DateTime
+  taskName  String
   timeSpent String
 }

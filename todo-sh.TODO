@@ -215,6 +215,7 @@ Total:
       - https://trpc.io/docs/server/adapters/express
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
+      - Updating schema: https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/customizing-migrations#how-to-edit-a-migration-file
 
     - node / express
       - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
