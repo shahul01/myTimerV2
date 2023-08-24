@@ -50,7 +50,7 @@ const Main = () => {
   // ];
 
   const firstLoad = useRef(true);
-  const initId = 0;
+  const initId = `${Math.random()}`;
   const initTimerArray = [{
     id: initId, title: '.',
     timerInput: '00:00:00', currentTimer: '00:00:00'
@@ -74,8 +74,8 @@ const Main = () => {
     };
   };
 
-  function handleSetSelTimer(i:number) {
-    setSelTimerId(i);
+  function handleSetSelTimer(i:string) {
+    setSelTimerId(`${i}`);
   };
 
   const handleTriggerTimer = useCallback(() => {

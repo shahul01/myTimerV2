@@ -15,7 +15,7 @@ export const taskRouter = createTRPCRouter({
   addTask: publicProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         title: z.string(),
         timerInput: z.string(),
         currentTimer: z.string()
@@ -38,7 +38,7 @@ export const taskRouter = createTRPCRouter({
   updateCurrentTimer: publicProcedure
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         currentTimer: z.string()
       })
     )

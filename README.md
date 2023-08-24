@@ -14,6 +14,8 @@
 
 ### codes
 
+#### 1. to start
+
 ```
   # frontend and backend
   npm i --save-exact
@@ -25,6 +27,15 @@
   npx prisma db push
   npm run dev:server
 
+```
+
+#### 2. misc
+
+#### 2a. prisma schema update
+
+```
+  npx prisma migrate dev --create-only
+  npx prisma migrate dev
 ```
 
 #### refer todo for reference docs

@@ -9,7 +9,7 @@ interface IAddTimerProps {
 };
 
 const initTimer = {
-  id: 0,
+  id: `${Math.random()}`,
   title: '',
   timerInput: '01:00:00',
   currentTimer: '01:00:00'
@@ -49,7 +49,7 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
     console.log(`timerArrayLength: `, timerArrayLength);
     const newForm:App.ITask = {
       ...addForm,
-      id: timerArrayLength + 1,
+      id: `${timerArrayLength + 1}`,
       currentTimer: addForm.timerInput
     };
 

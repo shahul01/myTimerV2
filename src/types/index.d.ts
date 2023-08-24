@@ -27,7 +27,7 @@ declare global {
     }
 
     interface ITask {
-      id: number;
+      id: string;
       title: string;
       // number | DateTime(?)
       timerInput: string;
