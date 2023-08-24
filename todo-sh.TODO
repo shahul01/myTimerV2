@@ -151,6 +151,7 @@ Total:
     ☐ sync.tsx → too many loops...
       - rewrite 3x
       - use chatgpt
+    ☐ replace `return` for guard clauses with `Error` if necessary
 
 
   # offline:
