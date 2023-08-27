@@ -19,6 +19,7 @@ Total:
         - To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
 
 
+
   # important:
     - top:
 
@@ -37,28 +38,14 @@ Total:
         - user auth
         - refactor
 
-    ☐ Input mask
-    ☐ timer string validation:
-      ☐ regex
-      ☐ zod
+        - Input mask
+        - timer string validation
+        - Backup and restore
+        - web version
+        - phone version
 
-    ☐ Backup and restore:
-      ☐ when clicking particular btn
-      ☐ basic
-      ☐ backup
-      ☐ restore
-	    ☐ as jsonc config gile
+        - keep an eye on inline TODOs
 
-
-    ☐ web version
-      - add user roles
-      ☐ needs server on web to run FE
-	    ☐ one source of truth timer: eg pausing web version pauses electron's timer...
-
-    ☐ phone version:
-      ☐ sync:
-        ☐ can get tasks and current level of completion
-        ☐ one touch sync
 
 
   # design:
@@ -79,51 +66,92 @@ Total:
     ☐ theme color per task
 
 
+
   # techstack:
     ☐ db
       - postgresql
     ☐ tailwind
       - for responsiveness(?)
 
+
+
   # ideas:
+    versions:
+      ☐ electron:
+        ☐ Mac: show on all windows / desktops
+        ☐ refresh react home page
+        ☐ integrate with db
+        ☐ executable file:
+          ☐ win
+          ☐ mac
+          ☐ integrated with db
+          ☐ make it portable
+        ☐ view raw data on db
+          ☐ table name in dropdown, once selected
+          ☐ shows all the data
+
+        ☐ remember position on screen and monitor
+
+
+      ☐ web:
+        ☐ modes:
+          - offline only ready
+          ☐ online
+            - add user roles
+          ☐ needs server on web to run FE
+          ☐ one source of truth timer
+            - eg pausing web version pauses electron's timer for that user...
+        ☐ PWA - for both modes
+
+
+      ☐ phone:
+
+
     ☐ timer:
       ☐ reset
         ✔ and before reset, send timespent to db @done(23-08-27 01:05)
         ☐ after reset, sel timer shouldnt change
       ☐ add delete option to task
       ☐ on double click:
-        - show elapsed timer
         - pause / resume
-      ☐ id as identifier instead of title:
+        - show elapsed timer
+      ✔ id as identifier instead of title: @done(23-08-27 23:47)
         ✔ replace title with id, which could be same as title, so title can be edited @done(23-08-27 01:05)
-        - editable
-          ☐ title
-          ☐ timerInput:
-            - ie each task has default timer, make it changable
-            ☐ before updating the timer, prompt to save data to db
-              - create timespent prop for ITask, which persists for entire day
+      ☐ editable
+        ☐ title
+        ☐ timerInput:
+          - ie each task has default timer, make it changable
+          ☐ before updating the timer, prompt to save data to db
+            - create timespent prop for ITask, which persists for entire day
 
-    ☐ Mac: show on all windows / desktops
-    ☐ refresh react home page
-    ☐ integrate with db
-    ☐ executable file:
-      ☐ win
-      ☐ mac
-      ☐ integrated with db
-      ☐ make it portable
+
+    ☐ Backup and restore:
+      feature:
+        ✔ when clicking particular btn @done(23-08-27 23:38)
+        ☐ basic
+        ☐ backup
+        ☐ restore
+        ☐ as .jsonc config file
+      code:
+        ☐ add reducers for hard coded values in Sync/ExportData.tsx(+)
+
+    ☐ Input mask
+    ☐ timer string validation:
+      ☐ regex
+      ☐ zod
+
+
+    ☐ sync:
+      ☐ can get tasks and current level of completion
+      ☐ one touch sync
+      ☐ btn to backup timer table within db
 
     ☐ minimise btn
     ☐ remove unicode and emoji btn and replace with svg buttons
-      ☐ sync:
-        ☐ btn to backup timer table within db
 
     ☐ blink
       ☐ on end
       ☐ when paused, once every 15 mins
-
-    ☐ view raw data on db
-      ☐ table name in dropdown, once selected
-      ☐ shows all the data
 
     ☐ open source the repo(?)
 
@@ -131,10 +159,6 @@ Total:
       - save every elapsed sec or min to lclStrg.
       - 'when' crash && if lclStrg has data && more time elapsed on lclStrg than db
         - ask to restore from lclStrg and push to db
-
-    ☐ PWA
-    ☐ Browser only
-    ☐ offline only
 
     ☐ stopwatch:
       ☐ multiples in list just like timers but with stopwatch
@@ -144,12 +168,12 @@ Total:
     ☐ hotkeys
       ☐ resume and pause
 
-    ☐ remember position on screen and monitor
     ☐ time end alert:
       ✔ beep @done(23-08-01 20:20)
       ✔ message dialog box @done(23-08-01 20:20)
       ☐ reverse countdown
     ☐ heatmap
+
 
 
   # refactor:
@@ -165,8 +189,11 @@ Total:
       ☐ logByDate has 2 interface, one global and one infile, remove one.
 
 
+
   # offline:
     ☐ save fonts locally
+    ☐ offline only ready
+
 
 
   # testing:
@@ -190,6 +217,7 @@ Total:
     ☐ Reduce loop count(+) in Sync
 
 
+
   # security:
     ☐ User auth to connect with db
 
@@ -202,11 +230,10 @@ Total:
       This warning will not show up
       once the app is packaged.
 
-    ☐ turn on recently disabled rules
+    ☐ turn on recently disabled rules(+)
       - in .eslintrc.js
     ☐ remove eslint in-file/in-line disable
       ☐ remove disabled rule for exhaustive useEffect deps
-
 
 
 
@@ -215,7 +242,8 @@ Total:
     ☐ add env processing files to trpc
 
 
-  # Docs & reference:
+
+  # docs & reference:
     - ~best practices:
       - file:///D:/Shahul/test-codes/fullstack/t3/chirp
 
@@ -252,9 +280,13 @@ Total:
       - https://www.google.com/search?q=portable+electron+app
       - https://github.com/electron/electron/issues/11895
 
-  # Symbols:
+
+
+  # symbols:
     - (+) - already mentioned in code inline
     - (?) -
 
-  # Gist link:
+
+
+# Gist link:
 
