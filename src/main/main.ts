@@ -19,7 +19,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 process.env.isDevelopmentUser='false';
-const isDevelopmentUser = JSON.parse(
+const isDevelopmentUser:boolean = JSON.parse(
   (process.env.isDevelopmentUser || 'false')
 );
 

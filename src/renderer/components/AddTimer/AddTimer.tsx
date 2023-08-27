@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { api } from 'renderer/utils/trpc';
-import { generateRandomWords } from 'renderer/utils/misc';
+import { generateRandomWords, tempId } from 'renderer/utils/misc';
 // import { App.ITask } from 'types';
 import styles from './addTimer.module.css';
 
@@ -10,7 +10,7 @@ interface IAddTimerProps {
 };
 
 const initTimer = {
-  id: `${Math.random()}`,
+  id: tempId(),
   title: '',
   timerInput: '01:00:00',
   currentTimer: '01:00:00'

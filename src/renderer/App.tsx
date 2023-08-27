@@ -10,6 +10,7 @@ import Modal from './components/Modal/Modal';
 import Sync from './components/Sync/Sync';
 import { api } from './utils/trpc';
 import { calcTimeSpent } from './utils/time';
+import { tempId } from './utils/misc';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
 import './App.css';
@@ -33,7 +34,8 @@ const Main = () => {
 
   const { mutate:dbPatchToLog } = api.logByDate.patchLog.useMutation({
     onSuccess: () => {
-      // trpcContext.logByDate.getAllLogs.invalidate();
+      trpcContext.logByDate.getAllLogs.invalidate();
+      trpcContext.task.getAllTasks.invalidate();
       // eslint-disable-next-line no-use-before-define
       updateTimerValueToTimerDb();
       // resetTimerValue();
@@ -50,7 +52,7 @@ const Main = () => {
   // ];
 
   const firstLoad = useRef(true);
-  const initId = `${Math.random()}`;
+  const initId = tempId();
   const initTimerArray = [{
     id: initId, title: '.',
     timerInput: '00:00:00', currentTimer: '00:00:00'
@@ -144,7 +146,7 @@ const Main = () => {
       // };
 
       const selTimerLogIdx = dbLogAll?.findIndex(cL => {
-        return cL.taskName === timerArray[selTimerIdx].title;
+        return cL.id === timerArray[selTimerIdx].id;
       });
 
       if (!dbLogAll || !selTimerLogIdx) return;
@@ -200,10 +202,10 @@ const Main = () => {
                 <div className="body">
                   <button
                     type='button'
-                    onClick={() => handleResetTimer()}
+                    onClick={handleResetTimer}
 
                   >
-                    Reset current timer
+                    Reset timer: {timerArray.find(cT => cT.id === selTimerId)?.title}
                   </button>
                 </div>
                 <br />

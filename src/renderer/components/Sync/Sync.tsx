@@ -94,7 +94,7 @@ const Sync: FC<ISyncProps> = (props) => {
     function sendToPostDataVar(currTimer:App.ITask, from:number) {
       // console.log('from', from);
       toPostData.push({
-        id: uuid({idLength: 'some'}),
+        id: currTimer.id,
         date: new Date().toISOString(),
         taskName: currTimer.title,
         timeSpent: calcTimeSpent(currTimer)
@@ -108,17 +108,18 @@ const Sync: FC<ISyncProps> = (props) => {
 
     };
       // type TDBLogAll = typeof App.ILogByDate;
-      dbLogAllRef.current?.forEach((currLog: App.ILogByDate) => {
+      dbLogAllRef.current?.forEach((currLog:ILogByDate) => {
+        console.log(`currLog: `, currLog);
 
         const availableInPostData = () =>  {
           return toPostData.find((currPost:ILogByDate) => {
-            return currPost.taskName === currTimer.title;
+            return currPost.id === currTimer.id;
           });
         };
 
         const availableInPatchData = () => (
           toPatchData.find((currPatch:ILogByDate) => {
-            return currPatch.taskName === currTimer?.title;
+            return currPatch.id === currTimer?.id;
           })
         );
 
@@ -127,11 +128,11 @@ const Sync: FC<ISyncProps> = (props) => {
         const availableInLogData = () => {
           // currTimer not avail in entire log and currLog not avail in entire log
           const currTimerNotInEntireLog = dbLogAllRef.current?.find(currLog2 => {
-            return currTimer.title === currLog2.taskName;
+            return currTimer.id === currLog2.id;
           });
 
           const currLogNotInEntireLog = dbLogAllRef.current?.find(currLog2 => {
-            return currLog.taskName === currLog2.taskName;
+            return currLog.id === currLog2.id;
           });
 
           return currTimerNotInEntireLog && currLogNotInEntireLog;
@@ -145,7 +146,7 @@ const Sync: FC<ISyncProps> = (props) => {
         );
 
         if (
-          currLog.taskName === currTimer.title
+          currLog.id === currTimer.id
           // availableInLogData()
         ) {
           // if ( logTimeAsNumber > currDbTimeAsNumber ) return;
@@ -207,13 +208,14 @@ const Sync: FC<ISyncProps> = (props) => {
       metaData: {lastUpdateAt: '<When tasks are saved as logs>' },
       data: {} as App.IObject<{[totalTime:string]: string}>
     };
+    const preferredUnit = 'minutes';
 
     // TODO: reduce loop count
     dbLogAllRef.current?.forEach((currTask:ILogByDate) => {
       // 120 minutes
       const prevTime = logs.data[currTask.taskName]?.totalTime;
       const currTime = getTimeAsNumber(
-        {time: currTask.timeSpent, preferredUnit: 'minutes'}
+        {time: currTask.timeSpent, preferredUnit}
       );
 
       // 120
@@ -225,7 +227,7 @@ const Sync: FC<ISyncProps> = (props) => {
 
       logs.data = {
         ...logs.data,
-        [currTask.taskName]: { totalTime: `${totalTime} minutes`}
+        [currTask.taskName]: { totalTime: `${totalTime} ${preferredUnit}`}
       }
 
     })

@@ -1,30 +1,22 @@
 declare global {
 
-  // TODO: move this to a folder common to main and renderer so both can get type
-  interface ITimerEnd {
-    e: Electron.IpcMainEvent;
-    arg: {
-      taskTitle: string;
-      timeSpent?: string;
-    };
-  }
-
   namespace App {
+
+    // from and to Config
+    type Version = string;
+
+    // browser incl PWA
+    type ServeMode = 'electron' | 'browser' | 'mobile';
+
+    type TTaskType = 'clock' | 'stopwatch' | 'timer';
 
     interface IObject<Type> {
       [key: string]: Type;
     }
 
-    type TTaskType = 'clock' | 'stopwatch' | 'timer';
-
     // TODO: make TTime
     //   check if time = '12:60:60' or time = '13:70:61'
     //   which shouldnt be
-
-    interface IMyTimer {
-      // last selected timer or count down's id
-      lastSelected: string;
-    }
 
     interface ITask {
       id: string;
@@ -40,18 +32,6 @@ declare global {
       // description?: string;
     }
 
-    interface IConfig {
-      version: string;
-      dateTime: string;
-      tasks: Record<TTaskType, ITask[]>
-      settings: {
-        // [k in IMyTimer]: IMyTimer;
-
-        // preferred settings: eg. selected App dimension: {sticky: 80*42} etc
-        // user: { }
-      }
-    }
-
     interface ILogByDate {
       id: string;
       // TODO: make date string type as in Db
@@ -60,10 +40,60 @@ declare global {
       timeSpent: string;
     }
 
+    type TaskConfig = {
+      // last selected timer or count down's id
+      lastSelectedTask: TTaskType; // countdown or stopwatch
+      lastSelectedId: string; // selected task's id
+    }
+
+    type ElectronConfig = {
+      // preferred settings: eg. selected App dimension: {sticky: 80*42} etc
+      // user: { }
+    }
+
+    type RendererConfig = {
+      taskType: TTaskType;
+      taskConfig: TaskConfig;
+      tasks: Record<TTaskType, ITask[]>
+    }
+
+    type Config = {
+      version: Version;
+      dateTime: string;
+      serveMode: 'electron';
+      configs: {
+        rendererConfig: RendererConfig;
+        electronConfig: ElectronConfig;
+      }
+    } | {
+      version: Version;
+      dateTime: string;
+      serveMode: 'browser';
+      configs: {
+        rendererConfig: RendererConfig;
+      }
+    } | {
+      version: Version;
+      dateTime: string;
+      serveMode: 'mobile';
+      configs: {
+        rendererConfig: RendererConfig;
+        mobileConfig: Record<any,any>;
+      }
+
+    };
+
+    interface ITimerEnd {
+      e: Electron.IpcMainEvent;
+      arg: {
+        taskTitle: string;
+        timeSpent?: string;
+      };
+    }
+
 
   }
+
 }
 
-export {
-  // App
-};
+export {};
