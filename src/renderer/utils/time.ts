@@ -1,5 +1,32 @@
 
 
+
+function getTime12Hr(dateTimeStamp:Date = new Date()):string {
+  let hours = dateTimeStamp?.getHours();
+  let minutes = dateTimeStamp?.getMinutes().toString();
+  const getAMPM = hours >= 12 ? 'pm' : 'am';
+
+  hours %= 12;
+  hours = hours || 12;
+  minutes = minutes.padStart(2, '0');
+  const strTime = `${hours}_${minutes}${getAMPM}`;
+
+  return strTime;
+};
+
+// TODO: use UTC time(?)
+// COMMT: returns year_month(letters)_date-time(12hrFormat)
+export function getFormattedDateTime(dateTimeStamp:Date = new Date()):string {
+  const currYear = dateTimeStamp?.getFullYear();
+  const currMonth = dateTimeStamp?.toDateString()?.split(' ')?.[1];
+  const currDate = dateTimeStamp?.getDate();
+  const currTime = getTime12Hr(dateTimeStamp);
+
+  const fullTimeString = `${currYear}_${currMonth}_${currDate}-${currTime}`;
+  // console.log(`fullTimeString: `, fullTimeString);
+  return fullTimeString;
+};
+
 interface IGetNumberAsTimeProps {
   number: number;
   selectedUnit: 'minutes' | 'seconds';

@@ -98,3 +98,8 @@ button {
   );
   margin: 8px 0;
 }
+
+.reset-timer button {
+  color: hsla(var(--color-text-2), 0.9);
+  background-color: hsl(0, 90%, 40%);
+}

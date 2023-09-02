@@ -54,27 +54,37 @@ declare global {
     type RendererConfig = {
       taskType: TTaskType;
       taskConfig: TaskConfig;
-      tasks: Record<TTaskType, ITask[]>
+      tasks: Record<TTaskType, ITask[]>;
+    }
+
+    type User = {
+      id: '',
+      name: string;
+    }
+
+    type MetaData = {
+      dateTime: string;
+      user: User;
     }
 
     type Config = {
       version: Version;
-      dateTime: string;
-      serveMode: 'electron';
+      metaData: MetaData;
+      serveMode: 'electron'; // as ServeMode
       configs: {
         rendererConfig: RendererConfig;
         electronConfig: ElectronConfig;
       }
     } | {
       version: Version;
-      dateTime: string;
+      metaData: MetaData;
       serveMode: 'browser';
       configs: {
         rendererConfig: RendererConfig;
       }
     } | {
       version: Version;
-      dateTime: string;
+      metaData: MetaData;
       serveMode: 'mobile';
       configs: {
         rendererConfig: RendererConfig;

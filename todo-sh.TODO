@@ -21,45 +21,46 @@ Total:
 
 
   # important:
-    - top:
+    - top 5:
 
-      - top 5:
-        - (fix bugs)
-        ✔ reset timer @done(23-08-19 00:41)
-        ✔ for mac: always visible @done(23-08-19 00:57)
-        ✔ id instead of name (use 'name ===' to filter) @done(23-08-27 00:56)
-        - backup and restore w/ config file
-        - testing
+      - (fix bugs)
+      ✔ reset timer @done(23-08-19 00:41)
+      ✔ for mac: always visible @done(23-08-19 00:57)
+      ✔ id instead of name (use 'name ===' to filter) @done(23-08-27 00:56)
+      - backup and restore w/ config file
+      - testing
 
-      - rest:
-        - double click - pause / resume
-        - change bg color on running
-        - local storage
-        - user auth
-        - refactor
+    - rest:
+      - double click - pause / resume
+      - change bg color on running
+      - local storage
+      - user auth
+      - refactor
 
-        - Input mask
-        - timer string validation
-        - Backup and restore
-        - web version
-        - phone version
+      - mac top on all screen
+      - Input mask
+      - timer string validation w/ regex at least
+      - web version
+      - phone version
 
-        - keep an eye on inline TODOs
+      - keep an eye on inline TODOs
 
 
 
   # design:
     ✔ no window titlebar @done(23-07-31 14:13)
     ☐ when running, change body color
+    ☐ remove unicode and emoji btn and replace with svg buttons
+
     ☐ to timer lists:
       ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
-    ☐ replace border with fading border
+    ✔ replace border with fading border @done(23-08-28 00:03)
 
     ☐ size
-      ☐ resizable
+      ✔ resizable @done(23-08-28 00:03)
         ☐ remembers dimensions even after toggling different sizes
-      ☐ font auto adjust
+      ☐ font auto adjust on resize
       ☐ on modal, have prop for modal that resizes the electron app acc to modal props
 
     ☐ responsive
@@ -79,6 +80,7 @@ Total:
     versions:
       ☐ electron:
         ☐ Mac: show on all windows / desktops
+        ☐ minimise btn - mainWindow.minimize();
         ☐ refresh react home page
         ☐ integrate with db
         ☐ executable file:
@@ -104,7 +106,7 @@ Total:
         ☐ PWA - for both modes
 
 
-      ☐ phone:
+        ☐ phone:
 
 
     ☐ timer:
@@ -125,54 +127,53 @@ Total:
             - create timespent prop for ITask, which persists for entire day
 
 
-    ☐ Backup and restore:
+
+    ☐ Sync:
+      ☐ can get tasks and current level of completion
+      ☐ one touch sync
+      ☐ btn to backup timer table within db
+
+    ☐ Backup and restore config:
       feature:
         ✔ when clicking particular btn @done(23-08-27 23:38)
         ☐ basic
         ☐ backup
         ☐ restore
-        ☐ as .jsonc config file
+        - export type
+          - as .jsonc config file
+          - .js file, check with jsonc parser (?)
+
       code:
         ☐ add reducers for hard coded values in Sync/ExportData.tsx(+)
 
-    ☐ Input mask
-    ☐ timer string validation:
-      ☐ regex
-      ☐ zod
 
-
-    ☐ sync:
-      ☐ can get tasks and current level of completion
-      ☐ one touch sync
-      ☐ btn to backup timer table within db
-
-    ☐ minimise btn
-    ☐ remove unicode and emoji btn and replace with svg buttons
-
-    ☐ blink
-      ☐ on end
-      ☐ when paused, once every 15 mins
-
-    ☐ open source the repo(?)
-
-    ☐ local Storage
+    ☐ local Storage:
       - save every elapsed sec or min to lclStrg.
       - 'when' crash && if lclStrg has data && more time elapsed on lclStrg than db
         - ask to restore from lclStrg and push to db
-
-    ☐ stopwatch:
-      ☐ multiples in list just like timers but with stopwatch
-
-    ☐ draggable anywhere
-    ☐ timer list drag and droppable
-    ☐ hotkeys
-      ☐ resume and pause
 
     ☐ time end alert:
       ✔ beep @done(23-08-01 20:20)
       ✔ message dialog box @done(23-08-01 20:20)
       ☐ reverse countdown
+
+    ☐ stopwatch:
+      ☐ multiples in list just like timers but with stopwatch
+
+    ☐ blink:
+      ☐ on time end
+      ☐ when paused, once every 15 mins
+
+    ☐ timer list drag and droppable
+    ☐ hotkeys
+      ☐ resume and pause
+
     ☐ heatmap
+
+    ☐ publicity(OR)
+      ☐ SAAS
+      ☐ Open source the repo(?)
+        ☐ block push to main branch
 
 
 
@@ -219,6 +220,11 @@ Total:
 
 
   # security:
+    ☐ validation:
+      ☐ Input mask
+      ☐ timer string:
+        ☐ regex
+        ☐ zod
     ☐ User auth to connect with db
 
     ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
@@ -234,6 +240,24 @@ Total:
       - in .eslintrc.js
     ☐ remove eslint in-file/in-line disable
       ☐ remove disabled rule for exhaustive useEffect deps
+
+    ☐ chatgpt - owasp recommendation for techstacks
+      ☐ Next.js, React.js, Svelte Kit:
+        ☐ Ensure you're not rendering user-generated content as raw HTML.
+        ☐ Use JSX or Svelte templates to automatically escape content.
+        ☐ Implement CSP headers to restrict which sources can execute scripts.
+      ☐ Electron:
+        ☐ Keep Electron and its dependencies updated to patch known vulnerabilities.
+        ☐ Avoid loading remote content that might introduce security risks.
+        ☐ Utilize Electron's context isolation for rendering.
+      ☐ Node.js + Express:
+        ☐ Utilize security middleware like Helmet.js to set security-related HTTP headers.
+        ☐ Use a security scanning tool to identify vulnerabilities in your dependencies (e.g., OWASP Dependency-Check).
+      ☐ PostgreSQL:
+        ☐ Implement database access control with proper roles and permissions.
+        ☐ Use parameterized queries or an ORM like Sequelize to prevent SQL injection.
+      ☐ more:
+        - https://chat.openai.com/share/138db41e-1690-462b-a228-b28baadaac93
 
 
 
@@ -262,6 +286,9 @@ Total:
       - https://stackoverflow.com/questions/41855859/electron-how-to-setup-db-with-sqlite-in-windows
       - https://morioh.com/a/9fa8d2cf658c/create-a-simple-react-project-electron-app-sqlite3-connection
       - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9
+
+    - electron:
+      - https://github.dev/benawad/dogehouse
 
     - node / express:
       - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/

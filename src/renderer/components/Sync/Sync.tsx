@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { FC, useEffect, useRef, useState } from 'react';
+import { stringify } from 'renderer/utils/misc';
+import { calcTimeSpent, getTimeAsNumber } from 'renderer/utils/time';
 import { api } from 'renderer/utils/trpc';
-import { calcTimeSpent, getNumberAsTime, getTimeAsNumber } from 'renderer/utils/time';
-import { stringify, uuid } from 'renderer/utils/misc';
+import ExportData from './ExportData/ExportData';
 import styles from './sync.module.css';
 
 interface ILogByDate {
@@ -251,8 +252,16 @@ const Sync: FC<ISyncProps> = (props) => {
     updateSyncData();
   };
 
+  function handleExport() {
+    // console.log(`export: `, export);
+
+  }
+
   return (
     <div className={styles.sync}>
+
+      {/* // TODO: use Accordion to change be reset, sync and export */}
+
       <h3>Sync: </h3>
       <button
         type='button'
@@ -260,7 +269,7 @@ const Sync: FC<ISyncProps> = (props) => {
         onClick={handleSync}
         className={styles["sync-button"]}
       >
-        🔄
+        🔄 Sync
       </button>
       <div className={styles.body}>
         <p>Logs: </p>
@@ -273,6 +282,24 @@ const Sync: FC<ISyncProps> = (props) => {
 
         </div>
       </div>
+
+      <div className="hr-fade" />
+
+      <div className="export">
+        <div className="export-body">
+          <ExportData
+            selectedExport='config'
+          />
+          <button
+            className="temp"
+            type='button'
+          >
+            Import config
+          </button>
+        </div>
+
+      </div>
+
     </div>
   )
 };

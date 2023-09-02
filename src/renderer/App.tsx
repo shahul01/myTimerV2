@@ -36,6 +36,7 @@ const Main = () => {
     onSuccess: () => {
       trpcContext.logByDate.getAllLogs.invalidate();
       trpcContext.task.getAllTasks.invalidate();
+
       // eslint-disable-next-line no-use-before-define
       updateTimerValueToTimerDb();
       // resetTimerValue();
@@ -203,7 +204,6 @@ const Main = () => {
                   <button
                     type='button'
                     onClick={handleResetTimer}
-
                   >
                     Reset timer: {timerArray.find(cT => cT.id === selTimerId)?.title}
                   </button>
