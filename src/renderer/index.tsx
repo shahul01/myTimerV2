@@ -7,8 +7,10 @@ declare global {
   interface Window {
     electron: {
       ipcRenderer: {
+        envVar: App.IObject<string>;
         handleStickyHover:(arg0:boolean) => void;
         handleTimerEnd:(arg0:App.IObject<string>) => void;
+        handleExport:(arg0:App.IObject<string|App.IObject<string>>) => void;
       }
     }
   }

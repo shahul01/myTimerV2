@@ -1,13 +1,7 @@
 import { stringify } from "./misc";
 
-type TExportDataProps = {
-  data: unknown;
-  fileName: string;
-  exportType: 'jsonc';
-};
-
 // eslint-disable-next-line import/prefer-default-export
-export function exportData(exportDataProps:TExportDataProps) {
+export function exportData(exportDataProps:App.ExportDataProps) {
   const {
     data,
     fileName,
@@ -18,6 +12,10 @@ export function exportData(exportDataProps:TExportDataProps) {
     const jsonString = `data:text/json;charset=utf-8,${
       encodeURIComponent(stringify(data))
     }`;
+    // TODO: up to this line modularise this fn.
+    // Renderer export should be link download
+    // electron export should use fs
+    // others should be DRY
     const link = document.createElement('a');
     link.href = jsonString;
     link.download = `${fileName}.${exportType}`;

@@ -14,10 +14,9 @@ import { tempId } from './utils/misc';
 // import icon from '../../assets/icon.svg';
 // import global from '../types/global';
 import './App.css';
-
+import { env } from './utils/constants';
 
 const Main = () => {
-
   const trpcContext = api.useContext();
   // const greeting = api.example.greeting.useQuery({name: 'Yo2'});
   // console.log(`greeting.data: `, greeting.data);
@@ -169,7 +168,12 @@ const Main = () => {
   useEffect(() => {
 
     if (firstLoad.current) {
-      console.log('#App Loaded');
+      console.log(
+        '%c#App Loaded',
+        "background: yellow; color: red; font-size: 25px"
+      );
+      console.log(`env: `, env);
+
       firstLoad.current = false;
     }
   }, []);

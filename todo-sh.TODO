@@ -9,6 +9,7 @@ Total:
         - solved by invalidating context on success
     ✔ sync @done(23-08-27 00:58)
       ✔ sync by title has repeated titles... @done(23-08-27 00:56)
+    ☐ reset error
 
     electron:
       ☐ refresh fn not working when frameless
@@ -43,7 +44,7 @@ Total:
       - web version
       - phone version
 
-      - keep an eye on inline TODOs
+      - keep an eye on inline TODOs and FIXes
 
 
 
@@ -73,6 +74,7 @@ Total:
       - postgresql
     ☐ tailwind
       - for responsiveness(?)
+    ☐ prisma studio
 
 
 
@@ -93,6 +95,7 @@ Total:
           ☐ shows all the data
 
         ☐ remember position on screen and monitor
+        ☐ add return guards when ServeMode != 'electron'
 
 
       ☐ web:
@@ -189,6 +192,8 @@ Total:
       ☐ replace `return` for guard clauses with `Error` if necessary
       ☐ logByDate has 2 interface, one global and one infile, remove one.
 
+    ☐ add version to api
+
 
 
   # offline:
@@ -225,6 +230,10 @@ Total:
       ☐ timer string:
         ☐ regex
         ☐ zod
+          ☐ z.object().strip()
+      ☐ prisma
+        ☐ use PrismaClient to get types
+        ☐ create zod schema from prisma schema
     ☐ User auth to connect with db
 
     ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
@@ -288,7 +297,9 @@ Total:
       - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9
 
     - electron:
+      - https://www.electronjs.org/docs/latest/tutorial/ipc#pattern-3-main-to-renderer
       - https://github.dev/benawad/dogehouse
+      - https://www.electronjs.org/docs/latest/tutorial/tutorial-preload
 
     - node / express:
       - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
@@ -306,6 +317,7 @@ Total:
     - misc:
       - https://www.google.com/search?q=portable+electron+app
       - https://github.com/electron/electron/issues/11895
+      - https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/3522#issuecomment-1709148573
 
 
 

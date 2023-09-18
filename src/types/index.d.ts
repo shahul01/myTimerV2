@@ -8,10 +8,19 @@ declare global {
     // browser incl PWA
     type ServeMode = 'electron' | 'browser' | 'mobile';
 
+    type Platform = 'windows' | 'mac';
+
     type TTaskType = 'clock' | 'stopwatch' | 'timer';
 
     interface IObject<Type> {
       [key: string]: Type;
+    }
+
+    type Env = {
+      IS_DEVELOPMENT_USER:boolean;
+      URL:App.IObject<string>;
+      USER:App.IObject<string>;
+      SERVE_MODE: App.ServeMode;
     }
 
     // TODO: make TTime
@@ -58,39 +67,43 @@ declare global {
     }
 
     type User = {
-      id: '',
+      id: string,
       name: string;
     }
 
-    type MetaData = {
-      dateTime: string;
-      user: User;
+    type BaseConfig = {
+      appName: 'myTimer';
+      version: Version;
+      metaData: {
+        dateTime: string;
+        user: User;
+      };
     }
 
-    type Config = {
-      version: Version;
-      metaData: MetaData;
+    type Config = BaseConfig & ({
       serveMode: 'electron'; // as ServeMode
       configs: {
         rendererConfig: RendererConfig;
         electronConfig: ElectronConfig;
       }
     } | {
-      version: Version;
-      metaData: MetaData;
       serveMode: 'browser';
       configs: {
         rendererConfig: RendererConfig;
       }
     } | {
-      version: Version;
-      metaData: MetaData;
       serveMode: 'mobile';
       configs: {
         rendererConfig: RendererConfig;
         mobileConfig: Record<any,any>;
       }
 
+    });
+
+    type ExportDataProps = {
+      data: unknown;
+      fileName: string;
+      exportType: 'jsonc';
     };
 
     interface ITimerEnd {

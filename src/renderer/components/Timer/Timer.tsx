@@ -127,6 +127,7 @@ const Timer: FC<ITimerProps> = (props) => {
 
       if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
+        // if (serveMode === 'electron') {};
         handleTimerEndElectron({taskTitle: title});
         endAudio.play();
         stopCountdown();
@@ -152,6 +153,7 @@ const Timer: FC<ITimerProps> = (props) => {
 
     const display = triggerClickedTimer % 2 === 0 ? 'show' : 'hide';
     setTriggerClickedTimer(p=>p+1);
+    // && serveMode === 'electron'
     if (display === 'show') {
       handleStickyHoverElectron(true);
       return setIsShowTimers(true);

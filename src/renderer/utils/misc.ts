@@ -9,6 +9,25 @@ export function tempId():string {
   return Math.random().toString().split('.')[1];
 };
 
+export function parseIfObject(str:string):App.IObject<string>|string {
+  if (str[0] === '{' && str[str.length-1] === '}') {
+    return JSON.parse(str)
+  };
+  return str;
+};
+
+export function snakeToCamelCase(str:string):string {
+  return str
+    .toLowerCase()
+    .replace(
+      /(_\w)/g,
+      w => (w
+        .toUpperCase()
+        .slice(1)
+      )
+    )
+}
+
 export function randomInRange(min=0, max=9999, isArray=false):number {
   const minActual = Math.min(min, max);
   const maxActual = Math.max(min, max);

@@ -12,16 +12,26 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
+import dotenv from 'dotenv';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
-process.env.isDevelopmentUser='false';
+dotenv.config();
 
-const isDevelopmentUser:boolean = JSON.parse(
-  (process.env.isDevelopmentUser || 'false')
+const parsify = (content:string) => (
+  JSON.parse(content)
+);
+
+console.log(`NODE_ENV: `, process.env?.NODE_ENV);
+console.log(`isDevelopmentUser: `, process.env?.IS_DEVELOPMENT_USER);
+console.log(`user: `, process.env?.USER);
+console.log(`serveMode: `, process.env?.SERVE_MODE);
+
+const isDevelopmentUser:boolean = parsify(
+  process.env?.IS_DEVELOPMENT_USER ? process.env?.IS_DEVELOPMENT_USER : ''
 );
 
 export default class AppUpdater {
@@ -34,6 +44,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+// user setting 2
 function appDimensionDict() {
   console.log(`isDevelopmentUser: `, isDevelopmentUser);
   return isDevelopmentUser ? (
@@ -52,13 +63,48 @@ function appDimensionDict() {
   )
 };
 
+function getAppVersion():string {
+  return '1.0.0';
+};
+
 const userSettings = {
-  version: '1.0.0',
+  isDevelopmentUser,
   appDimension: {
     sticky: appDimensionDict(),
   }
-
 };
+
+function getRenderConfig():App.RendererConfig {
+  const retStatement = {
+    taskType: '',
+    taskConfig: {
+      lastSelectedTask: '',
+      lastSelectedId: ''
+    },
+
+    tasks: undefined
+  } as const;
+
+  // get data from electron IPC
+
+
+
+  return retStatement;
+}
+
+const config:App.Config = {
+  version: getAppVersion(),
+  metaData: {
+    dateTime: new Date().toString(),
+    user: parsify(process.env?.user || "{}")
+  },
+  // serveMode: parsify(process.env.serveMode,'electron'),
+  configs: {
+    rendererConfig: getRenderConfig(),
+    electronConfig: userSettings
+  }
+
+} as const;
 
 function getAppDimension(dimension:'height'|'width', isStickyHovered:boolean):number{
   const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
@@ -72,7 +118,9 @@ function getAppDimension(dimension:'height'|'width', isStickyHovered:boolean):nu
 // TODO: make these event name a constant
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
+  // console.log(msgTemplate(arg));
+
+  // connected to `once` in preload
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -101,6 +149,15 @@ ipcMain.on(
 
   }
 );
+ipcMain.on(
+  'handle-export',
+  (e, arg) => {
+    // if (arg.selectedExport === 'config')
+    // const filePath = `./export/${arg.selectedExport}/`;
+    // exportData(arg.exportDataProps, filePath);
+
+  }
+)
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

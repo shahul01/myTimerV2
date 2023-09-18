@@ -1,4 +1,5 @@
 import { FC, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { env } from 'renderer/utils/constants';
 import { exportData } from 'renderer/utils/file';
 import { getFormattedDateTime } from 'renderer/utils/time';
 import { api } from 'renderer/utils/trpc';
@@ -16,7 +17,6 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
 
   const { data: dbGetAllTasks } = api.task.getAllTasks.useQuery();
 
-
   const user = {name:'shahul01'};
   const configToExport:App.RendererConfig = {
     // TODO: add reducers for these hard coded values
@@ -26,10 +26,10 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
       lastSelectedId: ''
     },
 
-    // yo what's up playa
+    // some comments here
 
     /**
-     * boiiii
+     * some comment here
      */
 
     tasks: {
@@ -50,6 +50,15 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
       // if (currentApp === 'electron') send data to electron;
       // else just export it with version, date and user
 
+      function handleExportElectron({selectedExport='', exportDataProps={}}) {
+        return window.electron?.ipcRenderer?.handleExport(
+          {
+            selectedExport,
+            exportDataProps
+          },
+        );
+      };
+
       function populateConfig() {
         function populateTasks() {
           if (!dbGetAllTasks) return;
@@ -57,16 +66,25 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
         };
 
         populateTasks();
+
         console.log(`configToExport: `, configToExport);
       };
-
       populateConfig();
+
       const exportDataProps = {
         data: configToExport,
         fileName: `myTimer-${user.name}-${getFormattedDateTime(new Date())}`,
         exportType: 'jsonc',
       } as const;
-      exportData(exportDataProps);
+      if (env.SERVE_MODE === 'electron') {
+        console.log('selected');
+        handleExportElectron({
+          selectedExport: 'config',
+          exportDataProps
+        });
+      } else if (env.SERVE_MODE === 'browser') {
+        exportData(exportDataProps);
+      }
 
     }
 

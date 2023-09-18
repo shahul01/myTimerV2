@@ -39,3 +39,11 @@
 ```
 
 #### refer todo for reference docs
+
+### credits
+
+#### electron - react template
+
+[electron-react-boilerplate repo](https://github.com/electron-react-boilerplate/electron-react-boilerplate)
+
+<br /> <hr /> <br />
