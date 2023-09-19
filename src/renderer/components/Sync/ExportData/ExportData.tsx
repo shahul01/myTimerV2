@@ -14,8 +14,6 @@ const ExportData: FC<IExportDataProps > = (props) => {
   const configRef = useRef();
 
   function handleExportData() {
-    console.log(`selectedExport: `, selectedExport);
-
     if (selectedExport === 'config') {
       configRef.current?.exportPopulatedConfig();
     };

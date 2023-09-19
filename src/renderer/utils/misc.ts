@@ -16,18 +16,6 @@ export function parseIfObject(str:string):App.IObject<string>|string {
   return str;
 };
 
-export function snakeToCamelCase(str:string):string {
-  return str
-    .toLowerCase()
-    .replace(
-      /(_\w)/g,
-      w => (w
-        .toUpperCase()
-        .slice(1)
-      )
-    )
-}
-
 export function randomInRange(min=0, max=9999, isArray=false):number {
   const minActual = Math.min(min, max);
   const maxActual = Math.max(min, max);

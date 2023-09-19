@@ -1,8 +1,7 @@
-import { parseIfObject, snakeToCamelCase } from "./misc";
+import { parseIfObject } from "./misc";
 
 function loadEnv():App.Env {
   const rawEnv = window.electron.ipcRenderer.envVar;
-  console.log(`rawEnv: `, rawEnv);
   const readableEnvArr = Object
     .entries(rawEnv)
     .map((el:string[]) => (

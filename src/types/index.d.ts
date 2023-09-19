@@ -75,7 +75,7 @@ declare global {
       appName: 'myTimer';
       version: Version;
       metaData: {
-        dateTime: string;
+        exportedAt: string;
         user: User;
       };
     }

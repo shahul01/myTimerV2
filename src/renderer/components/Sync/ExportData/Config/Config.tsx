@@ -51,12 +51,17 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
       // else just export it with version, date and user
 
       function handleExportElectron({selectedExport='', exportDataProps={}}) {
-        return window.electron?.ipcRenderer?.handleExport(
+        window.electron?.ipcRenderer?.handleExport(
           {
             selectedExport,
             exportDataProps
           },
         );
+
+        window.electron.ipcRenderer.once('handle-export', (arg) => {
+          console.log('handle-export result', arg)
+        });
+
       };
 
       function populateConfig() {
@@ -67,7 +72,6 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
 
         populateTasks();
 
-        console.log(`configToExport: `, configToExport);
       };
       populateConfig();
 
@@ -77,7 +81,6 @@ const Config: FC<IConfigProps > = forwardRef((props, ref) => {
         exportType: 'jsonc',
       } as const;
       if (env.SERVE_MODE === 'electron') {
-        console.log('selected');
         handleExportElectron({
           selectedExport: 'config',
           exportDataProps

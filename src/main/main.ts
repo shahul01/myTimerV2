@@ -17,20 +17,17 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import { exportData, resolveHtmlPath } from './util';
+import type { WriteResult } from './util';
 
 dotenv.config();
 
-const parsify = (content:string) => (
-  JSON.parse(content)
-);
+console.log(`NODE_ENV: `, process.env.NODE_ENV);
+console.log(`isDevelopmentUser: `, process.env.IS_DEVELOPMENT_USER);
+console.log(`user: `, process.env.USER);
+console.log(`serveMode: `, process.env.SERVE_MODE);
 
-console.log(`NODE_ENV: `, process.env?.NODE_ENV);
-console.log(`isDevelopmentUser: `, process.env?.IS_DEVELOPMENT_USER);
-console.log(`user: `, process.env?.USER);
-console.log(`serveMode: `, process.env?.SERVE_MODE);
-
-const isDevelopmentUser:boolean = parsify(
+const isDevelopmentUser:boolean = JSON.parse(
   process.env?.IS_DEVELOPMENT_USER ? process.env?.IS_DEVELOPMENT_USER : ''
 );
 
@@ -52,7 +49,6 @@ function appDimensionDict() {
       hideTimers: { height: 400, width: 600 },
       showTimers: { height: 400, width: 600 },
       expanded: { height: 400, width: 600 }
-
     }
   ) : (
     {
@@ -74,38 +70,6 @@ const userSettings = {
   }
 };
 
-function getRenderConfig():App.RendererConfig {
-  const retStatement = {
-    taskType: '',
-    taskConfig: {
-      lastSelectedTask: '',
-      lastSelectedId: ''
-    },
-
-    tasks: undefined
-  } as const;
-
-  // get data from electron IPC
-
-
-
-  return retStatement;
-}
-
-const config:App.Config = {
-  version: getAppVersion(),
-  metaData: {
-    dateTime: new Date().toString(),
-    user: parsify(process.env?.user || "{}")
-  },
-  // serveMode: parsify(process.env.serveMode,'electron'),
-  configs: {
-    rendererConfig: getRenderConfig(),
-    electronConfig: userSettings
-  }
-
-} as const;
-
 function getAppDimension(dimension:'height'|'width', isStickyHovered:boolean):number{
   const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
   const newSize = userSettings.appDimension.sticky[displayOption][dimension];
@@ -120,7 +84,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   // console.log(msgTemplate(arg));
 
-  // connected to `once` in preload
+  // connected to `once` in preload(?)
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -149,15 +113,51 @@ ipcMain.on(
 
   }
 );
+
+type HandleExportArg = {
+  selectedExport: 'config'
+  exportDataProps: {
+    data: App.RendererConfig,
+    fileName: string,
+    exportType: 'jsonc',
+  }
+};
+
 ipcMain.on(
   'handle-export',
-  (e, arg) => {
-    // if (arg.selectedExport === 'config')
-    // const filePath = `./export/${arg.selectedExport}/`;
-    // exportData(arg.exportDataProps, filePath);
+  async (e, arg:HandleExportArg) => {
+    // console.log(`arg: `, arg);
+    // if (arg.selectedExport === 'config') {}
 
+    const config:App.Config = {
+      appName: 'myTimer',
+      version: getAppVersion(),
+      serveMode: 'electron',
+      metaData: {
+        exportedAt: new Date().toString(),
+        user: JSON.parse(process.env.USER || '{}')
+      },
+      configs: {
+        rendererConfig: arg.exportDataProps.data,
+        electronConfig: userSettings
+      }
+    };
+
+    const envPath = JSON.parse(process.env.EXPORT_PATH || '{}');
+    const filePath = envPath.CONFIG || './';
+    const fileData = {
+      filePath,
+      fileName: arg.exportDataProps.fileName,
+      exportType: arg.exportDataProps.exportType
+    };
+
+    const writeResult:WriteResult = await exportData({ config, fileData });
+    e.reply('handle-export', {
+      status:  writeResult.status,
+      error: writeResult.error
+    });
   }
-)
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
