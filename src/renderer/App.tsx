@@ -28,6 +28,8 @@ const Main = () => {
   const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.updateCurrentTimer.useMutation({
     onSuccess: () => {
       trpcContext.task.getAllTasks.invalidate();
+      // updateCurrTimer();
+      console.log(`dbTimerArray 1: `, dbTimerArray?.[0]?.currentTimer);
     }
   });
 
@@ -62,14 +64,14 @@ const Main = () => {
   const [ timerArray, setTimerArray ] = useState<App.ITask[]>(initTimerArray);
   // changed this to id(starts with 1) instead of idx
   const [ selTimerId, setSelTimerId ] = useState(initId);
+  const [ currTimer, setCurrTimer ] = useState<App.ITask>(initTimerArray[0]);
   const [ isShowModal, setIsShowModal ] = useState(false);
   const [ triggerTimer, setTriggerTimer ] = useState(0);
   const [ isShowTimers, setIsShowTimers ] = useState(false);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
   function updateTimerArray() {
-    console.log(`dbTimerArray: `, dbTimerArray);
-    if (!!dbTimerArray?.length) {
+    if (dbTimerArray?.length) {
       // update the selected Id when db provides timer data
       setSelTimerId(dbTimerArray[0].id);
       setTimerArray(dbTimerArray)
@@ -95,41 +97,31 @@ const Main = () => {
   const handleUpdatedTimer = useCallback((newUpdatedTimer:string) => {
 
     // NOTE: currentTimer gets updated here
-    const selTimer:App.ITask|undefined = timerArray.find(currTimer => {
-      return currTimer.id === selTimerId;
+    const selTimer:App.ITask|undefined = timerArray.find(cT => {
+      return cT.id === selTimerId;
     });
 
     if (selTimer) {
       selTimer.currentTimer = newUpdatedTimer;
     };
 
-    console.log(`newUpdatedTimer: `, newUpdatedTimer);
-
-    // TODO: use TRPC useMutation to update time on db.
-    const res = updateCurrentTimer({
+    updateCurrentTimer({
       id: selTimerId,
       currentTimer: newUpdatedTimer
     });
 
-    // console.log(`dbTimerArray: `, dbTimerArray);
-    // console.log(`res: `, res);
-
+    // FIX: bad practise?
+    // TODO: add usestate to trigger this cb when paused
+    // triggerUpdate,
   }, [selTimerId, timerArray, updateCurrentTimer]);
 
   // TODO: modularise this fn
-
   const selTimerIdx = timerArray.findIndex(cT => {
     return cT.id === selTimerId;
   });
 
-  // function resetTimerValue() {
-  //   timerArray[selTimerIdx] = {
-  //     ...timerArray[selTimerIdx],
-  //     currentTimer: timerArray[selTimerIdx].timerInput
-  //   };
-  // };
-
   function updateTimerValueToTimerDb() {
+    // FIX: bad practise?
     updateCurrentTimer({
       id: timerArray[selTimerIdx].id,
       currentTimer: timerArray[selTimerIdx].timerInput
@@ -138,31 +130,22 @@ const Main = () => {
   };
 
   function handleResetTimer() {
+    const selTimerLogIdx = dbLogAll?.findIndex(cL => {
+      return cL.id === timerArray[selTimerIdx].id;
+    });
 
-    function updateTimerValToLogDb() {
-      // timerArray[selTimerIdx] = {
-      //   ...timerArray[selTimerIdx],
-      //   // patch
-      // };
+    if (!dbLogAll || !selTimerLogIdx) return;
 
-      const selTimerLogIdx = dbLogAll?.findIndex(cL => {
-        return cL.id === timerArray[selTimerIdx].id;
-      });
+    dbPatchToLog({
+      // should be currLog.id...
+      id: dbLogAll[selTimerLogIdx].id,
+      date: new Date().toISOString(),
+      taskName: timerArray[selTimerIdx].title,
+      timeSpent: calcTimeSpent(timerArray[selTimerIdx]),
+    });
 
-      if (!dbLogAll || !selTimerLogIdx) return;
+    // on success, it resets timer automatically by invalidating
 
-      dbPatchToLog({
-        // should be currLog.id...
-        id: dbLogAll[selTimerLogIdx].id,
-        date: new Date().toISOString(),
-        taskName: timerArray[selTimerIdx].title,
-        timeSpent: calcTimeSpent(timerArray[selTimerIdx]),
-      })
-
-    };
-
-    updateTimerValToLogDb();
-    // resetTimerValue();
   };
 
   useEffect(() => {
@@ -172,8 +155,6 @@ const Main = () => {
         '%c#App Loaded',
         "background: yellow; color: red; font-size: 25px"
       );
-      console.log(`env: `, env);
-
       firstLoad.current = false;
     }
   }, []);
@@ -184,6 +165,13 @@ const Main = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dbTimerArray]);
+
+  useEffect(() => {
+    // updates timer & its val in Timer component on Id change and reset
+    const newTimer = timerArray.find(cT => cT.id === selTimerId);
+    if (newTimer) setCurrTimer(newTimer);
+
+  }, [selTimerId, timerArray]);
 
 
   return (
@@ -197,35 +185,26 @@ const Main = () => {
         >
           <div className="modal-body">
 
-            {/* <ol>
-              <li>Reset timer</li>
-              <li>Sync</li>
-            </ol>
-            <div className="hr-fade" /> */}
-              <div className="reset-timer">
-                {/* <h3>Reset timer</h3> */}
-                <div className="body">
-                  <button
-                    type='button'
-                    onClick={handleResetTimer}
-                  >
-                    Reset timer: {timerArray.find(cT => cT.id === selTimerId)?.title}
-                  </button>
-                </div>
-                <br />
+            <div className="reset-timer">
+              <div className="body">
+                <button
+                  type='button'
+                  onClick={handleResetTimer}
+                >
+                  Reset timer: {timerArray.find(cT => cT.id === selTimerId)?.title}
+                </button>
               </div>
+              <br />
+            </div>
             <div className="hr-fade" />
               <Sync />
           </div>
       </Modal>
-
       <Timer
-        key={timerArray.find(cT => cT.id === selTimerId)?.id}
-        timerData={timerArray.find(cT => cT.id === selTimerId)}
-
+        key={`${currTimer?.id}-${currTimer?.currentTimer}`}
+        timerData={currTimer}
         onUpdatedTimer={handleUpdatedTimer}
         setIsShowTimers={setIsShowTimers}
-        // eslint-disable-next-line react/jsx-boolean-value
         triggerTimer={triggerTimer}
       />
 

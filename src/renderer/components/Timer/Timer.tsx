@@ -52,7 +52,7 @@ const Timer: FC<ITimerProps> = (props) => {
   };
 
   const totalDeciSeconds = useRef<number>(
-    getTimeInSeconds(currentTimer) * 10
+    getTimeInSeconds(currentTimer || '') * 10
   );
 
   const getTimeComponents = (totalSeconds: number): number[] => (
@@ -84,7 +84,7 @@ const Timer: FC<ITimerProps> = (props) => {
     if (!countdown?.current) return;
 
     // send updatedTimer to parent
-    if (!!timerData?.id) {
+    if (timerData?.id) {
       onUpdatedTimer(outputTimeRef.current);
     }
 
