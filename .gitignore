@@ -5,6 +5,7 @@ node_modules
 **/db.sqlite
 # **/db.sqlite.bak
 # *sh.TODO
+.temp-unsaved/*
 
 
 # misc:

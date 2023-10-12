@@ -5,7 +5,7 @@ import styles from './timers.module.css';
 
 interface ITimersProps {
   timerArray: App.ITask[];
-  handleSetSelTimer: (i:string) => void;
+  handleSetSelTimer: (id:string) => void;
   selTimerId: string;
   triggerTimer: number;
 };

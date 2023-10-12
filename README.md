@@ -1,6 +1,19 @@
 # Timer app
 
-## Built with Electron, React & SCSS.
+## Built with Electron, React & tRPC.
+
+### TechStacks
+
+- Electron
+- React
+  - Hooks - useState, useEffect, useImperative
+- React Query
+- TypeScript
+- Zod
+- CSS in modules
+- tRPC
+- SQLite
+- Prisma
 
 <br /> <hr /> <br />
 
@@ -9,6 +22,14 @@
 #### home
 
 ![home.png](./assets/images/screenshots/home.png)
+
+<br /> <hr /> <br />
+
+### Flow charts
+
+#### 1. State changes
+
+![myTimer-updates](./assets/images/flowCharts/myTimer-updates.drawio.png)
 
 <br /> <hr /> <br />
 

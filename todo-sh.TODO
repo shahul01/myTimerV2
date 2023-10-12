@@ -29,10 +29,11 @@ Total:
       ✔ for mac: always visible @done(23-08-19 00:57)
       ✔ id instead of name (use 'name ===' to filter) @done(23-08-27 00:56)
       - backup and restore w/ config file
-      - testing
+      - exe
 
-    - rest:
+      - rest:
       - double click - pause / resume
+      - testing
       - change bg color on running
       - local storage
       - user auth
@@ -117,8 +118,8 @@ Total:
         ✔ and before reset, send timespent to db @done(23-08-27 01:05)
         ☐ after reset, sel timer shouldnt change
       ☐ add delete option to task
-      ☐ on double click:
-        - pause / resume
+      ☐ on double click on timer in <Timer /> and timer in <Timers />:
+        - pause / resume that timer
         - show elapsed timer
       ✔ id as identifier instead of title: @done(23-08-27 23:47)
         ✔ replace title with id, which could be same as title, so title can be edited @done(23-08-27 01:05)
@@ -319,7 +320,9 @@ Total:
       - https://www.google.com/search?q=portable+electron+app
       - https://github.com/electron/electron/issues/11895
       - https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/3522#issuecomment-1709148573
-
+      - https://codesandbox.io/s/ecstatic-knuth-hlssvm?file=/src/App.js
+      - https://app.diagrams.net/
+      - https://phosphoricons.com/
 
 
   # symbols:
