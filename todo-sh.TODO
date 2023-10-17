@@ -32,7 +32,7 @@ Total:
       - exe
 
       - rest:
-      - double click - pause / resume
+      ✔ double click - pause / resume @done(23-10-17 11:45)
       - testing
       - change bg color on running
       - local storage
@@ -87,10 +87,10 @@ Total:
         ☐ refresh react home page
         ☐ integrate with db
         ☐ executable file:
+          ☐ make it portable
           ☐ win
           ☐ mac
           ☐ integrated with db
-          ☐ make it portable
         ☐ view raw data on db
           ☐ table name in dropdown, once selected
           ☐ shows all the data
@@ -238,6 +238,8 @@ Total:
         ☐ create zod schema from prisma schema
     ☐ User auth to connect with db
 
+    ☐ https://github.com/shahul01/myTimerV2/security/dependabot?q=is%3Aopen+severity%3Acritical%2Chigh
+
     ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
         Policy set or a policy with "unsafe-eval" enabled. This exposes users of
         this app to unnecessary security risks.
@@ -318,9 +320,7 @@ Total:
 
     - misc:
       - https://www.google.com/search?q=portable+electron+app
-      - https://github.com/electron/electron/issues/11895
-      - https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/3522#issuecomment-1709148573
-      - https://codesandbox.io/s/ecstatic-knuth-hlssvm?file=/src/App.js
+      - https://codesandbox.io/s/use-double-click-gpt-rylvmf?file=/src/components/DoubleClickExample.js
       - https://app.diagrams.net/
       - https://phosphoricons.com/
 

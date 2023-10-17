@@ -6,7 +6,7 @@
 
 - Electron
 - React
-  - Hooks - useState, useEffect, useImperative
+  - Hooks - useState, useEffect, useImperative, useCallback
 - React Query
 - TypeScript
 - Zod

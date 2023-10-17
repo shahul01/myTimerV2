@@ -1,10 +1,3 @@
-/** BUG:
- * after reset timer, I have to change timers to update full timer count
- * pause doesnt work when some times...
- * TRPCClientError when resetting
- */
-
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
@@ -135,7 +128,7 @@ const Main = () => {
   }, []);
 
   useEffect(() => {
-    // updateTimerArray when dbTimerArray is available
+    // updateTimerArray when dbTimerArray is available and when invalidated
     updateTimerArray();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,7 +174,7 @@ const Main = () => {
           <>
             <div className='buttons-container'>
               <TimerButton
-                handleToggleTimerState={handleTriggerTimer}
+                handleTriggerTimer={handleTriggerTimer}
               />
               <button
                 type='button'
