@@ -2,11 +2,11 @@ import { FC, MouseEventHandler, useEffect, useState } from 'react';
 import styles from './timerButton.module.css';
 
 interface ITimerButtonProps {
-  handleToggleTimerState: MouseEventHandler<HTMLButtonElement> | undefined;
+  handleTriggerTimer: MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
 const TimerButton: FC<ITimerButtonProps> = (props) => {
-  const { handleToggleTimerState } = props;
+  const { handleTriggerTimer } = props;
 
   return (
     <div className={styles['timer-button']}>
@@ -14,7 +14,7 @@ const TimerButton: FC<ITimerButtonProps> = (props) => {
       <button
         type='button'
         title='Pause or resume timer'
-        onClick={handleToggleTimerState}
+        onClick={handleTriggerTimer}
         >
       ⏯
       </button>

@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { api } from 'renderer/utils/trpc';
+import { generateRandomWords, tempId } from 'renderer/utils/misc';
 // import { App.ITask } from 'types';
 import styles from './addTimer.module.css';
 
@@ -9,7 +10,7 @@ interface IAddTimerProps {
 };
 
 const initTimer = {
-  id: 0,
+  id: tempId(),
   title: '',
   timerInput: '01:00:00',
   currentTimer: '01:00:00'
@@ -46,10 +47,10 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
 
   function handleSubmit() {
     // if (timerArrayLength < 0) return console.error('Error');
-    console.log(`timerArrayLength: `, timerArrayLength);
+    const randomWords = generateRandomWords({wordsNumber:2});
     const newForm:App.ITask = {
       ...addForm,
-      id: timerArrayLength + 1,
+      id: randomWords,
       currentTimer: addForm.timerInput
     };
 

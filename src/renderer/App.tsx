@@ -6,62 +6,76 @@ import Timer from './components/Timer/Timer';
 import TimerButton from './components/TimerButton/TimerButton';
 import Timers from './components/Timers/Timers';
 import AddTimer from './components/AddTimer/AddTimer';
-// import icon from '../../assets/icon.svg';
-// import global from '../types/global';
-import { api } from './utils/trpc';
-import './App.css';
 import Modal from './components/Modal/Modal';
 import Sync from './components/Sync/Sync';
-
+import { api } from './utils/trpc';
+import { calcTimeSpent } from './utils/time';
+import { tempId } from './utils/misc';
+import './App.css';
 
 const Main = () => {
+  const trpcContext = api.useContext();
+  const { data: dbTimerArray, isLoading: isLoadingTimerArray } = api.task.getAllTasks.useQuery();
+  const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery();
 
-  // const greeting = api.example.greeting.useQuery({name: 'Yo2'});
-  // console.log(`greeting.data: `, greeting.data);
-  // const id = api.example.idGetAll.useQuery();
-  // console.log(`id?.data: `, stringify(id?.data));
-  const { data: dbTimerArray } = api.task.getAllTasks.useQuery();
-
-  const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.UpdateCurrentTimer.useMutation({
+  const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.updateCurrentTimer.useMutation({
     onSuccess: () => {
-      // void ctx.task.getAllTasks.invalidate();
+      trpcContext.task.getAllTasks.invalidate();
+      console.log(`dbTimerArray 1: `, dbTimerArray?.[0]?.currentTimer);
     }
   });
 
-  // const user = async () => await trpc.userById.query('a')
-  // const [selectedTask, setSelectedTask] = useState<number>(0);
-  // const tasks: ITask[] = [
-  //   { title: 'React', timeLeft: '08:59:59' },
-  // ];
+  const { mutate:dbPatchToLog } = api.logByDate.patchLog.useMutation({
+    onSuccess: () => {
+      trpcContext.logByDate.getAllLogs.invalidate();
+      trpcContext.task.getAllTasks.invalidate();
 
-  const initId = 0;
+      // eslint-disable-next-line no-use-before-define
+      handleUpdateTimer('');
+    },
+    onError: (error) => {
+      console.error('error - reset timer - patch mutation', error)
+    }
+  });
+
+  const firstLoad = useRef(true);
   const initTimerArray = [{
-    id: initId, title: '.',
+    id: tempId(), title: '.',
     timerInput: '00:00:00', currentTimer: '00:00:00'
   }];
-  // dbTimerArray
-  // initTimerArray
+  // TODO: Reduce use states
   const [ timerArray, setTimerArray ] = useState<App.ITask[]>(initTimerArray);
-  // changed this to id(starts with 1) instead of idx
-  const [ selTimerId, setSelTimerId ] = useState(initId);
-  const [ isShowModal, setIsShowModal ] = useState(false);
+  // TODO: merge this as one state
+  const [ currTimer, setCurrTimer ] = useState<App.ITask>(initTimerArray[0]);
+
   const [ triggerTimer, setTriggerTimer ] = useState(0);
+  const [ isShowModal, setIsShowModal ] = useState(false);
+  // TODO: merge this as one state
   const [ isShowTimers, setIsShowTimers ] = useState(false);
   const [ isShowAddTimer, setIsShowAddTimer ] = useState(false);
 
   function updateTimerArray() {
-    console.log(`dbTimerArray: `, dbTimerArray);
-    if (!!dbTimerArray?.length) {
-      // update the selected Id when db provides timer data
-      setSelTimerId(dbTimerArray[0].id);
-      setTimerArray(dbTimerArray)
+    if (dbTimerArray?.length) {
+      // set the timerArray & currTimer
+      // when db provides timer data, on play/pause, on reset
+      setTimerArray(dbTimerArray);
+      if (currTimer.title === '.') {
+        setCurrTimer(dbTimerArray[0]);
+      } else {
+        const newTimer = dbTimerArray.find(dbTA => dbTA.id === currTimer.id);
+        if (!newTimer) return;
+        setCurrTimer(newTimer);
+      }
     };
   };
 
-  function handleSetSelTimer(i:number) {
-    setSelTimerId(i);
+  function handleSetSelTimer(selId:string) {
+    const newCurrTimer = timerArray.find(el => el.id === selId);
+    if (!newCurrTimer) return;
+    setCurrTimer(newCurrTimer);
   };
 
+  // pause or play
   const handleTriggerTimer = useCallback(() => {
     setTriggerTimer(p => p + 1);
   }, []);
@@ -74,32 +88,47 @@ const Main = () => {
     setIsShowModal(true);
   };
 
-  const handleUpdatedTimer = useCallback((newUpdatedTimer:string) => {
-
-    // NOTE: currentTimer gets updated here
-    const selTimer:App.ITask|undefined = timerArray.find(currTimer => {
-      return currTimer.id === selTimerId;
+  const handleUpdateTimer = useCallback((newUpdatedTimer:string) => {
+    updateCurrentTimer({
+      id: currTimer.id,
+      currentTimer: newUpdatedTimer || currTimer.timerInput
     });
 
-    if (selTimer) {
-      selTimer.currentTimer = newUpdatedTimer;
-    };
+  }, [currTimer.id, currTimer.timerInput, updateCurrentTimer]);
 
-    console.log(`newUpdatedTimer: `, newUpdatedTimer);
-
-    // TODO: use TRPC useMutation to update time on db.
-    const res = updateCurrentTimer({
-      id: selTimerId,
-      currentTimer: newUpdatedTimer
+  function handleResetTimer() {
+    const selTimerLogIdx = dbLogAll?.findIndex(cL => {
+      return cL.id === currTimer.id;
     });
 
-    // console.log(`dbTimerArray: `, dbTimerArray);
-    // console.log(`res: `, res);
+    if (!dbLogAll || !selTimerLogIdx) return;
 
-  }, [selTimerId, timerArray, updateCurrentTimer]);
+    dbPatchToLog({
+      // should be currLog.id...
+      id: dbLogAll[selTimerLogIdx].id,
+      date: new Date().toISOString(),
+      taskName: currTimer.title,
+      timeSpent: calcTimeSpent(currTimer),
+    });
+
+    handleUpdateTimer('');
+
+    // on success, it resets timer automatically by invalidating
+
+  };
 
   useEffect(() => {
-    // updateTimerArray when dbTimerArray is available
+    if (firstLoad.current) {
+      console.log(
+        '%c#App Loaded',
+        "background: yellow; color: red; font-size: 25px"
+      );
+      firstLoad.current = false;
+    }
+  }, []);
+
+  useEffect(() => {
+    // updateTimerArray when dbTimerArray is available and when invalidated
     updateTimerArray();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,17 +145,27 @@ const Main = () => {
           onClose={() => setIsShowModal(false)}
         >
           <div className="modal-body">
-            <Sync />
+
+            <div className="reset-timer">
+              <div className="body">
+                <button
+                  type='button'
+                  onClick={handleResetTimer}
+                >
+                  Reset timer: {timerArray.find(cT => cT.id === currTimer.id)?.title || ''}
+                </button>
+              </div>
+              <br />
+            </div>
+            <div className="hr-fade" />
+              <Sync />
           </div>
       </Modal>
-
       <Timer
-        key={timerArray.find(cT => cT.id === selTimerId)?.id}
-        timerData={timerArray.find(cT => cT.id === selTimerId)}
-
-        onUpdatedTimer={handleUpdatedTimer}
+        key={`${currTimer?.id}-${currTimer?.currentTimer}`}
+        timerData={currTimer}
+        onUpdatedTimer={handleUpdateTimer}
         setIsShowTimers={setIsShowTimers}
-        // eslint-disable-next-line react/jsx-boolean-value
         triggerTimer={triggerTimer}
       />
 
@@ -135,7 +174,7 @@ const Main = () => {
           <>
             <div className='buttons-container'>
               <TimerButton
-                handleToggleTimerState={handleTriggerTimer}
+                handleTriggerTimer={handleTriggerTimer}
               />
               <button
                 type='button'
@@ -156,8 +195,8 @@ const Main = () => {
             </div>
             <Timers
               timerArray={timerArray}
-              handleSetSelTimer={(x) => handleSetSelTimer(x)}
-              selTimerId={selTimerId}
+              handleSetSelTimer={(id) => handleSetSelTimer(id)}
+              selTimerId={currTimer.id}
               triggerTimer={triggerTimer}
             />
             {

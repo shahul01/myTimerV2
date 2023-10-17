@@ -12,11 +12,24 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import dotenv from 'dotenv';
 import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import { exportData, resolveHtmlPath } from './util';
+import type { WriteResult } from './util';
+
+dotenv.config();
+
+console.log(`NODE_ENV: `, process.env.NODE_ENV);
+console.log(`isDevelopmentUser: `, process.env.IS_DEVELOPMENT_USER);
+console.log(`user: `, process.env.USER);
+console.log(`serveMode: `, process.env.SERVE_MODE);
+
+const isDevelopmentUser:boolean = JSON.parse(
+  process.env?.IS_DEVELOPMENT_USER ? process.env?.IS_DEVELOPMENT_USER : ''
+);
 
 export default class AppUpdater {
   constructor() {
@@ -28,24 +41,38 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-const userSettings = {
-  version: '1.0.0',
-  appSize: {
-    sticky: {
+// user setting 2
+function appDimensionDict() {
+  console.log(`isDevelopmentUser: `, isDevelopmentUser);
+  return isDevelopmentUser ? (
+    {
       hideTimers: { height: 400, width: 600 },
       showTimers: { height: 400, width: 600 },
       expanded: { height: 400, width: 600 }
-      // hideTimers: { height: 48, width: 140 },
-      // showTimers: { height: 370, width: 140 },
-      // expanded: { height: 400, width: 600 }
-    },
-  }
-
+    }
+  ) : (
+    {
+      hideTimers: { height: 48, width: 140 },
+      showTimers: { height: 370, width: 140 },
+      expanded: { height: 400, width: 600 }
+    }
+  )
 };
 
-function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
+function getAppVersion():string {
+  return '1.0.0';
+};
+
+const userSettings = {
+  isDevelopmentUser,
+  appDimension: {
+    sticky: appDimensionDict(),
+  }
+};
+
+function getAppDimension(dimension:'height'|'width', isStickyHovered:boolean):number{
   const displayOption = isStickyHovered ? 'showTimers' : 'hideTimers';
-  const newSize = userSettings.appSize.sticky[displayOption][dimension];
+  const newSize = userSettings.appDimension.sticky[displayOption][dimension];
   // console.log(`newSize ${dimension}: `, newSize);
   return newSize;
 };
@@ -55,7 +82,9 @@ function getAppSize(dimension:'height'|'width', isStickyHovered:boolean):number{
 // TODO: make these event name a constant
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
+  // console.log(msgTemplate(arg));
+
+  // connected to `once` in preload(?)
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -63,20 +92,11 @@ ipcMain.on(
   'handle-sticky-hover',
   (e, arg:boolean) => {
     // console.log(`arg: `, arg);
-    const newHeight = getAppSize('height', arg);
-    const newWidth = getAppSize('width', arg);
+    const newHeight = getAppDimension('height', arg);
+    const newWidth = getAppDimension('width', arg);
     mainWindow?.setSize(newWidth, newHeight);
   }
 );
-
-// TODO: move this to a folder common to main and renderer so both can get type
-interface ITimerEnd {
-  e: Electron.IpcMainEvent;
-  arg: {
-    taskTitle: string;
-    timeSpent?: string;
-  };
-};
 ipcMain.on(
   'handle-timer-end',
   (e, arg) => {
@@ -94,6 +114,51 @@ ipcMain.on(
   }
 );
 
+type HandleExportArg = {
+  selectedExport: 'config'
+  exportDataProps: {
+    data: App.RendererConfig,
+    fileName: string,
+    exportType: 'jsonc',
+  }
+};
+
+ipcMain.on(
+  'handle-export',
+  async (e, arg:HandleExportArg) => {
+    // console.log(`arg: `, arg);
+    // if (arg.selectedExport === 'config') {}
+
+    const config:App.Config = {
+      appName: 'myTimer',
+      version: getAppVersion(),
+      serveMode: 'electron',
+      metaData: {
+        exportedAt: new Date().toString(),
+        user: JSON.parse(process.env.USER || '{}')
+      },
+      configs: {
+        rendererConfig: arg.exportDataProps.data,
+        electronConfig: userSettings
+      }
+    };
+
+    const envPath = JSON.parse(process.env.EXPORT_PATH || '{}');
+    const filePath = envPath.CONFIG || './';
+    const fileData = {
+      filePath,
+      fileName: arg.exportDataProps.fileName,
+      exportType: arg.exportDataProps.exportType
+    };
+
+    const writeResult:WriteResult = await exportData({ config, fileData });
+    e.reply('handle-export', {
+      status:  writeResult.status,
+      error: writeResult.error
+    });
+  }
+);
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -102,7 +167,7 @@ if (process.env.NODE_ENV === 'production') {
 const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
-if (isDevelopment) {
+if (isDevelopment && isDevelopmentUser) {
   require('electron-debug')();
 }
 
@@ -135,16 +200,23 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: getAppSize('width', false),
-    height: getAppSize('height', false),
+    width: getAppDimension('width', false),
+    height: getAppDimension('height', false),
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+
     frame: false,
+    resizable: true,
+
+    // fix: enabling 'transparent' disables window maximization
+    transparent: true,
   });
 
-  mainWindow.setAlwaysOnTop(true);
+  mainWindow.setVisibleOnAllWorkspaces(true, {});
+  mainWindow.setAlwaysOnTop(true, 'screen-saver', 1);
+  // mainWindow.moveTop();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

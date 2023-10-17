@@ -9,10 +9,10 @@
   </body>
   <script>
     window.electron.ipcRenderer.once('ipc-example', (arg) => {
-      // eslint-disable-next-line no-console
+      // logs 'pong'
       console.log('ipc-example', arg);
     });
 
-    window.electron.ipcRenderer.myPing();
+    window.electron.ipcRenderer.myPing('ping');
   </script>
 </html>

@@ -1,96 +1,245 @@
 Total:
   # bugs:
-    ✔ timer still gives switching error @done(23-07-23 12:38)
-      - as it is a new timer(?) rather than referencing the component it creates and reuses it
-      - fix:
-        - on pause: send 'currentTimer' to parent
-        - on resume: resume from last paused 'currentTimer'
-    ✔ Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer @done(23-08-02 14:47)
+    timer:
+      ✔ timer still gives switching error @done(23-08-27 00:56)
+        - as it is a new timer(?) rather than referencing the component it creates and reuses it
+        - fix:
+          - on pause: send 'currentTimer' to parent
+          - on resume: resume from last paused 'currentTimer'
+        - solved by invalidating context on success
+    ✔ sync @done(23-08-27 00:58)
+      ✔ sync by title has repeated titles... @done(23-08-27 00:56)
+    ☐ reset error
+
+    electron:
+      ☐ refresh fn not working when frameless
+
+    ☐ Warning:
+      ✔ 1. Can't perform a React state update on an unmounted component. @done(23-08-02 14:47)
+        - This is a no-op, but it indicates a memory leak in your application.
+        - To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
+
 
 
   # important:
-    ☐ Input mask
-    ☐ Basic Backup and restore when clicking particular btn
+    - top 5:
 
-    ☐ phone version:
-      ☐ sync:
-        ☐ can get tasks and current level of completion
-        ☐ one touch sync
+      - (fix bugs)
+      ✔ reset timer @done(23-08-19 00:41)
+      ✔ for mac: always visible @done(23-08-19 00:57)
+      ✔ id instead of name (use 'name ===' to filter) @done(23-08-27 00:56)
+      - backup and restore w/ config file
+      - exe
 
-    ☐ web version
-      ☐ needs server to run FE
+      - rest:
+      ✔ double click - pause / resume @done(23-10-17 11:45)
+      - testing
+      - change bg color on running
+      - local storage
+      - user auth
+      - refactor
+
+      - mac top on all screen
+      - Input mask
+      - timer string validation w/ regex at least
+      - web version
+      - phone version
+
+      - keep an eye on inline TODOs and FIXes
+
 
 
   # design:
     ✔ no window titlebar @done(23-07-31 14:13)
+    ☐ when running, change body color
+    ☐ remove unicode and emoji btn and replace with svg buttons
+
     ☐ to timer lists:
       ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
+    ✔ replace border with fading border @done(23-08-28 00:03)
+
     ☐ size
-      ☐ resizable
+      ✔ resizable @done(23-08-28 00:03)
         ☐ remembers dimensions even after toggling different sizes
-      ☐ font auto adjust
+      ☐ font auto adjust on resize
+      ☐ on modal, have prop for modal that resizes the electron app acc to modal props
+
+    ☐ responsive
+    ☐ theme color per task
+
 
 
   # techstack:
-    ☐ tRPC(?)
     ☐ db
       - postgresql
-      - sqlite
-      ☐ zod
-
-
-
-  # refactor:
-
-
-
-  # good codebases for reference:
-
-
-
-  # references and resources:
+    ☐ tailwind
+      - for responsiveness(?)
+    ☐ prisma studio
 
 
 
   # ideas:
+    versions:
+      ☐ electron:
+        ☐ Mac: show on all windows / desktops
+        ☐ minimise btn - mainWindow.minimize();
+        ☐ refresh react home page
+        ☐ integrate with db
+        ☐ executable file:
+          ☐ make it portable
+          ☐ win
+          ☐ mac
+          ☐ integrated with db
+        ☐ view raw data on db
+          ☐ table name in dropdown, once selected
+          ☐ shows all the data
+
+        ☐ remember position on screen and monitor
+        ☐ add return guards when ServeMode != 'electron'
+
+
+      ☐ web:
+        ☐ modes:
+          - offline only ready
+          ☐ online
+            - add user roles
+          ☐ needs server on web to run FE
+          ☐ one source of truth timer
+            - eg pausing web version pauses electron's timer for that user...
+        ☐ PWA - for both modes
+
+
+        ☐ phone:
+
+
     ☐ timer:
+      ☐ reset
+        ✔ and before reset, send timespent to db @done(23-08-27 01:05)
+        ☐ after reset, sel timer shouldnt change
       ☐ add delete option to task
-      ☐ on double click:
+      ☐ on double click on timer in <Timer /> and timer in <Timers />:
+        - pause / resume that timer
         - show elapsed timer
-        - pause / resume
-
-    ☐ stopwatch:
-      ☐ multiples in list just like timers but with stopwatch
-
-
-    ☐ draggable anywhere
-    ☐ timer list drag and droppable
-
-
+      ✔ id as identifier instead of title: @done(23-08-27 23:47)
+        ✔ replace title with id, which could be same as title, so title can be edited @done(23-08-27 01:05)
+      ☐ editable
+        ☐ title
+        ☐ timerInput:
+          - ie each task has default timer, make it changable
+          ☐ before updating the timer, prompt to save data to db
+            - create timespent prop for ITask, which persists for entire day
 
 
 
-    ☐ remember position on screen and monitor
+    ☐ Sync:
+      ☐ can get tasks and current level of completion
+      ☐ one touch sync
+      ☐ btn to backup timer table within db
+
+    ☐ Backup and restore config:
+      feature:
+        ✔ when clicking particular btn @done(23-08-27 23:38)
+        ☐ basic
+        ✔ backup @done(23-09-19 17:32)
+        ☐ restore
+        - export type
+          - as .jsonc config file
+          - .js file, check with jsonc parser (?)
+
+      code:
+        ☐ add reducers for hard coded values in Sync/ExportData.tsx(+)
+
+
+    ☐ local Storage:
+      - save every elapsed sec or min to lclStrg.
+      - 'when' crash && if lclStrg has data && more time elapsed on lclStrg than db
+        - ask to restore from lclStrg and push to db
+
     ☐ time end alert:
       ✔ beep @done(23-08-01 20:20)
       ✔ message dialog box @done(23-08-01 20:20)
       ☐ reverse countdown
+
+    ☐ stopwatch:
+      ☐ multiples in list just like timers but with stopwatch
+
+    ☐ blink:
+      ☐ on time end
+      ☐ when paused, once every 15 mins
+
+    ☐ timer list drag and droppable
+    ☐ hotkeys
+      ☐ resume and pause
+
     ☐ heatmap
 
-    ☐ testing
+    ☐ publicity(OR)
+      ☐ SAAS
+      ✔ Open source the repo(?) @done(23-09-19 17:32)
+        ✔ block push to main branch @done(23-09-19 17:32)
+
+
+
+  # refactor:
+    ☐ sync.tsx → too many loops...
+      - rewrite 3x
+      - use chatgpt
+    ☐ App.tsx → too much code...
+
+    - type:
+      ☐ replace `any`
+        ☐ with proper type
+        ☐ with unknown(?)
+      ☐ replace `return` for guard clauses with `Error` if necessary
+      ☐ logByDate has 2 interface, one global and one infile, remove one.
+
+    ☐ add version to api
+
+
 
   # offline:
     ☐ save fonts locally
+    ☐ offline only ready
+
+
+
+  # testing:
+    type:
+      ☐ unit testing
+        ☐ timer:
+          ☐ runs for particular seconds etc
+            ☐ unit testing
+          ☐ play pause
+        ☐ util function
+          ☐ important ones
+          ☐ possibly buggy ones
+      ☐ e2e testing
+        ☐ CRUD
+        ☐ sync
+
 
 
   # performance:
-    ☐ uninstall
-      ☐ cors and its type
+    ☐ uninstall unused npms
+    ☐ Reduce loop count(+) in Sync
 
 
 
   # security:
+    ☐ validation:
+      ☐ Input mask
+      ☐ timer string:
+        ☐ regex
+        ☐ zod
+          ☐ z.object().strip()
+      ☐ prisma
+        ☐ use PrismaClient to get types
+        ☐ create zod schema from prisma schema
+    ☐ User auth to connect with db
+
+    ☐ https://github.com/shahul01/myTimerV2/security/dependabot?q=is%3Aopen+severity%3Acritical%2Chigh
+
     ☐ Warning type log on Dev Tools: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
         Policy set or a policy with "unsafe-eval" enabled. This exposes users of
         this app to unnecessary security risks.
@@ -99,12 +248,30 @@ Total:
       https://electronjs.org/docs/tutorial/security.
       This warning will not show up
       once the app is packaged.
-    ☐ Replace types:
-      ☐ any type
-      ☐ unknown type
 
-    ☐ turn on recently disabled rules
+    ☐ turn on recently disabled rules(+)
       - in .eslintrc.js
+    ☐ remove eslint in-file/in-line disable
+      ☐ remove disabled rule for exhaustive useEffect deps
+
+    ☐ chatgpt - owasp recommendation for techstacks
+      ☐ Next.js, React.js, Svelte Kit:
+        ☐ Ensure you're not rendering user-generated content as raw HTML.
+        ☐ Use JSX or Svelte templates to automatically escape content.
+        ☐ Implement CSP headers to restrict which sources can execute scripts.
+      ☐ Electron:
+        ☐ Keep Electron and its dependencies updated to patch known vulnerabilities.
+        ☐ Avoid loading remote content that might introduce security risks.
+        ☐ Utilize Electron's context isolation for rendering.
+      ☐ Node.js + Express:
+        ☐ Utilize security middleware like Helmet.js to set security-related HTTP headers.
+        ☐ Use a security scanning tool to identify vulnerabilities in your dependencies (e.g., OWASP Dependency-Check).
+      ☐ PostgreSQL:
+        ☐ Implement database access control with proper roles and permissions.
+        ☐ Use parameterized queries or an ORM like Sequelize to prevent SQL injection.
+      ☐ more:
+        - https://chat.openai.com/share/138db41e-1690-462b-a228-b28baadaac93
+
 
 
   # misc:
@@ -112,17 +279,33 @@ Total:
     ☐ add env processing files to trpc
 
 
-  # Docs:
+
+  # docs & reference:
     - ~best practices:
       - file:///D:/Shahul/test-codes/fullstack/t3/chirp
 
-    - trpc / prisma
+    - timers:
+      - https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
+      - https://codesandbox.io/s/sh-coundown-timers-single-button-y72wfh?file=/src/components/Timer/Timer.tsx
+
+    - trpc / prisma:
       - https://trpc.io/docs/quickstart
       - https://trpc.io/docs/server/adapters/express
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
+      - Updating schema: https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/customizing-migrations#how-to-edit-a-migration-file
 
-    - node / express
+    - w/ sqlite:
+      - https://stackoverflow.com/questions/41855859/electron-how-to-setup-db-with-sqlite-in-windows
+      - https://morioh.com/a/9fa8d2cf658c/create-a-simple-react-project-electron-app-sqlite3-connection
+      - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9
+
+    - electron:
+      - https://www.electronjs.org/docs/latest/tutorial/ipc#pattern-3-main-to-renderer
+      - https://github.dev/benawad/dogehouse
+      - https://www.electronjs.org/docs/latest/tutorial/tutorial-preload
+
+    - node / express:
       - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
 
     - tools:
@@ -131,9 +314,22 @@ Total:
         - https://github.com/mohammed-bahumaish/prisma-editor
         - https://cloud.smartdraw.com/
 
+    - pin to top:
+      - https://stackoverflow.com/questions/49232037/how-to-make-electron-in-a-window-on-top-of-all-other-windows-as-an-indicator-of
+      - https://syobochim.medium.com/electron-keep-apps-on-top-whether-in-full-screen-mode-or-on-other-desktops-d7d914579fce
+
     - misc:
-      - https://codesandbox.io/s/4-sh-coundown-timers-add-yy9r48
+      - https://www.google.com/search?q=portable+electron+app
+      - https://codesandbox.io/s/use-double-click-gpt-rylvmf?file=/src/components/DoubleClickExample.js
+      - https://app.diagrams.net/
+      - https://phosphoricons.com/
 
 
-  # Gist link:
+  # symbols:
+    - (+) - already mentioned in code inline
+    - (?) -
+
+
+
+# Gist link:
 

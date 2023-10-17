@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { FC, useEffect, useRef, useState } from 'react';
+import { stringify } from 'renderer/utils/misc';
+import { calcTimeSpent, getTimeAsNumber } from 'renderer/utils/time';
 import { api } from 'renderer/utils/trpc';
-import { calcTimeSpent, getNumberAsTime, getTimeAsNumber } from 'renderer/utils/time';
-import { stringify, uuid } from 'renderer/utils/misc';
+import ExportData from './ExportData/ExportData';
 import styles from './sync.module.css';
 
 interface ILogByDate {
@@ -94,7 +95,7 @@ const Sync: FC<ISyncProps> = (props) => {
     function sendToPostDataVar(currTimer:App.ITask, from:number) {
       // console.log('from', from);
       toPostData.push({
-        id: uuid({idLength: 'some'}),
+        id: currTimer.id,
         date: new Date().toISOString(),
         taskName: currTimer.title,
         timeSpent: calcTimeSpent(currTimer)
@@ -108,17 +109,18 @@ const Sync: FC<ISyncProps> = (props) => {
 
     };
       // type TDBLogAll = typeof App.ILogByDate;
-      dbLogAllRef.current?.forEach((currLog: App.ILogByDate) => {
+      dbLogAllRef.current?.forEach((currLog:ILogByDate) => {
+        console.log(`currLog: `, currLog);
 
         const availableInPostData = () =>  {
           return toPostData.find((currPost:ILogByDate) => {
-            return currPost.taskName === currTimer.title;
+            return currPost.id === currTimer.id;
           });
         };
 
         const availableInPatchData = () => (
           toPatchData.find((currPatch:ILogByDate) => {
-            return currPatch.taskName === currTimer?.title;
+            return currPatch.id === currTimer?.id;
           })
         );
 
@@ -127,11 +129,11 @@ const Sync: FC<ISyncProps> = (props) => {
         const availableInLogData = () => {
           // currTimer not avail in entire log and currLog not avail in entire log
           const currTimerNotInEntireLog = dbLogAllRef.current?.find(currLog2 => {
-            return currTimer.title === currLog2.taskName;
+            return currTimer.id === currLog2.id;
           });
 
           const currLogNotInEntireLog = dbLogAllRef.current?.find(currLog2 => {
-            return currLog.taskName === currLog2.taskName;
+            return currLog.id === currLog2.id;
           });
 
           return currTimerNotInEntireLog && currLogNotInEntireLog;
@@ -145,7 +147,8 @@ const Sync: FC<ISyncProps> = (props) => {
         );
 
         if (
-          currLog.taskName === currTimer.title
+          currLog.id === currTimer.id
+          // availableInLogData()
         ) {
           // if ( logTimeAsNumber > currDbTimeAsNumber ) return;
           toPatchData.push({
@@ -206,13 +209,14 @@ const Sync: FC<ISyncProps> = (props) => {
       metaData: {lastUpdateAt: '<When tasks are saved as logs>' },
       data: {} as App.IObject<{[totalTime:string]: string}>
     };
+    const preferredUnit = 'minutes';
 
     // TODO: reduce loop count
     dbLogAllRef.current?.forEach((currTask:ILogByDate) => {
       // 120 minutes
       const prevTime = logs.data[currTask.taskName]?.totalTime;
       const currTime = getTimeAsNumber(
-        {time: currTask.timeSpent, preferredUnit: 'minutes'}
+        {time: currTask.timeSpent, preferredUnit}
       );
 
       // 120
@@ -224,7 +228,7 @@ const Sync: FC<ISyncProps> = (props) => {
 
       logs.data = {
         ...logs.data,
-        [currTask.taskName]: { totalTime: `${totalTime} minutes`}
+        [currTask.taskName]: { totalTime: `${totalTime} ${preferredUnit}`}
       }
 
     })
@@ -248,8 +252,16 @@ const Sync: FC<ISyncProps> = (props) => {
     updateSyncData();
   };
 
+  function handleExport() {
+    // console.log(`export: `, export);
+
+  }
+
   return (
     <div className={styles.sync}>
+
+      {/* // TODO: use Accordion to change be reset, sync and export */}
+
       <h3>Sync: </h3>
       <button
         type='button'
@@ -257,7 +269,7 @@ const Sync: FC<ISyncProps> = (props) => {
         onClick={handleSync}
         className={styles["sync-button"]}
       >
-        🔄
+        🔄 Sync
       </button>
       <div className={styles.body}>
         <p>Logs: </p>
@@ -270,6 +282,24 @@ const Sync: FC<ISyncProps> = (props) => {
 
         </div>
       </div>
+
+      <div className="hr-fade" />
+
+      <div className="export">
+        <div className="export-body">
+          <ExportData
+            selectedExport='config'
+          />
+          <button
+            className="temp"
+            type='button'
+          >
+            Import config
+          </button>
+        </div>
+
+      </div>
+
     </div>
   )
 };

@@ -1,9 +1,11 @@
 // https://chat.openai.com/share/11cff69c-8f48-450f-8a24-d2fc3bce1a13
 // chat.openai.com/c/516be87e-0adb-4875-acb3-40e3bdd6eab2
+// TODO: simplify this page.
 
 
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 // import { ITask } from 'renderer/types';
+// import useDoubleClick from 'use-double-click';
 import simpleBeep from '../../../../assets/audio/ringtones/beep-simple.mp3';
 import styles from './timer.module.css';
 // 4000mHz-2400mSec
@@ -40,6 +42,8 @@ const Timer: FC<ITimerProps> = (props) => {
   // ref for remembering data when unmounting
   const outputTimeRef = useRef(`${currentTimer}`);
   const timerState = useRef<TTimerState>('paused');
+  const singleClickTimer = useRef(null);
+  // const mainButtonRef = useRef();
   // const [ isClickedTimer, setIsClickedTimer ] = useState('false');
   const [ triggerClickedTimer, setTriggerClickedTimer ] = useState(0);
   const countdown = useRef<NodeJS.Timeout>();
@@ -52,7 +56,7 @@ const Timer: FC<ITimerProps> = (props) => {
   };
 
   const totalDeciSeconds = useRef<number>(
-    getTimeInSeconds(currentTimer) * 10
+    getTimeInSeconds(currentTimer || '') * 10
   );
 
   const getTimeComponents = (totalSeconds: number): number[] => (
@@ -84,7 +88,7 @@ const Timer: FC<ITimerProps> = (props) => {
     if (!countdown?.current) return;
 
     // send updatedTimer to parent
-    if (!!timerData?.id) {
+    if (timerData?.id) {
       onUpdatedTimer(outputTimeRef.current);
     }
 
@@ -127,6 +131,7 @@ const Timer: FC<ITimerProps> = (props) => {
 
       if (totalDeciSeconds.current <= 0) {
         console.log(title, 'done');
+        // if (serveMode === 'electron') {};
         handleTimerEndElectron({taskTitle: title});
         endAudio.play();
         stopCountdown();
@@ -152,6 +157,7 @@ const Timer: FC<ITimerProps> = (props) => {
 
     const display = triggerClickedTimer % 2 === 0 ? 'show' : 'hide';
     setTriggerClickedTimer(p=>p+1);
+    // && serveMode === 'electron'
     if (display === 'show') {
       handleStickyHoverElectron(true);
       return setIsShowTimers(true);
@@ -160,6 +166,44 @@ const Timer: FC<ITimerProps> = (props) => {
     handleStickyHoverElectron(false);
     return setIsShowTimers(false);
   };
+
+  // useDoubleClick({
+  //   onSingleClick: (e) => {
+  //     handleShowHideAllTimers();
+  //   },
+  //   onDoubleClick: (e) => {
+  //     console.log('double click');
+  //     pauseCountdown();
+  //     // handleToggleTimerState();
+  //   },
+  //   ref: mainButtonRef,
+  //   latency: 300
+  // });
+
+  // TODO: make this a hook / module
+  function handleDoubleClick() {
+    clearInterval(singleClickTimer.current);
+    singleClickTimer.current = null;
+
+    // handleDoubleClick fn
+    handleToggleTimerState();
+
+  };
+
+  function handleSingleClick() {
+    if (singleClickTimer.current === null) {
+      singleClickTimer.current = setTimeout(() => {
+        singleClickTimer.current = null;
+
+        // handleSingleClick fn
+        handleShowHideAllTimers();
+
+      }, 300)
+
+    };
+
+  };
+
 
   useEffect(() => {
     if (firstLoad.current) {
@@ -202,7 +246,7 @@ const Timer: FC<ITimerProps> = (props) => {
         }
       >
 
-      {!!timerData ?
+      {!!timerData?.id ?
         (
           <div className={styles.hero} >
             <div className={styles['title-bar']} >
@@ -210,7 +254,8 @@ const Timer: FC<ITimerProps> = (props) => {
             </div>
             <div
                 className={styles.body}
-                onClick={handleShowHideAllTimers}
+                onClick={handleSingleClick}
+                onDoubleClick={handleDoubleClick}
 
                 onKeyUp={handleShowHideAllTimers}
                 role="button"

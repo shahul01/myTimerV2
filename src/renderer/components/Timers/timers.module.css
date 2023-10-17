@@ -1,6 +1,6 @@
 .timers {
   height: 6.4rem;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 div.timers::-webkit-scrollbar {
@@ -10,6 +10,10 @@ div.timers::-webkit-scrollbar {
 div.timers::-webkit-scrollbar-thumb {
   border: 2px solid hsla(0, 0%, 50%, 0.6);
   border-radius: 20px;
+}
+
+div.timers::-webkit-scrollbar-thumb:hover {
+  border: 2px solid hsla(0, 0%, 70%, 1);
 }
 
 .timer-wrapper {
@@ -25,12 +29,15 @@ div.timers::-webkit-scrollbar-thumb {
   cursor: pointer;
 }
 
-.timer .title {
-  text-align: left;
+.timer .button-title {
   overflow: hidden;
 }
 
 .timer .button {
   user-select: none;
   margin-right: 0.25rem;
+}
+
+.timer .title {
+  text-align: left;
 }

@@ -9,6 +9,7 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+// FIX: remove this
 const tempEnv:'development'|'production' = 'development';
 
 // eslint-disable-next-line import/prefer-default-export
