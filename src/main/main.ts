@@ -17,7 +17,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { exportData, resolveHtmlPath } from './util';
+import { exportData, resolveHtmlPath, safeParse } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
@@ -27,9 +27,10 @@ console.log(`isDevelopmentUser: `, process.env.IS_DEVELOPMENT_USER);
 console.log(`user: `, process.env.USER);
 console.log(`serveMode: `, process.env.SERVE_MODE);
 
-const isDevelopmentUser:boolean = JSON.parse(
-  process.env?.IS_DEVELOPMENT_USER ? process.env?.IS_DEVELOPMENT_USER : ''
-);
+// const parsedIsDevelopmentUser =;
+const isDevelopmentUser:boolean =  safeParse(
+  process.env?.IS_DEVELOPMENT_USER, false
+) as boolean;
 
 export default class AppUpdater {
   constructor() {
@@ -135,7 +136,7 @@ ipcMain.on(
       serveMode: 'electron',
       metaData: {
         exportedAt: new Date().toString(),
-        user: JSON.parse(process.env.USER || '{}')
+        user: safeParse(process.env.USER, '{}') as App.User
       },
       configs: {
         rendererConfig: arg.exportDataProps.data,
@@ -143,7 +144,7 @@ ipcMain.on(
       }
     };
 
-    const envPath = JSON.parse(process.env.EXPORT_PATH || '{}');
+    const envPath = safeParse(process.env.EXPORT_PATH, '{}') as App.IObject<string>;
     const filePath = envPath.CONFIG || './';
     const fileData = {
       filePath,

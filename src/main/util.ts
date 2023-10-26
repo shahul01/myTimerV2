@@ -73,5 +73,21 @@ export async function exportData({config, fileData}:
 
   return writeResult;
 
-}
+};
+
+// renamed fn name from parseIfObject from src\renderer\utils\misc.ts
+type SafeParseReturn = App.IObject<string>|string|boolean;
+export function safeParse(
+  str:string|undefined, fallback:SafeParseReturn='{}'
+):SafeParseReturn {
+  if (typeof(str) === 'undefined') return fallback;
+  if (
+      typeof(str) === 'string'
+      && str[0] === '{'
+      && str[str.length-1] === '}'
+  ) {
+    return JSON.parse(str)
+  };
+  return str;
+};
 

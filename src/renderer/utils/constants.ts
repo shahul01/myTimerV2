@@ -2,6 +2,15 @@ import { parseIfObject } from "./misc";
 
 function loadEnv():App.Env {
   const rawEnv = window.electron.ipcRenderer.envVar;
+
+  const emptyEnv:App.Env = {
+    IS_DEVELOPMENT_USER: false,
+    URL: {},
+    USER: {},
+    SERVE_MODE: "browser"
+  };
+  if (!rawEnv || !Object.keys(rawEnv)?.length) return emptyEnv;
+
   const readableEnvArr = Object
     .entries(rawEnv)
     .map((el:string[]) => (

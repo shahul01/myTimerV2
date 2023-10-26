@@ -39,6 +39,9 @@ Total:
       - user auth
       - refactor
 
+      - offline
+      - actual icons
+
       - mac top on all screen
       - Input mask
       - timer string validation w/ regex at least
@@ -323,6 +326,9 @@ Total:
       - https://codesandbox.io/s/use-double-click-gpt-rylvmf?file=/src/components/DoubleClickExample.js
       - https://app.diagrams.net/
       - https://phosphoricons.com/
+      - project /react-typescript-electron-sample-with-create-react-app-and-electron-builder
+      - project /electron-react-boilerplate
+      - project /test-codes/electron/ers-stack
 
 
   # symbols:

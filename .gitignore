@@ -1,9 +1,12 @@
 # Dependency directory
 node_modules
-
 .env
+
+#db
 **/db.sqlite
 # **/db.sqlite.bak
+
+# Sh
 # *sh.TODO
 .temp-unsaved/*
 
@@ -26,6 +29,7 @@ coverage
 # OSX
 .DS_Store
 
+# build and executibles
 release/app/dist
 release/build
 .erb/dll
