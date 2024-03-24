@@ -39,14 +39,16 @@
 
 ```
   # frontend and backend
-  npm i --save-exact
-  npm run postinstall
-  npm run start
+    npm i --save-exact
+    npm run postinstall
+    npm run start
 
   # db
-  npx prisma generate
-  npx prisma db push
-  npm run dev:server
+    # to use prisma client
+    npx prisma generate
+    # creates db.sqlite file w/ tables
+    npx prisma db push
+    npm run dev:server
 
 ```
 
