@@ -10,7 +10,11 @@ import { appRouter } from './route';
 // export the type definition of the API & only that to client.
 export type AppRouter = typeof appRouter;
 
+
+console.log('api/index.ts');
+
 const app = express();
+const port = 9000;
 
 app.use(cors({
   // TODO: Remove hardcode
@@ -31,4 +35,6 @@ app.use(
 
 
 // TODO: remove hard code
-app.listen(9000);
+app.listen(port, () => {
+  console.log('Server listenting on port', port);
+});

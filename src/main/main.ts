@@ -1,13 +1,5 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build:main`, this file is compiled to
- * `./src/main.js` using webpack. This gives us some performance wins.
- */
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -21,6 +13,8 @@ import { exportData, resolveHtmlPath, safeParse } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
+
+const tempEnv = { DEBUG_PROD: 'true' };
 
 console.log(`NODE_ENV: `, process.env.NODE_ENV);
 console.log(`isDevelopmentUser: `, process.env.IS_DEVELOPMENT_USER);
@@ -47,9 +41,9 @@ function appDimensionDict() {
   console.log(`isDevelopmentUser: `, isDevelopmentUser);
   return isDevelopmentUser ? (
     {
-      hideTimers: { height: 400, width: 600 },
-      showTimers: { height: 400, width: 600 },
-      expanded: { height: 400, width: 600 }
+      hideTimers: { height: 500, width: 600 },
+      showTimers: { height: 500, width: 600 },
+      expanded: { height: 500, width: 600 }
     }
   ) : (
     {
@@ -166,7 +160,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const isDevelopment =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+  process.env.NODE_ENV === 'development' || tempEnv.DEBUG_PROD === 'true';
 
 if (isDevelopment && isDevelopmentUser) {
   require('electron-debug')();

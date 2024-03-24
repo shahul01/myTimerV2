@@ -56,6 +56,7 @@ const Main = () => {
 
   function updateTimerArray() {
     if (dbTimerArray?.length) {
+      console.log(`dbTimerArray: `, dbTimerArray);
       // set the timerArray & currTimer
       // when db provides timer data, on play/pause, on reset
       setTimerArray(dbTimerArray);
