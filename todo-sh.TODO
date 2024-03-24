@@ -10,6 +10,10 @@ Total:
     ✔ sync @done(23-08-27 00:58)
       ✔ sync by title has repeated titles... @done(23-08-27 00:56)
     ☐ reset error
+    ✔ on app starts up, if there is no net connection, it doesnt look for backend data @done(23-12-08 19:06)
+      - just shows 00:00
+      - maybe cos it needs online data like fonts first..
+      - Sol: I just needed to enable any adapter to communicate bw FE and BE
 
     electron:
       ☐ refresh fn not working when frameless
@@ -19,6 +23,22 @@ Total:
         - This is a no-op, but it indicates a memory leak in your application.
         - To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function. at Timer
 
+
+
+  # problem:
+    ☐ electron-server problem:
+      - electron executes renderer...
+      - electron
+        → react
+        → trpc
+      - how to make both react and trpc execute?
+      - refer: .erb\configs\webpack.config.renderer.dev.ts : line 176
+
+      - js/ts → compile and build to /release/app/dist folder
+      - electron pack → /dist folder to /release/build folder
+
+      - on npm run start → renderer gets triggered → compiles js file
+        → launches electron via spawn()
 
 
   # important:
@@ -38,6 +58,9 @@ Total:
       - local storage
       - user auth
       - refactor
+
+      - separate logs by week
+      - toast on network error etc
 
       - offline
       - actual icons
@@ -85,7 +108,9 @@ Total:
   # ideas:
     versions:
       ☐ electron:
-        ☐ Mac: show on all windows / desktops
+        ☐ show on all windows / desktops:
+          ☐ windows
+          ☐ mac
         ☐ minimise btn - mainWindow.minimize();
         ☐ refresh react home page
         ☐ integrate with db
@@ -100,6 +125,7 @@ Total:
 
         ☐ remember position on screen and monitor
         ☐ add return guards when ServeMode != 'electron'
+        ☐ exit confirmation dialog box
 
 
       ☐ web:
@@ -121,6 +147,7 @@ Total:
         ✔ and before reset, send timespent to db @done(23-08-27 01:05)
         ☐ after reset, sel timer shouldnt change
       ☐ add delete option to task
+      ☐ after every min, send timer to db
       ☐ on double click on timer in <Timer /> and timer in <Timers />:
         ✔ pause / resume that timer @done(23-10-17 11:47)
         - show elapsed timer
@@ -132,13 +159,19 @@ Total:
           - ie each task has default timer, make it changable
           ☐ before updating the timer, prompt to save data to db
             - create timespent prop for ITask, which persists for entire day
-
+      ☐ toast on network error etc
 
 
     ☐ Sync:
       ☐ can get tasks and current level of completion
       ☐ one touch sync
       ☐ btn to backup timer table within db
+
+    ☐ Logs:
+      ☐ Separate logs by
+        ☐ day
+        ☐ week
+        ☐ month
 
     ☐ Backup and restore config:
       feature:
@@ -175,12 +208,24 @@ Total:
     ☐ hotkeys
       ☐ resume and pause
 
-    ☐ heatmap
+    ☐ charts
+      ☐ horizontal progress bar as background
+      ☐ daily bar charts
+      ☐ weekly bar charts
+      ☐ heatmap
+          - https://codesandbox.io/p/sandbox/sh-heatmap-j2lsr8
+
+    ☐ requestSingleInstanceLock
+
+    ☐ hide icon on taskbar and only show on tray
+      - `skipTaskbar: true`
+      - https://www.electronjs.org/docs/latest/api/tray
+
 
     ☐ publicity(OR)
       ☐ SAAS
       ✔ Open source the repo(?) @done(23-09-19 17:32)
-        ✔ block push to main branch @done(23-09-19 17:32)
+        ☐ block push to main branch
 
 
 
@@ -198,6 +243,7 @@ Total:
       ☐ logByDate has 2 interface, one global and one infile, remove one.
 
     ☐ add version to api
+    ☐ add superjson transformer to trpc
 
 
 
@@ -222,9 +268,10 @@ Total:
         ☐ sync
 
 
-
   # performance:
     ☐ uninstall unused npms
+      ☐ crypto-browserify
+      ☐ url
     ☐ Reduce loop count(+) in Sync
 
 
@@ -297,16 +344,20 @@ Total:
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
       - Updating schema: https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/customizing-migrations#how-to-edit-a-migration-file
+      - https://github.com/NickyMeuleman/electron-trpc-prisma
 
     - w/ sqlite:
       - https://stackoverflow.com/questions/41855859/electron-how-to-setup-db-with-sqlite-in-windows
       - https://morioh.com/a/9fa8d2cf658c/create-a-simple-react-project-electron-app-sqlite3-connection
       - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9
+      - https://github.com/orbitinghail/sqlsync
 
     - electron:
       - https://www.electronjs.org/docs/latest/tutorial/ipc#pattern-3-main-to-renderer
       - https://github.dev/benawad/dogehouse
       - https://www.electronjs.org/docs/latest/tutorial/tutorial-preload
+      - https://github.com/electron-userland/electron-webpack-quick-start/
+      - sh-electron-node
 
     - node / express:
       - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
@@ -329,6 +380,7 @@ Total:
       - project /react-typescript-electron-sample-with-create-react-app-and-electron-builder
       - project /electron-react-boilerplate
       - project /test-codes/electron/ers-stack
+      - https://github.com/TasinIshmam/prisma-electron-test/blob/master/package.json
 
 
   # symbols:
