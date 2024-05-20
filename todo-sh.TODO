@@ -277,6 +277,8 @@ Total:
 
 
   # security:
+    ☐ github security
+      ☐ https://github.com/shahul01/myTimerV2/security/dependabot?q=is%3Aopen+severity%3Acritical%2Chigh
     ☐ validation:
       ☐ Input mask
       ☐ timer string:

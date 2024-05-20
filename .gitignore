@@ -33,6 +33,7 @@ coverage
 release/app/dist
 release/build
 .erb/dll
+src/server/dist
 
 .idea
 npm-debug.log.*
