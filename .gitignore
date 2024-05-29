@@ -4,6 +4,7 @@ node_modules
 
 #db
 **/db.sqlite
+**/db_*.sqlite
 # **/db.sqlite.bak
 
 # Sh

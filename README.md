@@ -33,9 +33,9 @@
 
 <br /> <hr /> <br />
 
-### codes
+### Codes
 
-#### 1. to start
+#### 1. to start - dev mode
 
 ```
   # frontend and backend
@@ -52,16 +52,37 @@
 
 ```
 
-#### 2. misc
+#### 2. to create application package
 
-#### 2a. prisma schema update
+```
+  npm run package
+```
+
+#### 3. to start - prod mode
+
+```
+  # frontend and backend
+    directly use electron app
+
+  # db
+    npm run build:server
+    npm run start:server
+```
+
+#### 4. misc
+
+#### 4a. prisma schema update
 
 ```
   npx prisma migrate dev --create-only
   npx prisma migrate dev
 ```
 
-#### refer todo for reference docs
+<br />
+
+#### 👉 refer .TODO file for reference docs
+
+<br />
 
 ### credits
 
