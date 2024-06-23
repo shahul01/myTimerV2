@@ -14,6 +14,11 @@ Total:
       - just shows 00:00
       - maybe cos it needs online data like fonts first..
       - Sol: I just needed to enable any adapter to communicate bw FE and BE
+    ☐ timer pauses when minimised
+      - https://stackoverflow.com/a/12522580/15187131
+      - https://stackoverflow.com/questions/5927284/how-can-i-make-setinterval-also-work-when-a-tab-is-inactive-in-chrome
+      - https://stackoverflow.com/a/34165620/15187131
+      - https://stackoverflow.com/a/25770437/15187131
 
     electron:
       ☐ refresh fn not working when frameless
@@ -53,6 +58,12 @@ Total:
 
       - rest:
       ✔ double click - pause / resume @done(23-10-17 11:45)
+      - App should ask for Db and run it
+      - horizontal progress bar
+      - hotkeys
+      - mac top on all screen
+      - timer string validation w/ regex at least
+
       - testing
       - change bg color on running
       - local storage
@@ -65,9 +76,7 @@ Total:
       - offline
       - actual icons
 
-      - mac top on all screen
       - Input mask
-      - timer string validation w/ regex at least
       - web version
       - phone version
 
@@ -119,9 +128,12 @@ Total:
           ☐ win
           ☐ mac
           ☐ integrated with db
+            ☐ App should ask for Db location and run it
         ☐ view raw data on db
           ☐ table name in dropdown, once selected
           ☐ shows all the data
+        ☐ click throught the window
+          - mainWindow.setIgnoreMouseEvents(true)
 
         ☐ remember position on screen and monitor
         ☐ add return guards when ServeMode != 'electron'
@@ -139,13 +151,14 @@ Total:
         ☐ PWA - for both modes
 
 
-        ☐ phone:
+      ☐ phone:
 
 
     ☐ timer:
       ☐ reset
         ✔ and before reset, send timespent to db @done(23-08-27 01:05)
         ☐ after reset, sel timer shouldnt change
+        ☐ can reset even when timer running and pause post reset
       ☐ add delete option to task
       ☐ after every min, send timer to db
       ☐ on double click on timer in <Timer /> and timer in <Timers />:
@@ -209,7 +222,8 @@ Total:
       ☐ resume and pause
 
     ☐ charts
-      ☐ horizontal progress bar as background
+      ☐ horizontal progress bar
+        ☐ background
       ☐ daily bar charts
       ☐ weekly bar charts
       ☐ heatmap
@@ -234,6 +248,8 @@ Total:
       - rewrite 3x
       - use chatgpt
     ☐ App.tsx → too much code...
+    ☐ Add prettier
+    ☐ Add eslint
 
     - type:
       ☐ replace `any`

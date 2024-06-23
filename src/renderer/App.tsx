@@ -18,12 +18,21 @@ const Main = () => {
   const { data: dbTimerArray, isLoading: isLoadingTimerArray } = api.task.getAllTasks.useQuery();
   const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery();
 
+  // const { data: exampleGreeting } = api.example.greeting.useQuery();
+
   const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.updateCurrentTimer.useMutation({
     onSuccess: () => {
       trpcContext.task.getAllTasks.invalidate();
       console.log(`dbTimerArray 1: `, dbTimerArray?.[0]?.currentTimer);
     }
   });
+
+  const { mutate:deleteCurrentTimer, isLoading: isDeletingTimer } = api.task.deleteTask.useMutation({
+    onSuccess:() => {
+      trpcContext.task.getAllTasks.invalidate();
+      console.log('Deleted timer')
+    }
+  })
 
   const { mutate:dbPatchToLog } = api.logByDate.patchLog.useMutation({
     onSuccess: () => {
@@ -90,10 +99,11 @@ const Main = () => {
   };
 
   const handleUpdateTimer = useCallback((newUpdatedTimer:string) => {
-    updateCurrentTimer({
+    const updatedTimer = updateCurrentTimer({
       id: currTimer.id,
       currentTimer: newUpdatedTimer || currTimer.timerInput
     });
+    console.log(`updatedTimer: `, updatedTimer);
 
   }, [currTimer.id, currTimer.timerInput, updateCurrentTimer]);
 
@@ -116,6 +126,19 @@ const Main = () => {
 
     // on success, it resets timer automatically by invalidating
 
+  };
+
+  function handleEditTimer() {
+
+  };
+
+  // TODO: delete any timer not just current timer and by id
+  function handleDeleteTimer() {
+    deleteCurrentTimer({
+      id: currTimer.id
+    });
+    // const resGreeting = exampleGreeting;
+    // console.log(`resGreeting: `, resGreeting);
   };
 
   useEffect(() => {
@@ -146,17 +169,27 @@ const Main = () => {
           onClose={() => setIsShowModal(false)}
         >
           <div className="modal-body">
-
+            <h2>Timer {timerArray.find(cT => cT.id === currTimer.id)?.title || ''}</h2>
             <div className="reset-timer">
               <div className="body">
                 <button
                   type='button'
                   onClick={handleResetTimer}
                 >
-                  Reset timer: {timerArray.find(cT => cT.id === currTimer.id)?.title || ''}
+                  Reset timer
                 </button>
               </div>
               <br />
+              <div className="reset-timer">
+                <div className="body">
+                  <button
+                    type="button"
+                    onClick={handleDeleteTimer}
+                    >
+                      Delete timer
+                    </button>
+                </div>
+              </div>
             </div>
             <div className="hr-fade" />
               <Sync />
