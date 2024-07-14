@@ -198,6 +198,8 @@ const createWindow = async () => {
     width: getAppDimension('width', false),
     height: getAppDimension('height', false),
     icon: getAssetPath('icon.png'),
+    // backgroundColor: "#282730FF",
+    backgroundColor: "#80FFFFFF",
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -222,7 +224,6 @@ const createWindow = async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
-
       mainWindow.show();
 
     }

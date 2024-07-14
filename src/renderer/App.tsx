@@ -32,6 +32,12 @@ const Main = () => {
       trpcContext.task.getAllTasks.invalidate();
       console.log('Deleted timer')
     }
+  });
+
+  const { mutate: deleteTimerLog } = api.logByDate.deleteLog.useMutation({
+    onSuccess:() => {
+      console.log("Deleted timer's log")
+    }
   })
 
   const { mutate:dbPatchToLog } = api.logByDate.patchLog.useMutation({
@@ -56,6 +62,7 @@ const Main = () => {
   const [ timerArray, setTimerArray ] = useState<App.ITask[]>(initTimerArray);
   // TODO: merge this as one state
   const [ currTimer, setCurrTimer ] = useState<App.ITask>(initTimerArray[0]);
+  const currTimerRef = useRef<App.ITask>(initTimerArray[0]);
 
   const [ triggerTimer, setTriggerTimer ] = useState(0);
   const [ isShowModal, setIsShowModal ] = useState(false);
@@ -69,20 +76,24 @@ const Main = () => {
       // set the timerArray & currTimer
       // when db provides timer data, on play/pause, on reset
       setTimerArray(dbTimerArray);
-      if (currTimer.title === '.') {
+      if (currTimerRef.current.title === '.') {
         setCurrTimer(dbTimerArray[0]);
+        [ currTimerRef.current ] = dbTimerArray;
       } else {
-        const newTimer = dbTimerArray.find(dbTA => dbTA.id === currTimer.id);
+        const newTimer = dbTimerArray.find(dbTA => dbTA.id === currTimerRef.current.id);
         if (!newTimer) return;
         setCurrTimer(newTimer);
+        currTimerRef.current = newTimer;
       }
     };
   };
 
   function handleSetSelTimer(selId:string) {
     const newCurrTimer = timerArray.find(el => el.id === selId);
+    console.log(`newCurrTimer: `, newCurrTimer);
     if (!newCurrTimer) return;
     setCurrTimer(newCurrTimer);
+    currTimerRef.current = newCurrTimer;
   };
 
   // pause or play
@@ -100,16 +111,17 @@ const Main = () => {
 
   const handleUpdateTimer = useCallback((newUpdatedTimer:string) => {
     const updatedTimer = updateCurrentTimer({
-      id: currTimer.id,
-      currentTimer: newUpdatedTimer || currTimer.timerInput
+      id: currTimerRef.current.id,
+      currentTimer: newUpdatedTimer || currTimerRef.current.timerInput
     });
     console.log(`updatedTimer: `, updatedTimer);
 
-  }, [currTimer.id, currTimer.timerInput, updateCurrentTimer]);
+  // }, [currTimer, currTimerRef.current.id, currTimerRef.current.timerInput, updateCurrentTimer]);
+  }, [updateCurrentTimer]);
 
   function handleResetTimer() {
     const selTimerLogIdx = dbLogAll?.findIndex(cL => {
-      return cL.id === currTimer.id;
+      return cL.id === currTimerRef.current.id;
     });
 
     if (!dbLogAll || !selTimerLogIdx) return;
@@ -118,8 +130,8 @@ const Main = () => {
       // should be currLog.id...
       id: dbLogAll[selTimerLogIdx].id,
       date: new Date().toISOString(),
-      taskName: currTimer.title,
-      timeSpent: calcTimeSpent(currTimer),
+      taskName: currTimerRef.current.title,
+      timeSpent: calcTimeSpent(currTimerRef.current),
     });
 
     handleUpdateTimer('');
@@ -133,10 +145,25 @@ const Main = () => {
   };
 
   // TODO: delete any timer not just current timer and by id
-  function handleDeleteTimer() {
-    deleteCurrentTimer({
-      id: currTimer.id
-    });
+  // TODO: ask prompt if log should be deleted too
+  function handleDeleteTimer(isDeleteLogToo:boolean) {
+    //
+    const matchedLogsId = dbLogAll
+      ?.map(log => (log.taskName === currTimerRef.current.title) ? log.id : '')
+      ?.filter(log => !!log);
+
+    console.log(`matchedLogsId: `, matchedLogsId);
+
+    if (isDeleteLogToo && matchedLogsId?.length) {
+      deleteTimerLog({
+        ids: matchedLogsId,
+      })
+    };
+    deleteCurrentTimer({ id: currTimerRef.current.id });
+
+    // TODO: close modal
+    // TODO: set 1st task as selected
+
     // const resGreeting = exampleGreeting;
     // console.log(`resGreeting: `, resGreeting);
   };
@@ -169,7 +196,7 @@ const Main = () => {
           onClose={() => setIsShowModal(false)}
         >
           <div className="modal-body">
-            <h2>Timer {timerArray.find(cT => cT.id === currTimer.id)?.title || ''}</h2>
+            <h2>Timer {timerArray.find(cT => cT.id === currTimerRef.current.id)?.title || ''}</h2>
             <div className="reset-timer">
               <div className="body">
                 <button
@@ -184,7 +211,7 @@ const Main = () => {
                 <div className="body">
                   <button
                     type="button"
-                    onClick={handleDeleteTimer}
+                    onClick={() => handleDeleteTimer(true)}
                     >
                       Delete timer
                     </button>
@@ -196,8 +223,8 @@ const Main = () => {
           </div>
       </Modal>
       <Timer
-        key={`${currTimer?.id}-${currTimer?.currentTimer}`}
-        timerData={currTimer}
+        key={`${currTimerRef.current?.id}-${currTimerRef.current?.currentTimer}`}
+        timerData={currTimerRef.current}
         onUpdatedTimer={handleUpdateTimer}
         setIsShowTimers={setIsShowTimers}
         triggerTimer={triggerTimer}
@@ -230,7 +257,7 @@ const Main = () => {
             <Timers
               timerArray={timerArray}
               handleSetSelTimer={(id) => handleSetSelTimer(id)}
-              selTimerId={currTimer.id}
+              selTimerId={currTimerRef.current.id}
               triggerTimer={triggerTimer}
             />
             {

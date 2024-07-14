@@ -78,6 +78,12 @@
   npx prisma migrate dev
 ```
 
+#### 4b. prisma studio
+
+```bash
+  npx prisma studio
+```
+
 <br />
 
 #### 👉 refer .TODO file for reference docs

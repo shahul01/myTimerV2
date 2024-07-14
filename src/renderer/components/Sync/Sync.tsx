@@ -240,7 +240,7 @@ const Sync: FC<ISyncProps> = (props) => {
   function updateSyncData() {
     setSyncData(calcTimePerTask());
   };
-
+  // TODO: has to be pressed twice to get latest log
   async function handleSync() {
     // step 1 get logByData Db Data
     await refetch();
