@@ -27,7 +27,7 @@
   color: hsla(var(--color-text-2), 1);
   /* text-align: left; */
   /* font-family: 'Courier', monospace; */
-  font-family: 'Chivo Mono';
+  font-family: 'Chivo Mono', inherit;
   font-size: 1.45rem;
   /* font-weight: bold; */
   cursor: pointer;
