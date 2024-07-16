@@ -124,7 +124,8 @@ const Main = () => {
       return cL.id === currTimerRef.current.id;
     });
 
-    if (!dbLogAll || !selTimerLogIdx) return;
+
+    if (!dbLogAll || !selTimerLogIdx || selTimerLogIdx === -1) return;
 
     dbPatchToLog({
       // should be currLog.id...
