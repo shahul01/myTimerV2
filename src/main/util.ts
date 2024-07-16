@@ -6,6 +6,7 @@ import { URL } from 'url';
 
 export type WriteResult = {
   status: 'success' | 'failure' | string;
+  message: string;
   error: App.IObject<string>;
 };
 
@@ -28,17 +29,23 @@ export const resolveHtmlPath:(htmlFileName:string) => string = newHtmlPath;
 export async function writeToFile(
   {dataToWrite='', filePath= './', fileNameWithType=`file-${Date.now()}.txt`}
 ):Promise<WriteResult> {
-  const result = {status: 'success', error: {}};
+  const result = {
+    status: 'success',
+    message: `Saved as ${filePath}/${fileNameWithType}`,
+    error: {}
+  };
+
   try {
-    if (!fs.existsSync(filePath)) {
-      fs.mkdirSync(filePath, { recursive: true })
-    };
+    if (!fs.existsSync(filePath)) fs.mkdirSync(filePath, { recursive: true });
+
     await fsProm.writeFile(
       `${filePath}/${fileNameWithType}`,
       dataToWrite
-    )
+    );
+
   } catch (error:unknown) {
     result.status = 'failure';
+    result.message = 'Did not write file. Check error.'
     if (error && typeof (error) === 'object') {
       result.error = error;
     }
@@ -52,9 +59,11 @@ export async function writeToFile(
 export async function exportData({config, fileData}:
   { config:App.Config, fileData:App.IObject<string> }
 ):Promise<WriteResult> {
-  const {filePath, fileName, exportType} = fileData;
+  const { filePath, fileName, exportType } = fileData;
+  console.log(`filePath: `, filePath);
   let writeResult = {
     status: 'success',
+    message: 'Not saved yet.',
     error: {}
   };
 

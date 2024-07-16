@@ -146,11 +146,11 @@ ipcMain.on(
       exportType: arg.exportDataProps.exportType
     };
 
-    const writeResult:WriteResult = await exportData({ config, fileData });
-    e.reply('handle-export', {
-      status:  writeResult.status,
-      error: writeResult.error
-    });
+    const { status, message, error }:WriteResult = await exportData({ config, fileData });
+    e.reply(
+      'handle-export',
+      { status, message, error }
+    );
   }
 );
 
