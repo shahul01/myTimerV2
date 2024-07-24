@@ -11,6 +11,7 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   submenu?: DarwinMenuItemConstructorOptions[] | Menu;
 }
 
+const tempEnv = { DEBUG_PROD: 'true' };
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
 
@@ -21,7 +22,7 @@ export default class MenuBuilder {
   buildMenu(): Menu {
     if (
       process.env.NODE_ENV === 'development' ||
-      process.env.DEBUG_PROD === 'true'
+      tempEnv.DEBUG_PROD === 'true'
     ) {
       this.setupDevelopmentEnvironment();
     }
@@ -185,7 +186,7 @@ export default class MenuBuilder {
 
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
-      process.env.DEBUG_PROD === 'true'
+      tempEnv.DEBUG_PROD === 'true'
         ? subMenuViewDev
         : subMenuViewProd;
 
@@ -214,7 +215,7 @@ export default class MenuBuilder {
       //   label: '&View',
       //   submenu:
       //     process.env.NODE_ENV === 'development' ||
-      //     process.env.DEBUG_PROD === 'true'
+      //     tempEnv.DEBUG_PROD === 'true'
       //       ? [
       //           {
       //             label: '&Reload',

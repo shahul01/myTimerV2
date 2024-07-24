@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { FC, useEffect, useRef, useState } from 'react';
-import { stringify } from 'renderer/utils/misc';
-import { calcTimeSpent, getTimeAsNumber } from 'renderer/utils/time';
-import { api } from 'renderer/utils/trpc';
+import { stringify } from '../../utils/misc';
+import { calcTimeSpent, getTimeAsNumber } from '../../utils/time';
+import { api } from '../../utils/trpc';
 import ExportData from './ExportData/ExportData';
 import styles from './sync.module.css';
 
@@ -45,12 +45,25 @@ const Sync: FC<ISyncProps> = (props) => {
     }
   });
 
+  const { mutate: dbAddTask } = api.task.addTask.useMutation({
+    onSuccess: () => {
+      console.log('Added a task');
+    }
+  });
+
   // const {data: dbGetByDate} = api.logByDate.getByDate.useQuery(dateRange);
   // console.log(`dbGetByDate: `, dbGetByDate);
   const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery(undefined, {
     onSuccess: (newDbLogAll) => {
       dbLogAllRef.current = newDbLogAll;
       // console.log('dbLogAllRef', dbLogAllRef.current);
+    }
+  });
+
+  const { mutate: dbDeleteTasks } = api.task.deleteTasks.useMutation({
+    onSuccess: () => {
+      trpcContext.task.getAllTasks.invalidate();
+      console.log('Deleted many tasks');
     }
   });
 
@@ -240,7 +253,7 @@ const Sync: FC<ISyncProps> = (props) => {
   function updateSyncData() {
     setSyncData(calcTimePerTask());
   };
-
+  // TODO: has to be pressed twice to get latest log
   async function handleSync() {
     // step 1 get logByData Db Data
     await refetch();
@@ -252,10 +265,55 @@ const Sync: FC<ISyncProps> = (props) => {
     updateSyncData();
   };
 
-  function handleExport() {
-    // console.log(`export: `, export);
+  // function handleExport() {
+  //   // console.log(`export: `, export);
+  // };
 
-  }
+  async function handleImport() {
+    let importsParsed = {} as App.Config;
+    // if (imported.configs.rendererConfig.taskType === 'timer') importTimer();
+    // TODO: ask user to backup data before import and create such function if necessary
+
+    async function importTimer():Promise<App.Config|{}> {
+      let importedData = {};
+      window.electron.ipcRenderer.handleImport({});
+      // eslint-disable-next-line compat/compat
+      importedData = await new Promise((resolve, reject) => {
+        window.electron.ipcRenderer.once('handle-import', (arg: Record<string, App.Config>) => {
+          resolve(arg.importedData);
+        });
+      });
+
+      return importedData;
+    };
+
+    async function syncImportedTimer(importsParsedArg:App.Config) {
+      // bulk delete db timers that match
+      // NOTE: for now import tasks and don't care about stopwatch etc
+      const importedTimer = importsParsedArg.configs.rendererConfig.tasks.timer;
+      const currTimersTitles = dbTimerArrayRef.current.map(currTimer => currTimer.title);
+      const matchedTitles = importedTimer
+        .filter(timer => currTimersTitles.includes(timer.title))
+        .map(timer => timer.title);
+
+      console.log(`deleting timer with titles: `, matchedTitles);
+      if (matchedTitles.length) dbDeleteTasks({ titleList: matchedTitles });
+
+      // bulk insert new timers on loop
+      importedTimer.forEach((currTimer, idx) => {
+        dbAddTask(currTimer);
+        if (idx === importedTimer.length - 1) {
+          console.log('All Timers imported successfully');
+          trpcContext.task.getAllTasks.invalidate();
+        };
+      });
+
+    };
+
+    importsParsed = await importTimer() as App.Config;
+    if (Object.keys(importsParsed).length) syncImportedTimer(importsParsed);
+
+  };
 
   return (
     <div className={styles.sync}>
@@ -293,6 +351,7 @@ const Sync: FC<ISyncProps> = (props) => {
           <button
             className="temp"
             type='button'
+            onClick={handleImport}
           >
             Import config
           </button>

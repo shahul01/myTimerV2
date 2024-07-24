@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'production') {
   checkNodeEnv('development');
 }
 
+// TODO: remove hardcoded port
 const port = process.env.PORT || 1212;
 const manifest = path.resolve(webpackPaths.dllPath, 'renderer.json');
 const requiredByDLLConfig = module.parent!.filename.includes(
@@ -44,7 +45,10 @@ const configuration: webpack.Configuration = {
 
   target: ['web', 'electron-renderer'],
 
+  // core-js helps support older js environments with es6+ features
+  // regenerator-runtime/runtime helps support async/await
   entry: [
+    // IMPORTANT: (?)
     `webpack-dev-server/client?http://localhost:${port}/dist`,
     'webpack/hot/only-dev-server',
     'core-js',
@@ -173,13 +177,14 @@ const configuration: webpack.Configuration = {
     },
     onBeforeSetupMiddleware() {
       console.log('Starting Main Process...');
-      spawn('npm', ['run', 'start:main'], {
-        shell: true,
-        env: process.env,
-        stdio: 'inherit',
-      })
-        .on('close', (code: number) => process.exit(code!))
-        .on('error', (spawnError) => console.error(spawnError));
+      // IMPORTANT:
+      // spawn('npm', ['run', 'start:main'], {
+      //   shell: true,
+      //   env: process.env,
+      //   stdio: 'inherit',
+      // })
+      //   .on('close', (code: number) => process.exit(code!))
+      //   .on('error', (spawnError) => console.error(spawnError));
     },
   },
 };

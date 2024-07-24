@@ -89,6 +89,21 @@ export const logByDateRouter = createTRPCRouter({
       });
 
       return resPatchLog;
+    }),
+
+  // TODO: rename this as deleteLogs
+  deleteLog: publicProcedure
+    .input(z.object({
+      idList: z.string().array()
+    }))
+    .mutation(async ({ctx, input}) => {
+      const deleteLog = await ctx.prisma.logByDate.deleteMany({
+        where: {
+          id: { in: input.idList }
+        }
+      })
+
+      return deleteLog
     })
 
 });

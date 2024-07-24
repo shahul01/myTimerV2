@@ -10,6 +10,15 @@ Total:
     ✔ sync @done(23-08-27 00:58)
       ✔ sync by title has repeated titles... @done(23-08-27 00:56)
     ☐ reset error
+    ✔ on app starts up, if there is no net connection, it doesnt look for backend data @done(23-12-08 19:06)
+      - just shows 00:00
+      - maybe cos it needs online data like fonts first..
+      - Sol: I just needed to enable any adapter to communicate bw FE and BE
+    ☐ timer pauses when minimised
+      - https://stackoverflow.com/a/12522580/15187131
+      - https://stackoverflow.com/questions/5927284/how-can-i-make-setinterval-also-work-when-a-tab-is-inactive-in-chrome
+      - https://stackoverflow.com/a/34165620/15187131
+      - https://stackoverflow.com/a/25770437/15187131
 
     electron:
       ☐ refresh fn not working when frameless
@@ -21,6 +30,22 @@ Total:
 
 
 
+  # problem:
+    ☐ electron-server problem:
+      - electron executes renderer...
+      - electron
+        → react
+        → trpc
+      - how to make both react and trpc execute?
+      - refer: .erb\configs\webpack.config.renderer.dev.ts : line 176
+
+      - js/ts → compile and build to /release/app/dist folder
+      - electron pack → /dist folder to /release/build folder
+
+      - on npm run start → renderer gets triggered → compiles js file
+        → launches electron via spawn()
+
+
   # important:
     - top 5:
 
@@ -28,20 +53,32 @@ Total:
       ✔ reset timer @done(23-08-19 00:41)
       ✔ for mac: always visible @done(23-08-19 00:57)
       ✔ id instead of name (use 'name ===' to filter) @done(23-08-27 00:56)
-      - backup and restore w/ config file
-      - exe
+      ✔ backup and restore w/ config file - almost done @done(24-07-24 01:27)
+      ✔ exe
 
       - rest:
+      - keep an eye on bugs
       ✔ double click - pause / resume @done(23-10-17 11:45)
+      - App should ask for Db and run it
+      - horizontal progress bar
+      - hotkeys
+      - mac top on all screen
+      - timer string validation w/ regex at least
+      - eslint
+
       - testing
       - change bg color on running
       - local storage
       - user auth
       - refactor
 
-      - mac top on all screen
+      - separate logs by week
+      - toast on network error etc
+
+      - offline
+      - actual icons
+
       - Input mask
-      - timer string validation w/ regex at least
       - web version
       - phone version
 
@@ -54,6 +91,7 @@ Total:
     ☐ when running, change body color
     ☐ remove unicode and emoji btn and replace with svg buttons
 
+    ☐ make the app beautiful & production quality.
     ☐ to timer lists:
       ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
@@ -71,18 +109,23 @@ Total:
 
 
   # techstack:
+    ☐ redux toolkit
     ☐ db
       - postgresql
     ☐ tailwind
       - for responsiveness(?)
-    ☐ prisma studio
+    ✔ prisma studio @done(24-06-23 07:17)
+      - `cd src/prisma/ && npx prisma studio`
+
 
 
 
   # ideas:
     versions:
       ☐ electron:
-        ☐ Mac: show on all windows / desktops
+        ☐ show on all windows / desktops:
+          ☐ windows
+          ☐ mac
         ☐ minimise btn - mainWindow.minimize();
         ☐ refresh react home page
         ☐ integrate with db
@@ -91,12 +134,16 @@ Total:
           ☐ win
           ☐ mac
           ☐ integrated with db
+            ☐ App should ask for Db location and run it
         ☐ view raw data on db
           ☐ table name in dropdown, once selected
           ☐ shows all the data
+        ☐ click throught the window
+          - mainWindow.setIgnoreMouseEvents(true)
 
         ☐ remember position on screen and monitor
         ☐ add return guards when ServeMode != 'electron'
+        ☐ exit confirmation dialog box
 
 
       ☐ web:
@@ -110,16 +157,23 @@ Total:
         ☐ PWA - for both modes
 
 
-        ☐ phone:
+      ☐ phone:
 
 
     ☐ timer:
+      ☐ create
+        ☐ prevent same title:
+          - add guard block in backend to check for task with same title in task (but not logByDate)
+          - then when that particular error is received in Frontend, show it to user
       ☐ reset
         ✔ and before reset, send timespent to db @done(23-08-27 01:05)
         ☐ after reset, sel timer shouldnt change
-      ☐ add delete option to task
+        ☐ can reset even when timer running and pause post reset
+      ✔ add delete option to task @done(24-06-23 07:19)
+        ☐ delete task in /logByTask
+      ☐ after every min, send timer to db
       ☐ on double click on timer in <Timer /> and timer in <Timers />:
-        - pause / resume that timer
+        ✔ pause / resume that timer @done(23-10-17 11:47)
         - show elapsed timer
       ✔ id as identifier instead of title: @done(23-08-27 23:47)
         ✔ replace title with id, which could be same as title, so title can be edited @done(23-08-27 01:05)
@@ -129,7 +183,7 @@ Total:
           - ie each task has default timer, make it changable
           ☐ before updating the timer, prompt to save data to db
             - create timespent prop for ITask, which persists for entire day
-
+      ☐ toast on network error etc
 
 
     ☐ Sync:
@@ -137,14 +191,20 @@ Total:
       ☐ one touch sync
       ☐ btn to backup timer table within db
 
+    ☐ Logs:
+      ☐ Separate logs by
+        ☐ day
+        ☐ week
+        ☐ month
+
     ☐ Backup and restore config:
       feature:
         ✔ when clicking particular btn @done(23-08-27 23:38)
-        ☐ basic
+        ✔ basic @done(24-07-24 01:27)
         ✔ backup @done(23-09-19 17:32)
-        ☐ restore
+        ✔ restore @done(24-07-24 01:27)
         - export type
-          - as .jsonc config file
+          ✔ as .jsonc config file @done(23-10-17 11:49)
           - .js file, check with jsonc parser (?)
 
       code:
@@ -172,12 +232,27 @@ Total:
     ☐ hotkeys
       ☐ resume and pause
 
-    ☐ heatmap
+    ☐ charts
+      ☐ horizontal progress bar
+        ☐ background
+      ☐ daily bar charts
+      ☐ weekly bar charts
+      ☐ heatmap
+          - https://codesandbox.io/p/sandbox/sh-heatmap-j2lsr8
+
+    ☐ requestSingleInstanceLock
+
+    ☐ tray
+      ☐ hide icon on taskbar and only show on
+        - `skipTaskbar: true`
+        - https://www.electronjs.org/docs/latest/api/tray
+      ☐ tray icon changes color when paused (helps when minimised)
+
 
     ☐ publicity(OR)
       ☐ SAAS
       ✔ Open source the repo(?) @done(23-09-19 17:32)
-        ✔ block push to main branch @done(23-09-19 17:32)
+        ☐ block push to main branch
 
 
 
@@ -186,15 +261,19 @@ Total:
       - rewrite 3x
       - use chatgpt
     ☐ App.tsx → too much code...
+    ☐ Add prettier
+    ☐ Add eslint
 
     - type:
       ☐ replace `any`
         ☐ with proper type
         ☐ with unknown(?)
       ☐ replace `return` for guard clauses with `Error` if necessary
+      ☐ add typesafety to IPC between main and renderer with shared type and interfaces
       ☐ logByDate has 2 interface, one global and one infile, remove one.
 
     ☐ add version to api
+    ☐ add superjson transformer to trpc
 
 
 
@@ -219,14 +298,17 @@ Total:
         ☐ sync
 
 
-
   # performance:
     ☐ uninstall unused npms
+      ☐ crypto-browserify
+      ☐ url
     ☐ Reduce loop count(+) in Sync
 
 
 
   # security:
+    ☐ github security
+      ☐ https://github.com/shahul01/myTimerV2/security/dependabot?q=is%3Aopen+severity%3Acritical%2Chigh
     ☐ validation:
       ☐ Input mask
       ☐ timer string:
@@ -294,16 +376,20 @@ Total:
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
       - Updating schema: https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/customizing-migrations#how-to-edit-a-migration-file
+      - https://github.com/NickyMeuleman/electron-trpc-prisma
 
     - w/ sqlite:
       - https://stackoverflow.com/questions/41855859/electron-how-to-setup-db-with-sqlite-in-windows
       - https://morioh.com/a/9fa8d2cf658c/create-a-simple-react-project-electron-app-sqlite3-connection
       - https://fmacedoo.medium.com/standalone-application-with-electron-react-and-sqlite-stack-9536a8b5a7b9
+      - https://github.com/orbitinghail/sqlsync
 
     - electron:
       - https://www.electronjs.org/docs/latest/tutorial/ipc#pattern-3-main-to-renderer
       - https://github.dev/benawad/dogehouse
       - https://www.electronjs.org/docs/latest/tutorial/tutorial-preload
+      - https://github.com/electron-userland/electron-webpack-quick-start/
+      - sh-electron-node
 
     - node / express:
       - file:///D:/Shahul/test-codes/node/others/nodejs-the-complete-guide/26.%20Understanding%20Async%20Wait%20in%20NodeJS/Backend/
@@ -323,6 +409,10 @@ Total:
       - https://codesandbox.io/s/use-double-click-gpt-rylvmf?file=/src/components/DoubleClickExample.js
       - https://app.diagrams.net/
       - https://phosphoricons.com/
+      - project /react-typescript-electron-sample-with-create-react-app-and-electron-builder
+      - project /electron-react-boilerplate
+      - project /test-codes/electron/ers-stack
+      - https://github.com/TasinIshmam/prisma-electron-test/blob/master/package.json
 
 
   # symbols:

@@ -100,6 +100,12 @@ declare global {
 
     });
 
+    // type ImportDataProps = {
+    //   data: unknown;
+    //   fileName: string;
+    //   importType: 'jsonc';
+    // };
+
     type ExportDataProps = {
       data: unknown;
       fileName: string;

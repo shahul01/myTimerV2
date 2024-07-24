@@ -9,8 +9,14 @@ export function tempId():string {
   return Math.random().toString().split('.')[1];
 };
 
+// rename fn to safeParse();
 export function parseIfObject(str:string):App.IObject<string>|string {
-  if (str[0] === '{' && str[str.length-1] === '}') {
+  if (typeof(str) === 'undefined') return '{}';
+  if (
+      typeof(str) === 'string'
+      && str[0] === '{'
+      && str[str.length-1] === '}'
+  ) {
     return JSON.parse(str)
   };
   return str;

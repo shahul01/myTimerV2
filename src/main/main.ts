@@ -1,13 +1,5 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build:main`, this file is compiled to
- * `./src/main.js` using webpack. This gives us some performance wins.
- */
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -17,19 +9,22 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { exportData, resolveHtmlPath } from './util';
+import { exportData, importData, resolveHtmlPath, safeParse } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
+
+const tempEnv = { DEBUG_PROD: 'true' };
 
 console.log(`NODE_ENV: `, process.env.NODE_ENV);
 console.log(`isDevelopmentUser: `, process.env.IS_DEVELOPMENT_USER);
 console.log(`user: `, process.env.USER);
 console.log(`serveMode: `, process.env.SERVE_MODE);
 
-const isDevelopmentUser:boolean = JSON.parse(
-  process.env?.IS_DEVELOPMENT_USER ? process.env?.IS_DEVELOPMENT_USER : ''
-);
+// const parsedIsDevelopmentUser =;
+const isDevelopmentUser:boolean =  safeParse(
+  process.env?.IS_DEVELOPMENT_USER, false
+) as boolean;
 
 export default class AppUpdater {
   constructor() {
@@ -46,9 +41,9 @@ function appDimensionDict() {
   console.log(`isDevelopmentUser: `, isDevelopmentUser);
   return isDevelopmentUser ? (
     {
-      hideTimers: { height: 400, width: 600 },
-      showTimers: { height: 400, width: 600 },
-      expanded: { height: 400, width: 600 }
+      hideTimers: { height: 500, width: 600 },
+      showTimers: { height: 500, width: 600 },
+      expanded: { height: 500, width: 600 }
     }
   ) : (
     {
@@ -114,6 +109,20 @@ ipcMain.on(
   }
 );
 
+ipcMain.on('handle-import', async (e, arg) => {
+  const openFile = await dialog.showOpenDialog({
+    properties: [ 'openFile' ],
+    filters: [{
+      name: 'JSON Config', extensions: ['jsonc', 'json']
+    }]
+  });
+
+  const importedRes = await importData(openFile.filePaths[0]);
+
+  e.reply( 'handle-import', importedRes );
+
+});
+
 type HandleExportArg = {
   selectedExport: 'config'
   exportDataProps: {
@@ -135,7 +144,7 @@ ipcMain.on(
       serveMode: 'electron',
       metaData: {
         exportedAt: new Date().toString(),
-        user: JSON.parse(process.env.USER || '{}')
+        user: safeParse(process.env.USER, '{}') as App.User
       },
       configs: {
         rendererConfig: arg.exportDataProps.data,
@@ -143,7 +152,7 @@ ipcMain.on(
       }
     };
 
-    const envPath = JSON.parse(process.env.EXPORT_PATH || '{}');
+    const envPath = safeParse(process.env.EXPORT_PATH, '{}') as App.IObject<string>;
     const filePath = envPath.CONFIG || './';
     const fileData = {
       filePath,
@@ -151,11 +160,10 @@ ipcMain.on(
       exportType: arg.exportDataProps.exportType
     };
 
-    const writeResult:WriteResult = await exportData({ config, fileData });
-    e.reply('handle-export', {
-      status:  writeResult.status,
-      error: writeResult.error
-    });
+    const { status, message, error }:WriteResult = await exportData({ config, fileData });
+
+    e.reply( 'handle-export', { status, message, error } );
+
   }
 );
 
@@ -165,7 +173,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const isDevelopment =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+  process.env.NODE_ENV === 'development' || tempEnv.DEBUG_PROD === 'true';
 
 if (isDevelopment && isDevelopmentUser) {
   require('electron-debug')();
@@ -203,6 +211,8 @@ const createWindow = async () => {
     width: getAppDimension('width', false),
     height: getAppDimension('height', false),
     icon: getAssetPath('icon.png'),
+    // backgroundColor: "#282730FF",
+    backgroundColor: "#80FFFFFF",
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -227,7 +237,6 @@ const createWindow = async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
-
       mainWindow.show();
 
     }
