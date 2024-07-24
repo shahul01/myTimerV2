@@ -38,6 +38,10 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('handle-timer-end', arg);
     },
 
+    handleImport(arg) {
+      ipcRenderer.send('handle-import', arg);
+    },
+
     handleExport(arg) {
       ipcRenderer.send('handle-export', arg);
     },
@@ -51,7 +55,7 @@ contextBridge.exposeInMainWorld('electron', {
       }
     },
     once(channel, func) {
-      const validChannels = ['ipc-example', 'handle-export'];
+      const validChannels = ['ipc-example', 'handle-import', 'handle-export'];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.once(channel, (event, ...args) => func(...args));

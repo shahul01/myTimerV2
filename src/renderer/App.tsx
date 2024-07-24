@@ -28,14 +28,14 @@ const Main = () => {
   });
 
   const { mutate:deleteCurrentTimer, isLoading: isDeletingTimer } = api.task.deleteTask.useMutation({
-    onSuccess:() => {
+    onSuccess: () => {
       trpcContext.task.getAllTasks.invalidate();
       console.log('Deleted timer')
     }
   });
 
   const { mutate: deleteTimerLog } = api.logByDate.deleteLog.useMutation({
-    onSuccess:() => {
+    onSuccess: () => {
       console.log("Deleted timer's log")
     }
   })
@@ -157,7 +157,7 @@ const Main = () => {
 
     if (isDeleteLogToo && matchedLogsId?.length) {
       deleteTimerLog({
-        ids: matchedLogsId,
+        idList: matchedLogsId,
       })
     };
     deleteCurrentTimer({ id: currTimerRef.current.id });

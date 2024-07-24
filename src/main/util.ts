@@ -1,13 +1,17 @@
 
 import path from 'path';
-import fs from 'fs';
-import fsProm from 'fs/promises';
+import fs, {promises as fsProm} from 'fs';
 import { URL } from 'url';
 
+type ResponseStatus = 'success' | 'failure';
 export type WriteResult = {
-  status: 'success' | 'failure' | string;
+  status: ResponseStatus;
   message: string;
-  error: App.IObject<string>;
+  error: Error;
+};
+
+type ReadResult = WriteResult & {
+  importedData: App.Config | {}
 };
 
 let newHtmlPath;
@@ -26,13 +30,41 @@ if (process.env.NODE_ENV === 'development') {
 
 export const resolveHtmlPath:(htmlFileName:string) => string = newHtmlPath;
 
+export async function readFromFile(filePath:string):Promise<ReadResult> {
+  const readResult:ReadResult = {
+    status: 'success',
+    message: `Imported properly from ${filePath}`,
+    importedData: {},
+    error: {} as Error
+  };
+
+  try {
+    const importedDataRaw = await  fsProm.readFile(filePath, 'utf-8');
+    // TODO: add security checks
+    readResult.importedData = JSON.parse(importedDataRaw);
+
+  } catch (error) {
+    readResult.status = 'failure';
+    readResult.message = 'Did not read properly. Check error.';
+    readResult.error = error as Error;
+  };
+
+  return readResult;
+};
+
+export async function importData(filePath:string) {
+  const importedData = await readFromFile(filePath);
+
+  return importedData;
+};
+
 export async function writeToFile(
   {dataToWrite='', filePath= './', fileNameWithType=`file-${Date.now()}.txt`}
 ):Promise<WriteResult> {
-  const result = {
+  const writeResult:WriteResult = {
     status: 'success',
     message: `Saved as ${filePath}/${fileNameWithType}`,
-    error: {}
+    error: {} as Error
   };
 
   try {
@@ -43,15 +75,13 @@ export async function writeToFile(
       dataToWrite
     );
 
-  } catch (error:unknown) {
-    result.status = 'failure';
-    result.message = 'Did not write file. Check error.'
-    if (error && typeof (error) === 'object') {
-      result.error = error;
-    }
+  } catch (error) {
+    writeResult.status = 'failure';
+    writeResult.message = 'Did not write file. Check error.'
+    writeResult.error = error as Error;
   };
 
-  return result;
+  return writeResult;
 
 };
 
@@ -60,25 +90,21 @@ export async function exportData({config, fileData}:
   { config:App.Config, fileData:App.IObject<string> }
 ):Promise<WriteResult> {
   const { filePath, fileName, exportType } = fileData;
-  console.log(`filePath: `, filePath);
-  let writeResult = {
+  let writeResult:WriteResult = {
     status: 'success',
     message: 'Not saved yet.',
-    error: {}
+    error: {} as Error
   };
 
   if (exportType === 'jsonc') {
     const stringifiedData = JSON.stringify(config, null, 2);
-
-    // console.log(`stringifiedData: `, stringifiedData);
-
     const fileNameWithType = `${fileName}.${exportType}`;
+
     writeResult = await writeToFile(
       {dataToWrite: stringifiedData, filePath, fileNameWithType}
     );
-    console.log(`writeResult: `, writeResult);
 
-  }
+  };
 
   return writeResult;
 

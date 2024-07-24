@@ -7,11 +7,13 @@ declare global {
   interface Window {
     electron: {
       ipcRenderer: {
-        once: (handle:string, cb:(arg0:string) => void) => void;
+        // TODO: make this type generic
+        once: (handle:string, cb:(arg0:Record<any, any>) => void) => void;
         envVar: App.IObject<string>;
         handleStickyHover:(arg0:boolean) => void;
         handleTimerEnd:(arg0:App.IObject<string>) => void;
-        handleExport:(arg0:App.IObject<string|App.IObject<string>>) => void;
+        handleImport:(arg0: App.IObject<string | App.IObject<any>>) => void;
+        handleExport:(arg0: App.IObject<string | App.IObject<any>>) => void;
       }
     }
   }

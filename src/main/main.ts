@@ -9,7 +9,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { exportData, resolveHtmlPath, safeParse } from './util';
+import { exportData, importData, resolveHtmlPath, safeParse } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
@@ -109,6 +109,20 @@ ipcMain.on(
   }
 );
 
+ipcMain.on('handle-import', async (e, arg) => {
+  const openFile = await dialog.showOpenDialog({
+    properties: [ 'openFile' ],
+    filters: [{
+      name: 'JSON Config', extensions: ['jsonc', 'json']
+    }]
+  });
+
+  const importedRes = await importData(openFile.filePaths[0]);
+
+  e.reply( 'handle-import', importedRes );
+
+});
+
 type HandleExportArg = {
   selectedExport: 'config'
   exportDataProps: {
@@ -147,10 +161,9 @@ ipcMain.on(
     };
 
     const { status, message, error }:WriteResult = await exportData({ config, fileData });
-    e.reply(
-      'handle-export',
-      { status, message, error }
-    );
+
+    e.reply( 'handle-export', { status, message, error } );
+
   }
 );
 
