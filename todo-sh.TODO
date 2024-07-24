@@ -53,7 +53,7 @@ Total:
       ✔ reset timer @done(23-08-19 00:41)
       ✔ for mac: always visible @done(23-08-19 00:57)
       ✔ id instead of name (use 'name ===' to filter) @done(23-08-27 00:56)
-      - backup and restore w/ config file - almost done
+      ✔ backup and restore w/ config file - almost done @done(24-07-24 01:27)
       ✔ exe
 
       - rest:
@@ -64,6 +64,7 @@ Total:
       - hotkeys
       - mac top on all screen
       - timer string validation w/ regex at least
+      - eslint
 
       - testing
       - change bg color on running
@@ -90,6 +91,7 @@ Total:
     ☐ when running, change body color
     ☐ remove unicode and emoji btn and replace with svg buttons
 
+    ☐ make the app beautiful & production quality.
     ☐ to timer lists:
       ☐ update height dynamically depending on tasks list length, then after say, 5 timers,
       ☐ add scrollbars
@@ -160,7 +162,9 @@ Total:
 
     ☐ timer:
       ☐ create
-        ☐ add guard block to check for task with same title in task (but not logByDate)
+        ☐ prevent same title:
+          - add guard block in backend to check for task with same title in task (but not logByDate)
+          - then when that particular error is received in Frontend, show it to user
       ☐ reset
         ✔ and before reset, send timespent to db @done(23-08-27 01:05)
         ☐ after reset, sel timer shouldnt change
@@ -196,9 +200,9 @@ Total:
     ☐ Backup and restore config:
       feature:
         ✔ when clicking particular btn @done(23-08-27 23:38)
-        ☐ basic
+        ✔ basic @done(24-07-24 01:27)
         ✔ backup @done(23-09-19 17:32)
-        ☐ restore
+        ✔ restore @done(24-07-24 01:27)
         - export type
           ✔ as .jsonc config file @done(23-10-17 11:49)
           - .js file, check with jsonc parser (?)
@@ -238,9 +242,11 @@ Total:
 
     ☐ requestSingleInstanceLock
 
-    ☐ hide icon on taskbar and only show on tray
-      - `skipTaskbar: true`
-      - https://www.electronjs.org/docs/latest/api/tray
+    ☐ tray
+      ☐ hide icon on taskbar and only show on
+        - `skipTaskbar: true`
+        - https://www.electronjs.org/docs/latest/api/tray
+      ☐ tray icon changes color when paused (helps when minimised)
 
 
     ☐ publicity(OR)
@@ -263,6 +269,7 @@ Total:
         ☐ with proper type
         ☐ with unknown(?)
       ☐ replace `return` for guard clauses with `Error` if necessary
+      ☐ add typesafety to IPC between main and renderer with shared type and interfaces
       ☐ logByDate has 2 interface, one global and one infile, remove one.
 
     ☐ add version to api
