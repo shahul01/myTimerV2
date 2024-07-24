@@ -64,7 +64,6 @@ Total:
       - hotkeys
       - mac top on all screen
       - timer string validation w/ regex at least
-      - eslint
 
       - testing
       - change bg color on running
@@ -116,7 +115,12 @@ Total:
       - for responsiveness(?)
     ✔ prisma studio @done(24-06-23 07:17)
       - `cd src/prisma/ && npx prisma studio`
-
+    ☐ `history` npm package
+    ☐ `react-test-renderer` npm package
+    ☐ dev-dependencies npm packages
+      ☐ `@teamsupercell/typings-for-css-modules-loader`
+      ☐ `file-loader`
+      ☐ `url-loader`
 
 
 
@@ -261,8 +265,7 @@ Total:
       - rewrite 3x
       - use chatgpt
     ☐ App.tsx → too much code...
-    ☐ Add prettier
-    ☐ Add eslint
+    ☐ run prettier on save?
 
     - type:
       ☐ replace `any`
