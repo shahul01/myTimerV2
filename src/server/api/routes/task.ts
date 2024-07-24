@@ -1,8 +1,16 @@
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
+const taskSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  timerInput: z.string(),
+  currentTimer: z.string()
+});
+
 // eslint-disable-next-line import/prefer-default-export
 export const taskRouter = createTRPCRouter({
+
 
   // TODO: make all public procedure private
   getAllTasks: publicProcedure
@@ -15,12 +23,7 @@ export const taskRouter = createTRPCRouter({
 
   addTask: publicProcedure
     .input(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        timerInput: z.string(),
-        currentTimer: z.string()
-      })
+      taskSchema
     )
     .mutation(async ({ctx, input}) => {
       const task = await ctx.prisma.task.create({
@@ -34,6 +37,8 @@ export const taskRouter = createTRPCRouter({
 
       return task;
     }),
+
+    // addTasks: publicProcedure,
 
   editTaskTitle: publicProcedure
     .input(
@@ -108,7 +113,7 @@ export const taskRouter = createTRPCRouter({
         }
       })
       return deleteTask
-    })
+    }),
     // https://stackoverflow.com/a/75614613/15187131
     // .query(async ({ ctx, input }) => {
     //   return await ctx.prisma.task.get({
@@ -116,5 +121,17 @@ export const taskRouter = createTRPCRouter({
     //       id: input.id
     //     }
     //   })
-    // })
+    // }),
+  deleteTasks: publicProcedure
+  .input(z.object({
+    titleList: z.string().array()
+  }))
+  .mutation(async ({ ctx, input }) => {
+    const deleteManyTasks = await ctx.prisma.task.deleteMany({
+      where: {
+        title: {in: input.titleList}
+      }
+    });
+    return deleteManyTasks;
+  }),
 });
