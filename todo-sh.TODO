@@ -60,8 +60,8 @@ Total:
       - keep an eye on bugs
       ✔ double click - pause / resume @done(23-10-17 11:45)
       - App should ask for Db and run it
-      - horizontal progress bar
       - hotkeys
+      - horizontal progress bar
       - mac top on all screen
       - timer string validation w/ regex at least
 
@@ -133,6 +133,9 @@ Total:
         ☐ minimise btn - mainWindow.minimize();
         ☐ refresh react home page
         ☐ integrate with db
+          - App should ask for db and run it
+          - after app is installed, it needs a terminal program to run server...
+          - it should do that on its own
         ☐ executable file:
           ☐ make it portable
           ☐ win
@@ -164,7 +167,17 @@ Total:
       ☐ phone:
 
 
-    ☐ timer:
+    ☐ build:
+      ☐ update app title, versioning and info page and icon
+      ☐ automatic versioning
+      ☐ proper file location
+        currently, in windows,  app is installed to
+          %AppData%\Local\Programs\App\myTimer.exe
+          it should be instead in
+          %AppData%\Local\Programs\myTimer\myTimer.exe
+
+
+      ☐ timer:
       ☐ create
         ☐ prevent same title:
           - add guard block in backend to check for task with same title in task (but not logByDate)
@@ -275,7 +288,7 @@ Total:
       ☐ add typesafety to IPC between main and renderer with shared type and interfaces
       ☐ logByDate has 2 interface, one global and one infile, remove one.
 
-    ☐ add version to api
+    ✔ add version to api @done(24-07-25 08:47)
     ☐ add superjson transformer to trpc
 
 
@@ -376,6 +389,7 @@ Total:
     - trpc / prisma:
       - https://trpc.io/docs/quickstart
       - https://trpc.io/docs/server/adapters/express
+      - https://github.dev/jsonnull/electron-trpc/blob/main/package.json
       - file:///D:/Shahul/test-codes/t3/tRPC/trpc/examples/minimal-react
       - file:///D:/Code/t3/my-t3-5-aug-23
       - Updating schema: https://www.prisma.io/docs/guides/migrate/developing-with-prisma-migrate/customizing-migrations#how-to-edit-a-migration-file
