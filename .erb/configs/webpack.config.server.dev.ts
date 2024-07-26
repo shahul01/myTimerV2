@@ -1,7 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
-import { merge } from 'webpack-merge';
-import baseConfig from './webpack.config.base';
+// import { merge } from 'webpack-merge';
+// import baseConfig from './webpack.config.base';
 import webpackPaths from './webpack.paths';
 
 // https://chat.openai.com/c/275f539f-dfc5-45fa-a403-a5ddf79fcf2c
