@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack'
-import TerserPlugin from 'terser-webpack-plugin';
+import nodeExternals from 'webpack-node-externals';
+// import TerserPlugin from 'terser-webpack-plugin';
 // import { merge } from 'webpack-merge';
 // import baseConfig from './webpack.config.base';
 
@@ -29,6 +30,7 @@ const configuration: webpack.Configuration = {
       }
     ]
   },
+  externals: [nodeExternals()],
   node: {
     __dirname: false,
     __filename: false

@@ -1,38 +1,40 @@
 {
   "name": "my-timer-v2",
-  "version": "2.0.1",
+  "version": "2.25.6",
   "private": true,
-  "description": "Timer app with Electron, React & SCSS.",
-  "main": "main.ts",
+  "description": "Multiple timers, always displaying. Built with Electron, React, tRPC & SQLite.",
+  "main": "src/main/main.ts",
   "scripts": {
-    "todo": "#remove unused npms",
-    "todo2": "#fix this mess",
-    "build": "concurrently \"npm run build:electron\" \"npm run build:react\" \"npm run build:server\"",
+    "todo": "#fix this mess",
+    "build": "concurrently \"npm run build:electron\" \"npm run build:react\" \"npm run build:server_wp\"",
     "build:electron": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:react": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
-    "build:server": "cd src/server && tsc",
-    "build:server_bak": "npx prisma generate && cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.server.prod.ts",
+    "build:server_tsc": "cd src/server && tsc",
+    "build:server_wp": "npx prisma generate && cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.server.prod.ts",
     "build:server_bak2": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.server.prod.ts",
     "build:server_bak3": "webpack --config ./.erb/configs/webpack.config.server.prod.ts",
     "build:win": "electron-builder --win",
     "dev": "concurrently \"npm run start\" \"npm run dev:server\"",
     "dev:client": "npm run start",
-    "dev:server": "nodemon --exec ts-node src/server/api/index.ts",
+    "dev:server": "nodemon --exec ts-node ./src/server/bundle.ts",
     "dev:server_bak": "webpack serve --config ./.erb/configs/webpack.config.server.dev.ts",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts && opencollective-postinstall",
     "prepare": "husky install",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
-    "start": "ts-node ./.erb/scripts/check-port-in-use.js && concurrently \"npm run start:react\" \"npm run start:electron\"",
+    "start": "ts-node ./.erb/scripts/check-port-in-use.js && concurrently \"npm run start:react\" \"npm run start:electron\" \"npm run start:server\"",
+    "start:er": "concurrently \"npm run start:electron\" \"npm run start:react\"",
     "start:electron": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/main/main.ts",
     "start:react": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "start:server": "node \"./release/app/dist/server/api\"",
+    "start:server": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/server/bundle.ts",
+    "start:server_wp": "webpack server --config ./.erb/configs/webpack.config.server.dev.ts",
+    "start:server_tsc": "node \"./release/app/dist/server/bundle.js\"",
     "start:server_bak": "concurrently \"watch:server\" \"watch:build\"",
     "test": "jest",
     "watch:build": "webpack --watch --config ./.erb/configs/webpack.config.server.dev.ts",
-    "watch:server": "node \"./release/app/dist/server/api/index.js\"",
-    "__watch:server:nodemon": "nodemon \"./release/app/dist/server/api/index.js\" --watch \"./release/app/dist/server/api\""
+    "watch:server": "node \"./release/app/dist/server/bundle.js\"",
+    "__watch:server:nodemon": "nodemon \"./release/app/dist/server/bundle.js\" --watch \"./release/app/dist/server/api\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -107,11 +109,19 @@
       "./assets/**",
       "./node_modules/.prisma/**",
       "./node_modules/@prisma/client/**",
-      "./prisma/**"
+      "./prisma/**",
+      "./release/app/dist/server/**",
+      {
+        "from": "./src/server/node_modules/",
+        "to": "./node_modules",
+        "filter": [
+          "**/*"
+        ]
+      }
     ],
     "publish": {
       "provider": "github",
-      "owner": "myTimerV2",
+      "owner": "shahul01",
       "repo": "myTimerV2"
     }
   },
@@ -163,6 +173,7 @@
     "@types/react": "^17.0.80",
     "@types/react-dom": "^17.0.25",
     "@types/terser-webpack-plugin": "^5.0.4",
+    "@types/webpack-node-externals": "^3.0.4",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "browserslist-config-erb": "^0.0.3",
@@ -187,6 +198,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^25.7.0",
     "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
@@ -217,7 +229,8 @@
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.15.2",
-    "webpack-merge": "^5.10.0"
+    "webpack-merge": "^5.10.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",

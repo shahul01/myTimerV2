@@ -16,32 +16,24 @@ import webpackPaths from './webpack.paths';
 
 // what is a sourcemap?
 
-// # this works
-// cd src/server
-// tsc --outDir ../../release/app/dist/server
-// cd ../../release/app/dist/server/api
-// node index.js
-
 // # error
 // prod.ts doesnt properly compile to js via `build:server`
 // as the built file is missing db.js
 // but direct `tsc` command properly compiles to js
 
-// hack
-// just run tsc command for npm build script
-
-
-
 const configuration: webpack.Configuration = {
   mode: 'development',
   target: 'node',
-  entry: {
-    main: './src/server/api/index.ts',
-    additional: './src/server/**/*.ts'
-  },
+  entry: [
+    path.join(webpackPaths.srcServerAPIPath, 'index.ts')
+  ],
   output: {
-    path: path.resolve(__dirname, '../../release/app/dist/server/'),
-    filename: '[name].js'
+    path: webpackPaths.distServerPath,
+    publicPath: '/',
+    filename: 'server.dev.js',
+    library: {
+      type: 'umd'
+    }
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -57,7 +49,18 @@ const configuration: webpack.Configuration = {
     ]
   },
   // plugins: [],
-  // node: {},
+  // node: {
+  //   __dirname: false,
+  //   __filename: false
+  // },
+
+  // // @ts-expect-error
+  // devServer: {
+  //   port: 9000,
+  //   onBeforeSetupMiddleware() {
+  //     console.log('Starting server')
+  //   }
+  // }
 };
 
 export default configuration;
