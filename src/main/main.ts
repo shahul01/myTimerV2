@@ -9,22 +9,24 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { exportData, importData, resolveHtmlPath, safeParse } from './util';
+import { exportData, importData, launchServer, resolveHtmlPath, safeParse } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
 
-const tempEnv = { DEBUG_PROD: 'true' };
-
 console.log(`NODE_ENV: `, process.env.NODE_ENV);
-console.log(`isDevelopmentUser: `, process.env.IS_DEVELOPMENT_USER);
 console.log(`user: `, process.env.USER);
 console.log(`serveMode: `, process.env.SERVE_MODE);
 
 // const parsedIsDevelopmentUser =;
-const isDevelopmentUser:boolean =  safeParse(
-  process.env?.IS_DEVELOPMENT_USER, false
-) as boolean;
+const isDevelopment:boolean =  process.env.NODE_ENV === 'development';
+  // && safeParse( process.env.IS_DEVELOPMENT_USER, false ) as boolean;
+
+console.log(`isDevelopment 2: `, process.env.isDevelopment);
+
+const debugMode = process.env.DEBUG_PROD === 'true' || isDevelopment;
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 export default class AppUpdater {
   constructor() {
@@ -32,14 +34,13 @@ export default class AppUpdater {
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
-}
+};
 
-let mainWindow: BrowserWindow | null = null;
+let mainWindow:BrowserWindow|null = null;
 
 // user setting 2
 function appDimensionDict() {
-  console.log(`isDevelopmentUser: `, isDevelopmentUser);
-  return isDevelopmentUser ? (
+  return isDevelopment ? (
     {
       hideTimers: { height: 500, width: 600 },
       showTimers: { height: 500, width: 600 },
@@ -55,11 +56,11 @@ function appDimensionDict() {
 };
 
 function getAppVersion():string {
-  return '1.0.0';
+  return '2.25.6';
 };
 
 const userSettings = {
-  isDevelopmentUser,
+  isDevelopment,
   appDimension: {
     sticky: appDimensionDict(),
   }
@@ -81,6 +82,8 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
   // connected to `once` in preload(?)
   event.reply('ipc-example', msgTemplate('pong'));
+  // if (isProduction)
+  launchServer(mainWindow!, 'Launching server');
 });
 
 ipcMain.on(
@@ -92,6 +95,7 @@ ipcMain.on(
     mainWindow?.setSize(newWidth, newHeight);
   }
 );
+
 ipcMain.on(
   'handle-timer-end',
   (e, arg) => {
@@ -167,17 +171,12 @@ ipcMain.on(
   }
 );
 
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
-}
+};
 
-const isDevelopment =
-  process.env.NODE_ENV === 'development' || tempEnv.DEBUG_PROD === 'true';
-
-if (isDevelopment && isDevelopmentUser) {
-  require('electron-debug')();
-}
+if (debugMode) require('electron-debug')();
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -194,9 +193,7 @@ const installExtensions = async () => {
 
 
 const createWindow = async () => {
-  if (isDevelopment) {
-    await installExtensions();
-  }
+  if (isDevelopment) await installExtensions();
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')

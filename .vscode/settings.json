@@ -26,6 +26,7 @@
     "AMPM",
     "Deca",
     "Deci",
+    "localappdata",
     "Uncapitalize"
   ],
   "editor.rulers": [

@@ -1,18 +1,21 @@
-
 import path from 'path';
 import fs, {promises as fsProm} from 'fs';
+import { exec } from 'child_process';
 import { URL } from 'url';
+import { dialog } from 'electron';
+// import { dialogMessage } from './main';
 
-type ResponseStatus = 'success' | 'failure';
 export type WriteResult = {
-  status: ResponseStatus;
+  status: 'success' | 'failure';
   message: string;
   error: Error;
 };
-
 type ReadResult = WriteResult & {
-  importedData: App.Config | {}
+  importedData: App.Config
 };
+
+type SafeParseReturn = App.IObject<string>|string|boolean;
+
 
 let newHtmlPath;
 if (process.env.NODE_ENV === 'development') {
@@ -30,17 +33,54 @@ if (process.env.NODE_ENV === 'development') {
 
 export const resolveHtmlPath:(htmlFileName:string) => string = newHtmlPath;
 
+async function sleep(ms:number) {
+  // eslint-disable-next-line compat/compat
+  return new Promise((resolve) => { setTimeout(resolve, ms) });
+};
+
+export function dialogMessage(mainWindow:Electron.BrowserWindow, myMessage: string) {
+  return dialog.showMessageBox(mainWindow!, {
+    title: 'Message',
+    message: myMessage,
+  });
+};
+
+let currServerRelaunchCount = 1;
+const maxServerRelaunchCount  = 10;
+
+export async function launchServer(
+  mainWindow:Electron.BrowserWindow,
+  myMessage:string
+) {
+  if (currServerRelaunchCount >= maxServerRelaunchCount) return;
+  const serverBuildPath = "%localappdata%/Programs/myTimer/resources/release/app/dist/server/bundle.js";
+  exec(`node ${serverBuildPath}`, async (error, stdout, stderr) => {
+    if (error) {
+      await sleep(300);
+      dialogMessage(mainWindow, myMessage);
+      launchServer(mainWindow, `Server launch failed. Relaunching Server - ${currServerRelaunchCount}/${maxServerRelaunchCount}`);
+      currServerRelaunchCount += 1;
+      return;
+    };
+    if (stderr !== '') console.error('Launch server stderr: ', stderr);
+
+    console.log('stdout', stdout);
+    dialogMessage(mainWindow, myMessage);
+  });
+};
+
 export async function readFromFile(filePath:string):Promise<ReadResult> {
   const readResult:ReadResult = {
     status: 'success',
     message: `Imported properly from ${filePath}`,
-    importedData: {},
+    importedData: {} as App.Config,
     error: {} as Error
   };
 
   try {
     const importedDataRaw = await  fsProm.readFile(filePath, 'utf-8');
     // TODO: add security checks
+    // TODO: zod Config schema parse check
     readResult.importedData = JSON.parse(importedDataRaw);
 
   } catch (error) {
@@ -53,9 +93,7 @@ export async function readFromFile(filePath:string):Promise<ReadResult> {
 };
 
 export async function importData(filePath:string) {
-  const importedData = await readFromFile(filePath);
-
-  return importedData;
+  return readFromFile(filePath);
 };
 
 export async function writeToFile(
@@ -111,7 +149,6 @@ export async function exportData({config, fileData}:
 };
 
 // renamed fn name from parseIfObject from src\renderer\utils\misc.ts
-type SafeParseReturn = App.IObject<string>|string|boolean;
 export function safeParse(
   str:string|undefined, fallback:SafeParseReturn='{}'
 ):SafeParseReturn {
@@ -125,4 +162,3 @@ export function safeParse(
   };
   return str;
 };
-

@@ -1,11 +1,11 @@
 {
-  "name": "App",
-  "version": "0.1.0",
+  "name": "myTimer",
+  "version": "2.25.6",
   "private": true,
-  "description": "App",
+  "description": "Multiple timers, always displaying. Built with Electron, React, tRPC & SQLite.",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "Sh"
+    "name": "shahul01"
   },
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
