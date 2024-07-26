@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 
 // Important: Fixing Prisma Errors
-// run `npx prisma generate` // to use prisma client // TODO: add this to postinsall
+// run `npx prisma generate` // to use prisma client // TODO: add this to postinstall
 // run `npx prisma db push` // to create db w/ tables
 
 const globalForPrisma = globalThis as unknown as {

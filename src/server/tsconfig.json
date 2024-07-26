@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../release/app/dist/server",
+
     "target": "ES6",
     "module": "CommonJS",
     "strict": true,
-    "rootDir": ".",
-    "outDir": "../../release/app/dist/server",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,

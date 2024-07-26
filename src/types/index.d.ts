@@ -81,7 +81,7 @@ declare global {
     }
 
     type Config = BaseConfig & ({
-      serveMode: 'electron'; // as ServeMode
+      serveMode: 'electron';
       configs: {
         rendererConfig: RendererConfig;
         electronConfig: ElectronConfig;

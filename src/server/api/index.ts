@@ -10,14 +10,12 @@ import { appRouter } from './route';
 // export the type definition of the API & only that to client.
 export type AppRouter = typeof appRouter;
 
-
-console.log('api/index.ts');
-
 const app = express();
+// TODO: remove hardcode
 const port = 9000;
 
 app.use(cors({
-  // TODO: Remove hardcode
+  // TODO: remove hardcode
   origin: 'http://localhost:1212',
   // credentials: true
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -34,7 +32,6 @@ app.use(
 );
 
 
-// TODO: remove hard code
 app.listen(port, () => {
-  console.log('Server listenting on port', port);
+  console.log('Server listening on port', port);
 });
