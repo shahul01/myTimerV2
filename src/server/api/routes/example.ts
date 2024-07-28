@@ -17,12 +17,12 @@ export const exampleRouter = createTRPCRouter({
       };
     }),
 
-  // http://localhost:9000/trpc/example.idGetAll
+  // http://localhost:9000/api/v1/example.idGetAll
   idGetAll: publicProcedure
-    .query(({ ctx }) => {
+    .query(async ({ ctx }) => {
       // NOTE: findMany for [], groupBy for {}
-      // return ctx.prisma.example.findMany();
-      return ctx.prisma.example.groupBy({by: 'id'});
+      return ctx.prisma.example.findMany();
+      // return ctx.prisma.example.groupBy({by: 'id'});
     })
 });
 

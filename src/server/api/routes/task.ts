@@ -11,6 +11,9 @@ const taskSchema = z.object({
 // eslint-disable-next-line import/prefer-default-export
 export const taskRouter = createTRPCRouter({
 
+  test: publicProcedure.query(({ctx}) => {
+    return ctx.prisma.task.findMany()
+  }),
 
   // TODO: make all public procedure private
   getAllTasks: publicProcedure
