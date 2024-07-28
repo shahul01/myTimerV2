@@ -49,7 +49,7 @@ export function uuid({idLength}:{idLength: 'some' | 'full'}):string {
 };
 
 export function generateRandomWords({wordsNumber = 2}):string {
-  let ans = '';
+  let randomWords = '';
 
   const randomWord = (min:number,max:number) => (
     words.data[randomInRange(min,max,true)]
@@ -59,14 +59,14 @@ export function generateRandomWords({wordsNumber = 2}):string {
     .map((el:string) => randomWord(0, words.data.length) )
     .join('-');
 
-  ans = newWords;
+  randomWords = newWords;
 
   // NOTE: this works?
-  if (ans.split('-').length !== wordsNumber) throw new Error(
+  if (randomWords.split('-').length !== wordsNumber) throw new Error(
     'Random ID is not generated or not generated properly, retry again.'
   );
 
-  return ans;
+  return randomWords;
 };
 
 // TODO: create util to check if similar id already present..

@@ -35,18 +35,15 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
     });
   };
 
-  function resetForm(form: any) {
-    const emptyByType = (el: any) => (
-      typeof(el.length) === 'undefined' ? 0 : ''
-    );
-    const objArr = Object.entries(addForm).map(([k,v]) => (
-      [k, emptyByType(v)]
-    ));
-    return form(Object.fromEntries(objArr));
+  function isTimerValid():boolean {
+    const timerRegex = /^[0-9][0-9]:[0-5][0-9]:[0-5][0-9]$/;
+    return timerRegex.test(addForm.timerInput);
   };
 
   function handleSubmit() {
-    // if (timerArrayLength < 0) return console.error('Error');
+    const isValid = isTimerValid();
+    if (!isValid) return;
+
     const randomWords = generateRandomWords({wordsNumber:2});
     const newForm:App.ITask = {
       ...addForm,
@@ -57,7 +54,6 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
     // onAddTimer(newForm);
     dbAddTask(newForm);
 
-    return false;
   };
 
   return (
@@ -66,13 +62,13 @@ const AddTimer: FC<IAddTimerProps> = (props) => {
         placeholder='Title'
         name='title'
         value={addForm.title}
-        onChange={e=>handleUpdateForm(e)}
+        onChange={handleUpdateForm}
       />
       <input
         placeholder='01:00:00'
         name='timerInput'
         value={addForm.timerInput}
-        onChange={e=>handleUpdateForm(e)}
+        onChange={handleUpdateForm}
       />
       <button type="button" onClick={handleSubmit}>
         Add

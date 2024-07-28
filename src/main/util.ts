@@ -55,6 +55,7 @@ export async function launchServer(
   };
   // TODO: make serverBuildPath work for macos
   const serverBuildPath = process.env.SERVER_BUILD_PATH;
+  // dialogMessage(mainWindow!, `serverBuildPath: ${serverBuildPath}`);
 
   exec(`node ${serverBuildPath}`, async (error, stdout, stderr) => {
     if (stderr !== '') console.error('Launch server stderr: ', stderr);
