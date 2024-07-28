@@ -33,9 +33,9 @@ if (process.env.NODE_ENV === 'development') {
 
 export const resolveHtmlPath:(htmlFileName:string) => string = newHtmlPath;
 
-async function sleep(ms:number) {
+export async function sleep(ms:number) {
   // eslint-disable-next-line compat/compat
-  return new Promise((resolve) => { setTimeout(resolve, ms) });
+  await new Promise(resolve => {setTimeout(resolve, ms)});
 };
 
 export function dialogMessage(mainWindow:Electron.BrowserWindow, myMessage: string) {
@@ -45,28 +45,37 @@ export function dialogMessage(mainWindow:Electron.BrowserWindow, myMessage: stri
   });
 };
 
-let currServerRelaunchCount = 1;
-const maxServerRelaunchCount  = 10;
+let currServerRelaunchCount = 0;
+const maxServerRelaunchCount  = 4;
 
 export async function launchServer(
-  mainWindow:Electron.BrowserWindow,
-  myMessage:string
+  mainWindow:Electron.BrowserWindow, myMessage:string
 ) {
-  if (currServerRelaunchCount >= maxServerRelaunchCount) return;
-  const serverBuildPath = "%localappdata%/Programs/myTimer/resources/release/app/dist/server/bundle.js";
+  let isServerLaunched = false;
+  if (currServerRelaunchCount > maxServerRelaunchCount) {
+    dialogMessage(mainWindow!, 'All server launches failed. Do install properly and check the server build path environment variable.');
+    return isServerLaunched;
+  };
+  const serverBuildPath = process.env.SERVER_BUILD_PATH;
+
   exec(`node ${serverBuildPath}`, async (error, stdout, stderr) => {
-    if (error) {
-      await sleep(300);
-      dialogMessage(mainWindow, myMessage);
-      launchServer(mainWindow, `Server launch failed. Relaunching Server - ${currServerRelaunchCount}/${maxServerRelaunchCount}`);
+    if (stderr !== '') console.error('Launch server stderr: ', stderr);
+    if (error || stderr !== '') {
+      await sleep(250);
       currServerRelaunchCount += 1;
+      dialogMessage(mainWindow, myMessage);
+      console.error(`Server launch failed. Relaunching Server - ${currServerRelaunchCount}/${maxServerRelaunchCount}`);
+      launchServer(mainWindow, `Server launch failed. Relaunching Server - ${currServerRelaunchCount}/${maxServerRelaunchCount}`);
       return;
     };
-    if (stderr !== '') console.error('Launch server stderr: ', stderr);
-
+    if (!error && stderr === '') {
+      isServerLaunched = true;
+      dialogMessage(mainWindow, myMessage);
+    };
     console.log('stdout', stdout);
-    dialogMessage(mainWindow, myMessage);
   });
+
+  return isServerLaunched;
 };
 
 export async function readFromFile(filePath:string):Promise<ReadResult> {
@@ -123,7 +132,7 @@ export async function writeToFile(
 
 };
 
-// TODO: modularise this fn or merge this with writeToFile()
+// TODO: modularize this fn or merge this with writeToFile()
 export async function exportData({config, fileData}:
   { config:App.Config, fileData:App.IObject<string> }
 ):Promise<WriteResult> {
@@ -161,4 +170,30 @@ export function safeParse(
     return JSON.parse(str)
   };
   return str;
+};
+
+export function killProcessByPort(serverPort:Number) {
+  console.log('killProcessByPort() called');
+  const findProcessCommand = `netstat -ano | findstr ":${serverPort}"`;
+  const killCommand = `taskkill -F /PID`;
+
+  exec(findProcessCommand, (error, stdout, stderr) => {
+    if (error) return console.error('error', error);
+    const lines = stdout.split("\r\n");
+    console.log(`lines: `, lines);
+    const pidLine = lines[0];
+    if (!pidLine) return console.log(`No process found listening on port ${serverPort}.`);
+
+    const pid = pidLine.trim().split(/\s+/);
+    exec(`${killCommand} ${pid}`, (errKill, stdoutKill, stderrKill) => {
+      if (errKill) return console.error(errKill);
+      console.log(`Port ${serverPort} is now free.`);
+
+      return '';
+    });
+
+    return '';
+
+  });
+
 };

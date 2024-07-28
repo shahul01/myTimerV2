@@ -1,5 +1,4 @@
 import { render } from 'react-dom';
-// import { IObject } from 'types/index.d';
 import App from './App';
 
 // TODO: modularize this
@@ -14,6 +13,8 @@ declare global {
         handleTimerEnd:(arg0:App.IObject<string>) => void;
         handleImport:(arg0: App.IObject<string | App.IObject<any>>) => void;
         handleExport:(arg0: App.IObject<string | App.IObject<any>>) => void;
+        // dialogMessage
+
       }
     }
   }

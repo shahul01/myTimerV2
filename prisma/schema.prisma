@@ -15,7 +15,7 @@ model Example {
 }
 
 model Task {
-// id          TEXT PRIMARY KEY DESC
+  // id          TEXT PRIMARY KEY DESC
   id           String         @id @unique
   title        String
   timerInput   String

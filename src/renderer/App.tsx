@@ -18,7 +18,7 @@ const Main = () => {
   const { data: dbTimerArray, isLoading: isLoadingTimerArray } = api.task.getAllTasks.useQuery();
   const { data: dbLogAll } = api.logByDate.getAllLogs.useQuery();
 
-  // const { data: exampleGreeting } = api.example.greeting.useQuery();
+  const {data: exampleGreeting} = api.example.greeting.useQuery();
 
   const { mutate:updateCurrentTimer, isLoading: isUpdatingTimer } = api.task.updateCurrentTimer.useMutation({
     onSuccess: () => {
@@ -178,6 +178,11 @@ const Main = () => {
       firstLoad.current = false;
     }
   }, []);
+
+  // prints server is working
+  useEffect(() => {
+    if (exampleGreeting) console.log(`Server hello world: `, exampleGreeting.text);
+  }, [exampleGreeting]);
 
   useEffect(() => {
     // updateTimerArray when dbTimerArray is available and when invalidated

@@ -9,7 +9,8 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { exportData, importData, launchServer, resolveHtmlPath, safeParse } from './util';
+import { exportData, importData, killProcessByPort, launchServer,
+  resolveHtmlPath, safeParse, sleep } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
@@ -27,6 +28,8 @@ console.log(`isDevelopment 2: `, process.env.isDevelopment);
 const debugMode = process.env.DEBUG_PROD === 'true' || isDevelopment;
 
 const isProduction = process.env.NODE_ENV === 'production';
+
+let isServerLaunched = false;
 
 export default class AppUpdater {
   constructor() {
@@ -73,17 +76,12 @@ function getAppDimension(dimension:'height'|'width', isStickyHovered:boolean):nu
   return newSize;
 };
 
-// ipc
-
 // TODO: make these event name a constant
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   // console.log(msgTemplate(arg));
 
-  // connected to `once` in preload(?)
   event.reply('ipc-example', msgTemplate('pong'));
-  // if (isProduction)
-  launchServer(mainWindow!, 'Launching server');
 });
 
 ipcMain.on(
@@ -191,8 +189,12 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-
 const createWindow = async () => {
+  // if (isProduction)
+  isServerLaunched = await launchServer(mainWindow!, 'Launching server...');
+  await sleep(1_000);
+  // if (isServerLaunched)
+
   if (isDevelopment) await installExtensions();
 
   const RESOURCES_PATH = app.isPackaged
@@ -257,16 +259,15 @@ const createWindow = async () => {
   new AppUpdater();
 };
 
-/**
- * Add event listeners...
- */
+app.on('will-quit', () => {
+  // FIX: not working yet
+  // killProcessByPort(9000);
+});
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
+  // OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 });
 
 app

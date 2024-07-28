@@ -21,6 +21,7 @@ const envVar = {
 // TODO: change to typescript
 contextBridge.exposeInMainWorld('electron', {
 
+  // react to electron
   ipcRenderer: {
     myPing(arg='ping') {
       ipcRenderer.send('ipc-example', arg);
@@ -38,10 +39,12 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('handle-timer-end', arg);
     },
 
+    // import config
     handleImport(arg) {
       ipcRenderer.send('handle-import', arg);
     },
 
+    // export config
     handleExport(arg) {
       ipcRenderer.send('handle-export', arg);
     },
