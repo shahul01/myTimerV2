@@ -10,10 +10,7 @@ export type WriteResult = {
   message: string;
   error: Error;
 };
-type ReadResult = WriteResult & {
-  importedData: App.Config
-};
-
+type ReadResult = WriteResult & { importedData: App.Config };
 type SafeParseReturn = App.IObject<string>|string|boolean;
 
 
@@ -56,6 +53,7 @@ export async function launchServer(
     dialogMessage(mainWindow!, 'All server launches failed. Do install properly and check the server build path environment variable.');
     return isServerLaunched;
   };
+  // TODO: make serverBuildPath work for macos
   const serverBuildPath = process.env.SERVER_BUILD_PATH;
 
   exec(`node ${serverBuildPath}`, async (error, stdout, stderr) => {
