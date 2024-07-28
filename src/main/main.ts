@@ -1,6 +1,5 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
@@ -9,21 +8,30 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import MenuBuilder from './menu';
-import { exportData, importData, killProcessByPort, launchServer,
+import { exportData, importData, launchServer,
   resolveHtmlPath, safeParse, sleep } from './util';
 import type { WriteResult } from './util';
 
 dotenv.config();
 
-console.log(`NODE_ENV: `, process.env.NODE_ENV);
-console.log(`user: `, process.env.USER);
-console.log(`serveMode: `, process.env.SERVE_MODE);
+type HandleExportArg = {
+  selectedExport: 'config'
+  exportDataProps: {
+    data: App.RendererConfig,
+    fileName: string,
+    exportType: 'jsonc',
+  }
+};
+
+console.log(`env NODE_ENV: `, process.env.NODE_ENV);
+console.log(`env USER: `, process.env.USER);
+console.log(`env SERVE_MODE: `, process.env.SERVE_MODE);
 
 // const parsedIsDevelopmentUser =;
 const isDevelopment:boolean =  process.env.NODE_ENV === 'development';
   // && safeParse( process.env.IS_DEVELOPMENT_USER, false ) as boolean;
 
-console.log(`isDevelopment 2: `, process.env.isDevelopment);
+console.log(`env isDevelopment 2: `, process.env.isDevelopment);
 
 const debugMode = process.env.DEBUG_PROD === 'true' || isDevelopment;
 
@@ -82,34 +90,25 @@ ipcMain.on('ipc-example', async (event, arg) => {
   // console.log(msgTemplate(arg));
 
   event.reply('ipc-example', msgTemplate('pong'));
+
 });
 
-ipcMain.on(
-  'handle-sticky-hover',
-  (e, arg:boolean) => {
-    // console.log(`arg: `, arg);
-    const newHeight = getAppDimension('height', arg);
-    const newWidth = getAppDimension('width', arg);
-    mainWindow?.setSize(newWidth, newHeight);
-  }
-);
+ipcMain.on('handle-sticky-hover', (e, arg:boolean) => {
+  // console.log(`arg: `, arg);
+  const newHeight = getAppDimension('height', arg);
+  const newWidth = getAppDimension('width', arg);
+  mainWindow?.setSize(newWidth, newHeight);
 
-ipcMain.on(
-  'handle-timer-end',
-  (e, arg) => {
+});
 
-    // TODO: modularise this function
-    if (!mainWindow) return ;
-    dialog.showMessageBox(
-      mainWindow,
-      {
-        title: 'myTimer',
-        message: `Timer for Task ${arg.taskTitle} is done`
-      }
-    );
+ipcMain.on('handle-timer-end', (e, arg) => {
+  // TODO: modularize this function
+  dialog.showMessageBox(mainWindow!, {
+    title: 'myTimer',
+    message: `Timer for Task ${arg.taskTitle} is done`
+  });
 
-  }
-);
+});
 
 ipcMain.on('handle-import', async (e, arg) => {
   const openFile = await dialog.showOpenDialog({
@@ -125,56 +124,40 @@ ipcMain.on('handle-import', async (e, arg) => {
 
 });
 
-type HandleExportArg = {
-  selectedExport: 'config'
-  exportDataProps: {
-    data: App.RendererConfig,
-    fileName: string,
-    exportType: 'jsonc',
-  }
-};
+ipcMain.on('handle-export', async (e, arg:HandleExportArg) => {
+  // console.log(`arg: `, arg);
+  // if (arg.selectedExport === 'config') {}
 
-ipcMain.on(
-  'handle-export',
-  async (e, arg:HandleExportArg) => {
-    // console.log(`arg: `, arg);
-    // if (arg.selectedExport === 'config') {}
+  const config:App.Config = {
+    appName: 'myTimer',
+    version: getAppVersion(),
+    serveMode: 'electron',
+    metaData: {
+      exportedAt: new Date().toString(),
+      user: safeParse(process.env.USER, '{}') as App.User
+    },
+    configs: {
+      rendererConfig: arg.exportDataProps.data,
+      electronConfig: userSettings
+    }
+  };
 
-    const config:App.Config = {
-      appName: 'myTimer',
-      version: getAppVersion(),
-      serveMode: 'electron',
-      metaData: {
-        exportedAt: new Date().toString(),
-        user: safeParse(process.env.USER, '{}') as App.User
-      },
-      configs: {
-        rendererConfig: arg.exportDataProps.data,
-        electronConfig: userSettings
-      }
-    };
+  const envPath = safeParse(process.env.EXPORT_PATH, '{}') as App.IObject<string>;
+  const filePath = envPath.CONFIG || './';
+  const fileData = {
+    filePath,
+    fileName: arg.exportDataProps.fileName,
+    exportType: arg.exportDataProps.exportType
+  };
 
-    const envPath = safeParse(process.env.EXPORT_PATH, '{}') as App.IObject<string>;
-    const filePath = envPath.CONFIG || './';
-    const fileData = {
-      filePath,
-      fileName: arg.exportDataProps.fileName,
-      exportType: arg.exportDataProps.exportType
-    };
+  const { status, message, error }:WriteResult = await exportData({ config, fileData });
 
-    const { status, message, error }:WriteResult = await exportData({ config, fileData });
+  e.reply( 'handle-export', { status, message, error } );
 
-    e.reply( 'handle-export', { status, message, error } );
-
-  }
-);
-
-if (isProduction) {
-  const sourceMapSupport = require('source-map-support');
-  sourceMapSupport.install();
-};
+});
 
 if (debugMode) require('electron-debug')();
+if (isProduction) require('source-map-support').install();
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -215,11 +198,10 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-
     frame: false,
     resizable: true,
 
-    // fix: enabling 'transparent' disables window maximization
+    // FIX: enabling 'transparent' disables window maximization
     transparent: true,
   });
 
@@ -230,9 +212,7 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
+    if (!mainWindow) throw new Error('"mainWindow" is not defined');
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
@@ -241,9 +221,7 @@ const createWindow = async () => {
     }
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  mainWindow.on('closed', () => { mainWindow = null });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
@@ -254,9 +232,7 @@ const createWindow = async () => {
     shell.openExternal(url);
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
+  (() => new AppUpdater())();
 };
 
 app.on('will-quit', () => {
