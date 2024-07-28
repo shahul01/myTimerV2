@@ -59,7 +59,7 @@ Total:
       - rest:
       - keep an eye on bugs
       ✔ double click - pause / resume @done(23-10-17 11:45)
-      - App should ask for Db and run it
+      ✔ App should ask for Db and run it @done(24-07-28 07:26)
       - hotkeys
       - horizontal progress bar
       - mac top on all screen
@@ -132,16 +132,14 @@ Total:
           ☐ mac
         ☐ minimise btn - mainWindow.minimize();
         ☐ refresh react home page
-        ☐ integrate with db
-          - App should ask for db and run it
-          - after app is installed, it needs a terminal program to run server...
-          - it should do that on its own
         ☐ executable file:
           ☐ make it portable
-          ☐ win
+          ✔ win @done(24-07-28 07:26)
           ☐ mac
-          ☐ integrated with db
+          ✔ integrated with db @done(24-07-28 07:26)
             ☐ App should ask for Db location and run it
+            - after app is installed, it needs a terminal program to run server...
+            - it should do that on its own
         ☐ view raw data on db
           ☐ table name in dropdown, once selected
           ☐ shows all the data
@@ -365,7 +363,7 @@ Total:
         ☐ Utilize security middleware like Helmet.js to set security-related HTTP headers.
         ☐ Use a security scanning tool to identify vulnerabilities in your dependencies (e.g., OWASP Dependency-Check).
       ☐ PostgreSQL:
-        ☐ Implement database access control with proper roles and permissions.
+        ☐ Implement db access control with proper roles and permissions.
         ☐ Use parameterized queries or an ORM like Sequelize to prevent SQL injection.
       ☐ more:
         - https://chat.openai.com/share/138db41e-1690-462b-a228-b28baadaac93
